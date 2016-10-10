@@ -64,7 +64,7 @@ class ControlPanel(QtWidgets.QWidget):
         self.eventList         = EventList(environment, parent=self)
 
         # For Command List
-        self.commandGBox       = QtWidgets.QGroupBox("Command List")
+        self.commandGBox       = QtWidgets.QGroupBox(self.tr("Command List"))
         self.commandListStack  = QtWidgets.QStackedWidget()
 
         # For Command Menu
@@ -79,9 +79,9 @@ class ControlPanel(QtWidgets.QWidget):
         self.eventList.itemSelectionChanged.connect(self.refresh)
 
         # Set Up Buttons and their text
-        self.addEventBtn.setText('Add Event')
-        self.deleteEventBtn.setText('Delete')
-        self.changeEventBtn.setText('Change')
+        self.addEventBtn.setText(self.tr('Add Event'))
+        self.deleteEventBtn.setText(self.tr('Delete'))
+        self.changeEventBtn.setText(self.tr('Change'))
 
 
         # Connect Button Events
@@ -148,13 +148,13 @@ class ControlPanel(QtWidgets.QWidget):
         self.deleteEventBtn.setDisabled(selectedEvent is None)
         self.changeEventBtn.setDisabled(selectedEvent is None)
         self.commandMenuWidget.setDisabled(selectedEvent is None)
-        self.commandGBox.setTitle("Command List")
+        self.commandGBox.setTitle(self.tr("Command List"))
         if selectedEvent is None:
             printf("GUI| No event selected. Hiding buttons.")
             return
 
 
-        eventTitle = selectedEvent.title + " Command List"
+        eventTitle = selectedEvent.title + self.tr(" Command List")
         self.commandGBox.setTitle(eventTitle)
 
 
@@ -238,7 +238,7 @@ class ControlPanel(QtWidgets.QWidget):
 
                     errorStr = "The script ended prematurely because of the following error(s)\n" \
                                "Check the Console for a traceback.\n\n" + errorText
-                    QtWidgets.QMessageBox.question(self, 'Warning', errorStr, QtWidgets.QMessageBox.Ok)
+                    QtWidgets.QMessageBox.question(self, self.tr('Warning'), errorStr, QtWidgets.QMessageBox.Ok)
 
             mainWindowEndScriptFunc()
             return
@@ -789,8 +789,8 @@ class CommandList(QtWidgets.QListWidget):
             self.selectAll()
 
     def onContext(self):
-        copyAction = QtWidgets.QAction("Ayyy", self)
-        menu = QtGui.QMenu("Menu", self)
+        copyAction = QtWidgets.QAction(self.tr("Ayyy"), self)
+        menu = QtGui.QMenu(self.tr("Menu"), self)
         menu.addAction(copyAction)
 
         # Show the context menu.

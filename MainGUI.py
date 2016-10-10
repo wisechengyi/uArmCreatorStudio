@@ -30,6 +30,7 @@ import sys             # For GUI, and overl`oading the default error handling
 import webbrowser      # For opening the uFactory forums under the "file" menu
 import ControlPanelGUI
 import Paths
+import locale
 from CommonGUI         import Console
 from copy              import deepcopy                  # For copying saves and comparing later
 from PyQt5             import QtCore, QtWidgets, QtGui  # All GUI things
@@ -48,6 +49,7 @@ from ObjectManagerGUI  import MakeFunctionWindow
 from ObjectManagerGUI  import MakeObjectWindow
 __author__ = "Alexander Thiel"
 
+global app
 
 ########## MAIN WINDOW ##########
 class MainWindow(QtWidgets.QMainWindow):
@@ -71,9 +73,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # Create GUI related class variables
         self.fileName        = None
         self.loadData        = []  #Set when file is loaded. Used to check if the user has changed anything when closing
-        self.programTitle    = 'uArm Creator Studio'
-        self.scriptToggleBtn = QtWidgets.QAction(QtGui.QIcon(Paths.run_script), 'Run', self)
-        self.devicesBtn      = QtWidgets.QAction(QtGui.QIcon(Paths.devices_neither), 'Devices', self)
+        self.programTitle    = self.tr('uArm Creator Studio')
+        self.scriptToggleBtn = QtWidgets.QAction(QtGui.QIcon(Paths.run_script), self.tr('Run'), self)
+        self.devicesBtn      = QtWidgets.QAction(QtGui.QIcon(Paths.devices_neither), self.tr('Devices'), self)
         self.centralWidget   = QtWidgets.QStackedWidget()
         self.controlPanel    = ControlPanelGUI.ControlPanel(self.env, parent=self)
         self.cameraWidget    = CameraWidget(self.env.getVStream(), parent=self)
@@ -124,11 +126,11 @@ class MainWindow(QtWidgets.QMainWindow):
                                                                                    self.consoleWidget.settings))
 
         # Create File Menu and actions
-        fileMenu      = menuBar.addMenu('File')
-        newAction     = QtWidgets.QAction(QtGui.QIcon(Paths.file_new), "New Task", self)
-        saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), "Save Task", self)
-        saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), "Save Task As", self)
-        loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load), "Load Task", self)
+        fileMenu      = menuBar.addMenu(self.tr('File'))
+        newAction     = QtWidgets.QAction(QtGui.QIcon(Paths.file_new),  self.tr('New Task'    )  , self)
+        saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task'   )  , self)
+        saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As')  , self)
+        loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load), self.tr('Load Task'   )  , self)
 
         saveAction.setShortcut("Ctrl+S")
 
@@ -146,9 +148,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # Create Community Menu
-        communityMenu = menuBar.addMenu('Community')
-        forumAction   = QtWidgets.QAction(QtGui.QIcon(Paths.taskbar), "Visit the forum!", self)
-        redditAction  = QtWidgets.QAction(QtGui.QIcon(Paths.reddit_link), "Visit our subreddit!", self)
+        communityMenu = menuBar.addMenu(self.tr('Community'))
+        forumAction   = QtWidgets.QAction(QtGui.QIcon(Paths.taskbar), self.tr('Visit the forum!'), self)
+        redditAction  = QtWidgets.QAction(QtGui.QIcon(Paths.reddit_link), self.tr('Visit our subreddit!'), self)
 
         forumAction.triggered.connect(  lambda: webbrowser.open("https://forum.ufactory.cc/", new=0, autoraise=True))
         redditAction.triggered.connect(lambda: webbrowser.open("https://www.reddit.com/r/uArm/", new=0, autoraise=True))
@@ -158,11 +160,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # Create Resources Menu
-        resourceMenu = menuBar.addMenu('New Resource')
-        visAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize), "Vision Object", self)
-        grpAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize), "Vision Group", self)
-        recAction  = QtWidgets.QAction(QtGui.QIcon(Paths.record_start), "Movement Recording", self)
-        fncAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), "Function", self)
+        resourceMenu = menuBar.addMenu(self.tr('New Resource'))
+        visAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize),  self.tr('Vision Object'     )    , self)
+        grpAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize),  self.tr('Vision Group'      )    , self)
+        recAction  = QtWidgets.QAction(QtGui.QIcon(Paths.record_start),     self.tr('Movement Recording')    , self)
+        fncAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), self.tr('Function'          )    , self)
 
 
         visAction.triggered.connect(  lambda: MakeObjectWindow(   None, self.env, parent=self))
@@ -175,27 +177,39 @@ class MainWindow(QtWidgets.QMainWindow):
         resourceMenu.addAction(recAction)
         resourceMenu.addAction(fncAction)
 
+        # Create Languages Menu
+        languageMenu = menuBar.addMenu(self.tr('Languages'))
+        enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize),  self.tr('English'     )    , self)
+        cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), self.tr('Chinese'          )    , self)
+        cnLanAction.triggered.connect(  QtCore.QTranslator().load(Paths.language_pack_zh_CN))
+
+
+        app.installTranslator(trans)
+
+        languageMenu.addAction(enLanAction)
+        languageMenu.addAction(cnLanAction)
 
 
         # Add menus to menuBar
         menuBar.addMenu(fileMenu)
         menuBar.addMenu(communityMenu)
         menuBar.addMenu(resourceMenu)
+        menuBar.addMenu(languageMenu)
 
 
         # Create Toolbar
-        toolbar = self.addToolBar("MainToolbar")
+        toolbar = self.addToolBar(self.tr("MainToolbar"))
         toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 
-        calibrateBtn = QtWidgets.QAction(QtGui.QIcon(Paths.calibrate), 'Calibrate', self)
-        objMngrBtn   = QtWidgets.QAction(QtGui.QIcon(Paths.objectManager), 'Resources', self)
+        calibrateBtn = QtWidgets.QAction(QtGui.QIcon(Paths.calibrate),          self.tr('Calibrate'), self)
+        objMngrBtn   = QtWidgets.QAction(QtGui.QIcon(Paths.objectManager),      self.tr('Resources'), self)
 
-        self.scriptToggleBtn.setToolTip('Run/Pause the command script (Ctrl+R)')
-        self.devicesBtn.setToolTip('Open Camera and Robot settings',)
-        calibrateBtn.setToolTip('Open Robot and Camera Calibration Center')
-        objMngrBtn.setToolTip('Open Resource Manager')
+        self.scriptToggleBtn.setToolTip(self.tr('Run/Pause the command script (Ctrl+R)'))
+        self.devicesBtn.setToolTip(self.tr('Open Camera and Robot settings'),)
+        calibrateBtn.setToolTip(self.tr('Open Robot and Camera Calibration Center'))
+        objMngrBtn.setToolTip(self.tr('Open Resource Manager'))
 
-        self.scriptToggleBtn.setShortcut('Ctrl+R')
+        self.scriptToggleBtn.setShortcut(self.tr('Ctrl+R'))
 
 
         self.scriptToggleBtn.triggered.connect(self.toggleScript)
@@ -230,8 +244,8 @@ class MainWindow(QtWidgets.QMainWindow):
             # dockWidget.setTitleBarWidget(titleBarWidget)
             return dockWidget
 
-        cameraDock = createDockWidget(self.cameraWidget, "Camera")
-        consoleDock = createDockWidget(self.consoleWidget, "Console")
+        cameraDock = createDockWidget(self.cameraWidget, self.tr('Camera'))
+        consoleDock = createDockWidget(self.consoleWidget, self.tr('Console'))
 
 
         # Add the consoleWidgets to the window, and tabify them
@@ -320,13 +334,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
             # Generate a message for the user to explain what parameters are missing
-            errorStr = 'Certain Events and Commands are missing the following requirements to work properly: \n\n' + \
+            errorStr = self.tr('Certain Events and Commands are missing the following requirements to work properly: \n\n') + \
                        ''.join(errorText) + \
-                       '\nWould you like to continue anyways? Events and commands with errors will not activate.'
+                       self.tr('\nWould you like to continue anyways? Events and commands with errors will not activate.')
 
 
             # Warn the user
-            reply = QtWidgets.QMessageBox.question(self, 'Warning', errorStr,
+            reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'), errorStr,
                                 QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.Cancel)
 
 
@@ -361,10 +375,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # Check to make sure the thread closed correctly
         if self.interpreter.threadRunning():
             # Generate a message for the user to explain what parameters are missing
-            errorStr = 'The script was unable to end.\n' \
+            errorStr = self.tr('The script was unable to end.\n' \
                        'This may mean the script crashed, or it is taking time finishing.\n\n' \
                        'If you are running Python code inside of this script, make sure you check isExiting() during' \
-                       ' loops, to exit code quickly when the stop button is pressed.'
+                       ' loops, to exit code quickly when the stop button is pressed.')
 
             # Warn the user
             reply = QtWidgets.QMessageBox.question(self, 'Error', errorStr, QtWidgets.QMessageBox.Ok)
@@ -388,7 +402,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         self.scriptToggleBtn.setIcon(QtGui.QIcon(Paths.run_script))
-        self.scriptToggleBtn.setText("Start")
+        self.scriptToggleBtn.setText(self.tr("Start"))
 
 
     def refreshDevicesIcon(self):
@@ -405,9 +419,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         robotErrors = robot.getErrorsToDisplay()
         if len(robotErrors) > 0:
-            reply = QtWidgets.QMessageBox.question(self, 'Communication Errors', "The following errors have occured "
+            reply = QtWidgets.QMessageBox.question(self, self.tr('Communication Errors'), self.tr("The following errors have occured "
                             "communicating with your robot.\nTry reconnecting under the Devices menu."
-                            "\n\nERROR:\n" + "\n".join(robotErrors), QtWidgets.QMessageBox.Ok)
+                            "\n\nERROR:\n") + "\n".join(robotErrors), QtWidgets.QMessageBox.Ok)
             self.env.updateSettings("robotID", None)
 
         robCon = robot.connected()
@@ -574,7 +588,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             self.loadData = json.load( open(filename))
         except IOError:
-            printf("GUI| ERROR: Task file ", filename, "not found!")
+            printf("GUI| ERROR: Task file "), filename, self.tr("not found!")
             self.fileName = None
             self.env.updateSettings("lastOpenedFile", None)
             return
@@ -592,8 +606,8 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             printf("GUI| ERROR: Could not load task: ", e)
             self.newTask(promptSave=False)
-            QtWidgets.QMessageBox.question(self, 'Warning', "The program was unable to load the following script:\n" +
-                                    filename + "\n\n The following error occured: " + type(e).__name__ + ": " + str(e),
+            QtWidgets.QMessageBox.question(self, self.tr('Warning', "The program was unable to load the following script:\n") +
+                                    filename + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": " + str(e),
                                            QtWidgets.QMessageBox.Ok)
 
 
@@ -691,15 +705,15 @@ class DeviceWindow(QtWidgets.QDialog):
     def initUI(self):
 
         # Create Text
-        selectRobotTxt  = QtWidgets.QLabel('Please select the robot you will be using:')
-        selectCameraTxt = QtWidgets.QLabel('Please select the camera you will be using:')
+        selectRobotTxt  = QtWidgets.QLabel(self.tr('Please select the robot you will be using:'))
+        selectCameraTxt = QtWidgets.QLabel(self.tr('Please select the camera you will be using:'))
 
 
         # CREATE BUTTONS
-        robotScanBtn  = QtWidgets.QPushButton("Scan for Robots")
-        cameraScanBtn = QtWidgets.QPushButton("Scan for Cameras")
-        applyBtn      = QtWidgets.QPushButton("Apply")
-        cancelBtn     = QtWidgets.QPushButton("Cancel")
+        robotScanBtn  = QtWidgets.QPushButton(self.tr("Scan for Robots"))
+        cameraScanBtn = QtWidgets.QPushButton(self.tr("Scan for Cameras"))
+        applyBtn      = QtWidgets.QPushButton(self.tr("Apply"))
+        cancelBtn     = QtWidgets.QPushButton(self.tr("Cancel"))
 
         # Connect Buttons
         robotScanBtn.clicked.connect(self.scanForRobotsClicked)
@@ -760,7 +774,7 @@ class DeviceWindow(QtWidgets.QDialog):
 
         self.setLayout(mainHLayout)
         self.setMinimumHeight(400)
-        self.setWindowTitle('Devices')
+        self.setWindowTitle(self.tr('Devices'))
         self.setWindowIcon(QtGui.QIcon(Paths.settings))
 
 
@@ -779,7 +793,7 @@ class DeviceWindow(QtWidgets.QDialog):
 
 
         if len(connectedDevices) == 0:
-            notFoundTxt = QtWidgets.QLabel('No devices were found.')
+            notFoundTxt = QtWidgets.QLabel(self.tr('No devices were found.'))
             self.robVBox.addWidget(notFoundTxt)
 
     def scanForCamerasClicked(self):
@@ -792,14 +806,14 @@ class DeviceWindow(QtWidgets.QDialog):
         # Update the list of found cameras
         self.clearLayout(self.camVBox)  #  Clear camera list
         for i in range(len(connectedCameras)):
-            newButton = QtWidgets.QRadioButton("Camera " + str(i))
+            newButton = QtWidgets.QRadioButton(self.tr("Camera ") + str(i))
             self.camVBox.addWidget(newButton)                  # Add the button to the button layout
             self.cameraButtonGroup.addButton(newButton, i)     # Add the button to a group, with an ID of i
             newButton.clicked.connect(self.camButtonClicked)   # Connect each radio button to a method
 
 
         if len(connectedCameras) == 0:
-            notFoundTxt = QtWidgets.QLabel('No cameras were found.')
+            notFoundTxt = QtWidgets.QLabel(self.tr('No cameras were found.'))
             self.camVBox.addWidget(notFoundTxt)
 
 
@@ -869,8 +883,13 @@ if __name__ == '__main__':
 
 
     # Create the Application base
+    global app
     app = Application(sys.argv)
-
+    # app = QtGui.QApplication(sys.argv)
+    if locale.getdefaultlocale()[0] != 'zh_CN':
+        trans = QtCore.QTranslator()
+        trans.load(Paths.language_pack_zh_CN)
+        app.installTranslator(trans)
 
     # Apply a stylesheet (theme) of choice here
     # app.setStyleSheet(fancyqt.firefox.style)

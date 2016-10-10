@@ -157,7 +157,8 @@ class LineTextWidget(QtWidgets.QFrame):
 class ScriptWidget(QtWidgets.QWidget):
     """This class is for making a text editor that will help you write python code"""
 
-    documentation = "" \
+    documentation = "" + \
+    QtCore.QCoreApplication.translate("CommonGUI",
 """
     Using this scripting module, the possibilities are endless. You can directly inject python code into your program
 without a hassle. You can use any of the libraries and modules that are built into this software, real time, and
@@ -301,7 +302,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         # ... code ...
         # ... code ...
 
-"""
+""")
 
 
     def __init__(self, previousCode, parent):
@@ -310,7 +311,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         self.prompt.content.setContentsMargins(5, 5, 5, 5)
 
         self.docText   = QtWidgets.QTextEdit()
-        self.docBtn    = QtWidgets.QPushButton("Show Documentation")
+        self.docBtn    = QtWidgets.QPushButton(self.tr("Show Documentation"))
         self.textEdit  = LineTextWidget()
         self.textEdit.setText(previousCode)
 
@@ -370,12 +371,12 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         hiding = not self.docText.isHidden()
 
         if hiding:
-            self.docBtn.setText("Show Documentation")
+            self.docBtn.setText(self.tr("Show Documentation"))
             self.docText.hide()
             self.textEdit.show()
             self.prompt.resize(self.prompt.sizeHint())
         else:
-            self.docBtn.setText("Show Code")
+            self.docBtn.setText(self.tr("Show Code"))
             self.textEdit.hide()
             self.docText.show()
 
@@ -446,7 +447,7 @@ class Console(QtWidgets.QWidget):
 
 
         codeLayout = QtWidgets.QHBoxLayout()
-        codeLayout.addWidget(QtWidgets.QLabel("Run Code: "))
+        codeLayout.addWidget(QtWidgets.QLabel(self.tr("Run Code: ")))
         codeLayout.addWidget(self.inputEdt)
         codeLayout.addWidget(settingsBtn)
 
@@ -573,22 +574,22 @@ class Console(QtWidgets.QWidget):
 
         # Set the main layout and general window parameters
         window.setLayout(window.mainVLayout)
-        window.setWindowTitle("Console Settings")
+        window.setWindowTitle(self.tr("Console Settings"))
         window.setWindowIcon(QtGui.QIcon(Paths.settings))
-        window.setWhatsThis("Here you can change settings about what you see in the console")
+        window.setWhatsThis(self.tr("Here you can change settings about what you see in the console"))
 
 
         # Dress the base window (this is where the child actually puts the content into the widget)
-        descLbl   = QtWidgets.QLabel("Customize what you see printed on the Console")
+        descLbl   = QtWidgets.QLabel(self.tr("Customize what you see printed on the Console"))
 
-        wrapLbl   = QtWidgets.QLabel("Wrap Lines ")
-        robotLbl  = QtWidgets.QLabel("Robot Logs ")
-        visionLbl = QtWidgets.QLabel("Vision Logs ")
-        comLbl    = QtWidgets.QLabel("Communication Logs ")
-        interpLbl = QtWidgets.QLabel("Interpreter Logs ")
-        scriptLbl = QtWidgets.QLabel("Script Logs ")
-        guiLbl    = QtWidgets.QLabel("GUI Logs ")
-        othLbl    = QtWidgets.QLabel("Other Logs ")
+        wrapLbl   = QtWidgets.QLabel(self.tr("Wrap Lines "))
+        robotLbl  = QtWidgets.QLabel(self.tr("Robot Logs "))
+        visionLbl = QtWidgets.QLabel(self.tr("Vision Logs "))
+        comLbl    = QtWidgets.QLabel(self.tr("Communication Logs "))
+        interpLbl = QtWidgets.QLabel(self.tr("Interpreter Logs "))
+        scriptLbl = QtWidgets.QLabel(self.tr("Script Logs "))
+        guiLbl    = QtWidgets.QLabel(self.tr("GUI Logs "))
+        othLbl    = QtWidgets.QLabel(self.tr("Other Logs "))
 
         window.wrapChk   = QtWidgets.QCheckBox()
         window.robotChk  = QtWidgets.QCheckBox()   # Show prints from robot class

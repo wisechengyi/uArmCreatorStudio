@@ -48,6 +48,10 @@ def resourcePath(relative_path):
 
 exeResourcesPath = resourcePath(resourcesLoc)
 
+# Used by translation
+languageLoc = resourcePath(os.path.join(resourcesLoc, "Languages"))
+language_pack_zh_CN = os.path.join(languageLoc, "zh_CN.qm")
+
 # Used by Vision
 cascade_dir  = exeResourcesPath
 user_manual  = os.path.join(exeResourcesPath, "User Manual.pdf")

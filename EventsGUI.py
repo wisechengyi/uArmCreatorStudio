@@ -39,7 +39,7 @@ class EventWidget(QtWidgets.QWidget):
     def __init__(self, parent):
         super(EventWidget, self).__init__(parent)
         self.title        = QtWidgets.QLabel()
-        self.primaryIcon  = QtWidgets.QLabel("No icon found.")
+        self.primaryIcon  = QtWidgets.QLabel(self.tr("No icon found."))
         self.optionalIcon = QtWidgets.QLabel("")
 
         self.optionalIcon.hide()
@@ -131,13 +131,13 @@ class EventPromptWindow(QtWidgets.QDialog):
 
 
         # Create Event Buttons
-        self.initBtn      = self.getNewButton( 'Initialization',         InitEvent.icon)
-        self.stepBtn      = self.getNewButton(           'Step',         StepEvent.icon)
-        self.tipBtn       = self.getNewButton(     'Tip Sensor',          TipEvent.icon)
-        self.keyboardBtn  = self.getNewButton(       'Keyboard',     KeypressEvent.icon)
-        self.motionBtn    = self.getNewButton('Motion Detected',       MotionEvent.icon)
-        self.seenBtn      = self.getNewButton(     'Recognized', RecognizeObjectEvent.icon)
-        self.notSeenBtn   = self.getNewButton( 'Not Recognized', Paths.event_not_recognize)
+        self.initBtn      = self.getNewButton(self.tr( 'Initialization'),         InitEvent.icon)
+        self.stepBtn      = self.getNewButton(self.tr(           'Step'),         StepEvent.icon)
+        self.tipBtn       = self.getNewButton(self.tr(     'Tip Sensor'),          TipEvent.icon)
+        self.keyboardBtn  = self.getNewButton(self.tr(       'Keyboard'),     KeypressEvent.icon)
+        self.motionBtn    = self.getNewButton(self.tr('Motion Detected'),       MotionEvent.icon)
+        self.seenBtn      = self.getNewButton(self.tr(     'Recognized'), RecognizeObjectEvent.icon)
+        self.notSeenBtn   = self.getNewButton(self.tr( 'Not Recognized'), Paths.event_not_recognize)
 
 
         # CONNECT BUTTONS THAT DON'T HAVE MENUS
@@ -161,7 +161,7 @@ class EventPromptWindow(QtWidgets.QDialog):
         keyboardMnu = QtWidgets.QMenu()
 
         # Create Letters Sub Menu
-        self.lettersSubMnu = QtWidgets.QMenu("Letters")  # Has to be self or something glitches with garbage collection
+        self.lettersSubMnu = QtWidgets.QMenu(self.tr("Letters"))  # Has to be self or something glitches with garbage collection
         alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
                     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
         for letter in alphabet:
@@ -171,7 +171,7 @@ class EventPromptWindow(QtWidgets.QDialog):
             self.lettersSubMnu.addAction(letter, addKeyEvntFunc)
 
         # Create Digits Sub Menu
-        self.digitsSubMnu = QtWidgets.QMenu("Digits")
+        self.digitsSubMnu = QtWidgets.QMenu(self.tr("Digits"))
         digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         for index, digit in enumerate(digits):
             addKeyEvntFunc = lambda digit=digit: self.btnClicked(KeypressEvent, params={"checkKey": digit})
@@ -187,13 +187,13 @@ class EventPromptWindow(QtWidgets.QDialog):
         newMotionBtn = lambda params: self.btnClicked(MotionEvent, params=params)
         motionMnu    = QtWidgets.QMenu()
 
-        motionMnu.addAction("No Motion", lambda: newMotionBtn({"low": "None", "high":  "Low"}))
-        motionMnu.addAction("Any Motion", lambda: newMotionBtn({"low":  "Low", "high":  "Inf"}))
+        motionMnu.addAction(self.tr("No Motion"), lambda: newMotionBtn({"low": "None", "high":  "Low"}))
+        motionMnu.addAction(self.tr("Any Motion"), lambda: newMotionBtn({"low":  "Low", "high":  "Inf"}))
         motionMnu.addSeparator()
-        motionMnu.addAction("Above 'High' Speed", lambda: newMotionBtn({"low": "High", "high":  "Inf"}))
-        motionMnu.addAction("Less than 'High' Speed", lambda: newMotionBtn({"low": "None", "high": "High"}))
+        motionMnu.addAction(self.tr("Above 'High' Speed"), lambda: newMotionBtn({"low": "High", "high":  "Inf"}))
+        motionMnu.addAction(self.tr("Less than 'High' Speed"), lambda: newMotionBtn({"low": "None", "high": "High"}))
         motionMnu.addSeparator()
-        motionMnu.addAction("Between 'Low' to 'High' Speed", lambda: newMotionBtn({"low":  "Low", "high": "High"}))
+        motionMnu.addAction(self.tr("Between 'Low' to 'High' Speed"), lambda: newMotionBtn({"low":  "Low", "high": "High"}))
 
 
         self.motionBtn.setMenu(motionMnu)
@@ -209,12 +209,12 @@ class EventPromptWindow(QtWidgets.QDialog):
         notRecMnu       = QtWidgets.QMenu()
 
         # Add cascade tracking options
-        recMnu.addAction(        "Face Detected", lambda: newCascadeBtn({'objectID':  "Face", "not": False}))
-        notRecMnu.addAction( "Face Not Detected", lambda: newCascadeBtn({'objectID':  "Face", "not":  True}))
-        recMnu.addAction(       "Smile Detected", lambda: newCascadeBtn({'objectID': "Smile", "not": False}))
-        notRecMnu.addAction("Smile Not Detected", lambda: newCascadeBtn({'objectID': "Smile", "not":  True}))
-        recMnu.addAction(         "Eye Detected", lambda: newCascadeBtn({'objectID':   "Eye", "not": False}))
-        notRecMnu.addAction(  "Eye Not Detected", lambda: newCascadeBtn({'objectID':   "Eye", "not":  True}))
+        recMnu.addAction(    self.tr(    "Face Detected"), lambda: newCascadeBtn({'objectID':  "Face", "not": False}))
+        notRecMnu.addAction( self.tr("Face Not Detected"), lambda: newCascadeBtn({'objectID':  "Face", "not":  True}))
+        recMnu.addAction(    self.tr(   "Smile Detected"), lambda: newCascadeBtn({'objectID': "Smile", "not": False}))
+        notRecMnu.addAction(self.tr("Smile Not Detected"), lambda: newCascadeBtn({'objectID': "Smile", "not":  True}))
+        recMnu.addAction(   self.tr(      "Eye Detected"), lambda: newCascadeBtn({'objectID':   "Eye", "not": False}))
+        notRecMnu.addAction(self.tr(  "Eye Not Detected"), lambda: newCascadeBtn({'objectID':   "Eye", "not":  True}))
 
         recMnu.addSeparator()
         notRecMnu.addSeparator()
@@ -304,8 +304,8 @@ class NameEvent(EventGUI):
 
 #   SIMPLE, NO-PARAMETER EVENTS
 class InitEvent(EventGUI):
-    title     = 'Initialization'
-    tooltip   = 'Activates once each time the task is run'
+    title     = QtCore.QCoreApplication.translate("EventsGUI", 'Initialization')
+    tooltip   = QtCore.QCoreApplication.translate('EventsGUI', "Activates once each time the task is run")
     icon      = Paths.event_creation
     priority  = 0
 
@@ -314,8 +314,8 @@ class InitEvent(EventGUI):
 
 
 class StepEvent(EventGUI):
-    title     = 'Step'
-    tooltip   = 'Activates every time the events are refreshed'
+    title     = QtCore.QCoreApplication.translate("EventsGUI", 'Step')
+    tooltip   = QtCore.QCoreApplication.translate("EventsGUI", 'Activates every time the events are refreshed')
     icon      = Paths.event_step
     priority  = 100
 
@@ -328,8 +328,8 @@ class TipEvent(EventGUI):
     This event activates when the sensor on the tip of the robots sucker is pressed/triggered
     """
 
-    title     = 'Tip Pressed'
-    tooltip   = 'Activates when the sensor on the tip of the arm is pressed'
+    title     = QtCore.QCoreApplication.translate("EventsGUI", 'Tip Pressed')
+    tooltip   = QtCore.QCoreApplication.translate("EventsGUI", 'Activates when the sensor on the tip of the arm is pressed')
     icon      = Paths.event_tip
     priority  = 200
 
@@ -341,7 +341,7 @@ class TipEvent(EventGUI):
 
 #   EVENTS WITH PARAMETERS
 class KeypressEvent(EventGUI):
-    title     = "Key Pressed"
+    title     = QtCore.QCoreApplication.translate("EventsGUI", "Key Pressed")
     icon      = Paths.event_keyboard
     priority  = 300
 
@@ -349,10 +349,11 @@ class KeypressEvent(EventGUI):
         super(KeypressEvent, self).__init__(parameters)
 
     def dressWidget(self, widget):
-        self.title = 'KeyPress ' + self.parameters["checkKey"]
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", 'KeyPress ') + self.parameters["checkKey"]
         widget.setIcon(self.icon)
-        widget.setTitle('Keypress ' + self.parameters["checkKey"])
-        widget.setTip('Activates when the letter ' + self.parameters["checkKey"] + " is pressed")
+        widget.setTitle(QtCore.QCoreApplication.translate("EventsGUI", 'Keypress ') + self.parameters["checkKey"])
+        widget.setTip(QtCore.QCoreApplication.translate("EventsGUI", 'Activates when the letter ')
+                      + self.parameters["checkKey"] + QtCore.QCoreApplication.translate("EventsGUI", " is pressed"))
         return widget
 
 
@@ -360,7 +361,7 @@ class MotionEvent(EventGUI):
     """
     This event activates when the sensor on the tip of the robots sucker is pressed/triggered
     """
-    title     = "Motion Detected"
+    title     = QtCore.QCoreApplication.translate("EventsGUI", "Motion Detected")
     icon      = Paths.event_motion
     priority  = 400
 
@@ -370,19 +371,19 @@ class MotionEvent(EventGUI):
         title = ""
         # Figure out the naming for the event
         if self.parameters["high"] == "Inf":
-            title = "Above " + self.parameters["low"] + " Speed"
+            title = QtCore.QCoreApplication.translate("EventsGUI", "Above ") + self.parameters["low"] + QtCore.QCoreApplication.translate("EventsGUI", " Speed")
         elif self.parameters["low"] == "None":
-            title = "Less than " + self.parameters["high"] + " Speed"
+            title = QtCore.QCoreApplication.translate("EventsGUI", "Less than ") + self.parameters["high"] + QtCore.QCoreApplication.translate("EventsGUI", " Speed")
 
         elif self.parameters["low"] == "Low":
-            title = "Low to High Speed"
+            title = QtCore.QCoreApplication.translate("EventsGUI", "Low to High Speed")
 
         # Special case naming
         if self.parameters["low"] == "Low" and self.parameters["high"] == "Inf":
-            title = "Any Motion"
+            title = QtCore.QCoreApplication.translate("EventsGUI", "Any Motion")
 
         if self.parameters["low"] == "None" and self.parameters["high"] == "Low":
-            title = "No Motion"
+            title = QtCore.QCoreApplication.translate("EventsGUI", "No Motion")
 
 
         self.title = title
@@ -391,13 +392,13 @@ class MotionEvent(EventGUI):
 
         widget.setIcon(self.icon)
         widget.setTitle(self.title)  # 'Motion ' + self.parameters["low"] + "-" + self.parameters["high"])
-        widget.setTip('Activates when there is motion detected')
+        widget.setTip(QtCore.QCoreApplication.translate("EventsGUI", 'Activates when there is motion detected'))
 
         return widget
 
 
 class RecognizeObjectEvent(EventGUI):
-    title     = "Object Recognized"
+    title     = QtCore.QCoreApplication.translate("EventsGUI", "Object Recognized")
     icon      = Paths.event_recognize   # Changes in self.dressWidget in this case
     priority  = 500
 
@@ -407,7 +408,8 @@ class RecognizeObjectEvent(EventGUI):
         if parameters["not"]: self.priority += 10
 
     def dressWidget(self, widget):
-        self.title = "Object '" + self.parameters["objectID"] + "' Recognized"
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", "Object '")
+        + self.parameters["objectID"] + QtCore.QCoreApplication.translate("EventsGUI", "' Recognized")
 
         # Format the widget that will show up to make it unique. Not necessary in non-parameter events
         if self.parameters["not"]:
@@ -416,12 +418,13 @@ class RecognizeObjectEvent(EventGUI):
             widget.setIcon(self.icon)
 
         widget.setTitle(self.parameters["objectID"].replace("_", " "))
-        widget.setTip('Activates when the object ' + self.parameters["objectID"] + " is seen on camera.")
+        widget.setTip(QtCore.QCoreApplication.translate("EventsGUI", 'Activates when the object ')
+                      + self.parameters["objectID"] + QtCore.QCoreApplication.translate("EventsGUI", " is seen on camera."))
         return widget
 
 
 class RecognizeCascadeEvent(RecognizeObjectEvent):
-    title     = "Object Recognized"
+    title     = QtCore.QCoreApplication.translate("EventsGUI", "Object Recognized")
 
     def __init__(self, parameters):
         super(RecognizeCascadeEvent, self).__init__(parameters)

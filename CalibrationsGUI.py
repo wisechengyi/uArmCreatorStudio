@@ -56,15 +56,15 @@ class CalibrateWindow(QtWidgets.QDialog):
         # Use this when the user doesn't have the appropriate requirements for a calibration
         okBtn = QtWidgets.QMessageBox.Ok
         self.showError   = lambda message: QtWidgets.QMessageBox.question(self, 'Error', message, okBtn)
-        self.cameraError = lambda: self.showError("A camera must be connected to run this calibration.")
-        self.robotError  = lambda: self.showError("A robot must be connected to run this calibration.")
+        self.cameraError = lambda: self.showError(self.tr("A camera must be connected to run this calibration."))
+        self.robotError  = lambda: self.showError(self.tr("A robot must be connected to run this calibration."))
 
-        self.nextStep    = lambda message: QtWidgets.QMessageBox.question(self, 'Instructions', message, okBtn)
+        self.nextStep    = lambda message: QtWidgets.QMessageBox.question(self, self.tr('Instructions'), message, okBtn)
 
 
         # The label for the current known information for each calibration test. Label is changed in updateLabels()
-        self.motionLbl = QtWidgets.QLabel("No information for this calibration")
-        self.coordLbl  = QtWidgets.QLabel("No information for this calibration")
+        self.motionLbl = QtWidgets.QLabel(self.tr("No information for this calibration"))
+        self.coordLbl  = QtWidgets.QLabel(self.tr("No information for this calibration"))
         self.initUI()
 
         self.updateLabels()
@@ -81,10 +81,10 @@ class CalibrateWindow(QtWidgets.QDialog):
             layout.addWidget(pictureLbl)
             return layout
 
-        motionBtn = QtWidgets.QPushButton("Calibrate Motion Detection")
-        coordBtn  = QtWidgets.QPushButton("Calibrate Camera/Robot Position")
-        cancelBtn = QtWidgets.QPushButton("Cancel")
-        applyBtn  = QtWidgets.QPushButton("Apply")
+        motionBtn = QtWidgets.QPushButton(self.tr("Calibrate Motion Detection"))
+        coordBtn  = QtWidgets.QPushButton(self.tr("Calibrate Camera/Robot Position"))
+        cancelBtn = QtWidgets.QPushButton(self.tr("Cancel"))
+        applyBtn  = QtWidgets.QPushButton(self.tr("Apply"))
 
 
         motionBtn.clicked.connect(self.calibrateMotion)
@@ -155,7 +155,7 @@ class CalibrateWindow(QtWidgets.QDialog):
 
         self.setMinimumHeight(400)
         self.setLayout(mainHLayout)
-        self.setWindowTitle('Calibrations')
+        self.setWindowTitle(self.tr('Calibrations'))
         self.setWindowIcon(QtGui.QIcon(Paths.calibrate))
 
 
@@ -163,18 +163,18 @@ class CalibrateWindow(QtWidgets.QDialog):
         # Check if motionCalibrations already exist
         movCalib = self.motionSettings
         if movCalib["stationaryMovement"] is not None:
-            self.motionLbl.setText(" Stationary Movement: " + str(movCalib["stationaryMovement"]) +
-                                   "     Active Movement: " + str(movCalib["activeMovement"]))
+            self.motionLbl.setText(self.tr(" Stationary Movement: ") + str(movCalib["stationaryMovement"]) +
+                                   self.tr("     Active Movement: ") + str(movCalib["activeMovement"]))
 
         coordCalib = self.coordSettings
         if coordCalib["ptPairs"] is not None:
-            self.coordLbl.setText("Calibration has been run before. " + str(len(coordCalib["ptPairs"])) +
-                                  " points of data were collected.")
+            self.coordLbl.setText(self.tr("Calibration has been run before. ") + str(len(coordCalib["ptPairs"])) +
+                                  self.tr(" points of data were collected."))
 
     def calibrateMotion(self):
         # Shake the robot left and right while getting frames to get a threshold for "high" movement between frames
-        showStep = lambda step, message: QtWidgets.QMessageBox.question(self, 'Step ' + str(step),
-                                                                        'Step ' + str(step) + "\n\n" + message,
+        showStep = lambda step, message: QtWidgets.QMessageBox.question(self, self.tr('Step ') + str(step),
+                                                                        self.tr('Step ') + str(step) + "\n\n" + message,
                                                                         QtWidgets.QMessageBox.Ok)
 
         vStream = self.env.getVStream()
@@ -194,7 +194,7 @@ class CalibrateWindow(QtWidgets.QDialog):
             return
 
 
-        showStep(1, "Do not make any movement in the cameras view until the next message appears.")
+        showStep(1, self.tr("Do not make any movement in the cameras view until the next message appears."))
 
         # Get movement while nothing is happening
         totalMotion = 0.0
@@ -267,13 +267,13 @@ class CalibrateWindow(QtWidgets.QDialog):
         if robotTracker is not None:
 
             message = QtWidgets.QMessageBox()
-            message.setWindowTitle("Skip to Calibration?")
-            message.addButton(QtWidgets.QPushButton('I want to set a new Robot Marker'), QtWidgets.QMessageBox.YesRole)
-            message.addButton(QtWidgets.QPushButton('Skip to Automatic Calibration'), QtWidgets.QMessageBox.NoRole)
-            message.setText("It appears this is not the first time you have run this tutorial.\n\n" +
-                            "Would you like to start from scratch, or skip to the automated calibration?\n\n" +
-                            "(Automated calibration only works if the robot has the same marker on the top" +
-                            " of its head as it did when you first ran this calibration.)\n")
+            message.setWindowTitle(self.tr("Skip to Calibration?"))
+            message.addButton(QtWidgets.QPushButton(self.tr('I want to set a new Robot Marker')), QtWidgets.QMessageBox.YesRole)
+            message.addButton(QtWidgets.QPushButton(self.tr('Skip to Automatic Calibration')), QtWidgets.QMessageBox.NoRole)
+            message.setText(self.tr("It appears this is not the first time you have run this tutorial.\n\n") +
+                            self.tr("Would you like to start from scratch, or skip to the automated calibration?\n\n") +
+                            self.tr("(Automated calibration only works if the robot has the same marker on the top") +
+                            self.tr(" of its head as it did when you first ran this calibration.)\n"))
             reply = message.exec_()
 
             # QtWidgets.QMessageBox.addButton
@@ -343,7 +343,7 @@ class CoordWizard(QtWidgets.QWizard):
 
 
         # Aesthetic details
-        self.setWindowTitle("Coordinate Calibration Wizard")
+        self.setWindowTitle(self.tr("Coordinate Calibration Wizard"))
         self.setWindowIcon(QtGui.QIcon(Paths.objectWizard))
 
     def getNewCoordCalibrations(self):
@@ -375,16 +375,16 @@ class CWPage1(QtWidgets.QWizardPage):
 
     def initUI(self):
 
-        prompt = "The algorithms in this software will only work if the\n"    \
-                 "camera is placed above the robot, and doesn't move. \n\n"   \
-                 "Please find a way to mount your webcam above the robot,\n"  \
-                 "in such a way that it has a wide field of view of the\n"    \
-                 "robots workspace.\n"                                        \
+        prompt = self.tr("The algorithms in this software will only work if the\n") +    \
+                 self.tr("camera is placed above the robot, and doesn't move. \n\n") +   \
+                 self.tr("Please find a way to mount your webcam above the robot,\n") +  \
+                 self.tr("in such a way that it has a wide field of view of the\n") +    \
+                 self.tr("robots workspace.\n")                                        \
 
 
-        welcomeLbl = QtWidgets.QLabel("Welcome Coordinate Calibration Wizard!\n")
-        introLbl   = QtWidgets.QLabel("This will walk you through teaching the camera the position of the robot.")
-        step1Lbl   = QtWidgets.QLabel("\n\nStep 1: Setup")
+        welcomeLbl = QtWidgets.QLabel(self.tr("Welcome Coordinate Calibration Wizard!\n"))
+        introLbl   = QtWidgets.QLabel(self.tr("This will walk you through teaching the camera the position of the robot."))
+        step1Lbl   = QtWidgets.QLabel(self.tr("\n\nStep 1: Setup"))
         promptLbl  = QtWidgets.QLabel(prompt)
         imageLbl   = QtWidgets.QLabel()
 
@@ -437,20 +437,20 @@ class CWPage2(QtWidgets.QWizardPage):
 
     def initUI(self):
 
-        prompt = "Mount the robot to the ground so that it doesn't move\n"         \
-                 "around, to avoid doing this calibration every time the \n"        \
-                 "robot is moved.\n\n"                                          \
-                 "Without moving the robots base, lower the head of the robot \n"   \
-                 "until the suction cup is barely touching the ground, as shown\n"  \
-                 "on the video to the right.\n\n"                                   \
-                 "Make sure the top of the robots head is still near the \n"        \
-                 "center of the cameras view, and the sucker is touching the\n" \
-                 "ground."
+        prompt = self.tr("Mount the robot to the ground so that it doesn't move\n"          ) + \
+                 self.tr("around, to avoid doing this calibration every time the \n"        ) + \
+                 self.tr("robot is moved.\n\n"                                              ) + \
+                 self.tr("Without moving the robots base, lower the head of the robot \n"   ) + \
+                 self.tr("until the suction cup is barely touching the ground, as shown\n"  ) + \
+                 self.tr("on the video to the right.\n\n"                                   ) + \
+                 self.tr("Make sure the top of the robots head is still near the \n"        ) + \
+                 self.tr("center of the cameras view, and the sucker is touching the\n"     ) + \
+                 self.tr("ground.")
 
 
-        step1Lbl   = QtWidgets.QLabel("\n\nStep 2: Robot Placement")
+        step1Lbl   = QtWidgets.QLabel(self.tr("\n\nStep 2: Robot Placement"))
         promptLbl  = QtWidgets.QLabel(prompt)
-        movieLbl   = QtWidgets.QLabel("Could not find example gif")
+        movieLbl   = QtWidgets.QLabel(self.tr("Could not find example gif"))
 
 
         # Set the animated gif on the movieLbl
@@ -488,11 +488,11 @@ class CWPage2(QtWidgets.QWizardPage):
         if currentID == 2:
             self.robot.setActiveServos(all=False)
             warn = QtWidgets.QMessageBox()
-            warn.setWindowTitle("Getting Height of Ground")
-            warn.addButton(QtWidgets.QPushButton('Yes, the end effector is touching the ground'),
+            warn.setWindowTitle(self.tr("Getting Height of Ground"))
+            warn.addButton(QtWidgets.QPushButton(self.tr('Yes, the end effector is touching the ground')),
                            QtWidgets.QMessageBox.YesRole)
-            warn.setText("Important!\nBefore continuing, make sure the robots end effector is touching the ground, "
-                         "and that it is centered below the camera. The program will read the robots coordinates.\n\n")
+            warn.setText(self.tr("Important!\nBefore continuing, make sure the robots end effector is touching the ground, ")+
+                         self.tr("and that it is centered below the camera. The program will read the robots coordinates.\n\n"))
             reply = warn.exec_()
 
 
@@ -515,19 +515,19 @@ class CWPage3(QtWidgets.QWizardPage):
 
     def initUI(self):
 
-        prompt = "In order to track the robot, there must be a marker of some\n"    \
-                 "sort on the robot. If you have a QR code or detailed \n"          \
-                 "sticker, then place it on the robots head.\n\n"                   \
-                 "If you do not have anything readily avaliable, get a piece \n"    \
-                 "of tape- make sure it's not reflective (non plastic tape is\n"    \
-                 "best), draw on it (as show on the right), and place it on\n"      \
-                 "the robots head.\n\n"                                             \
-                 "There must be a lot of detail on the marker in order to\n"        \
-                 "track properly. If you finish this tutorial and tracking is\n"    \
-                 "not sufficient, then draw on the marker to add more detail."
+        prompt = self.tr("In order to track the robot, there must be a marker of some\n"    ) +\
+                 self.tr("sort on the robot. If you have a QR code or detailed \n"          ) +\
+                 self.tr("sticker, then place it on the robots head.\n\n"                   ) +\
+                 self.tr("If you do not have anything readily avaliable, get a piece \n"    ) +\
+                 self.tr("of tape- make sure it's not reflective (non plastic tape is\n"    ) +\
+                 self.tr("best), draw on it (as show on the right), and place it on\n"      ) +\
+                 self.tr("the robots head.\n\n"                                             ) +\
+                 self.tr("There must be a lot of detail on the marker in order to\n"        ) +\
+                 self.tr("track properly. If you finish this tutorial and tracking is\n"    ) +\
+                 self.tr("not sufficient, then draw on the marker to add more detail."      )
 
 
-        step1Lbl   = QtWidgets.QLabel("\n\nStep 3: Make a Robot Marker")
+        step1Lbl   = QtWidgets.QLabel(self.tr("\n\nStep 3: Make a Robot Marker"))
         promptLbl  = QtWidgets.QLabel(prompt)
         imgOneLbl  = QtWidgets.QLabel()
         imgTwoLbl  = QtWidgets.QLabel()
@@ -588,13 +588,13 @@ class CWPage4(QtWidgets.QWizardPage):
         self.initUI()
 
     def initUI(self):
-        prompt = "Make sure the robot's head is in the center of the camera view. Then, click the mouse on the top "  +\
-                 "\nright corner of the marker, and drag it to the bottom right corner of the marker.\n\n"            +\
-                 "The camera will begin tracking the marker. Try to have more than 500 points on the marker. Move\n"  +\
-                 "the robot around and make sure that the object can be recognized for the majority of the cameras\n" +\
-                 "view.\n"
+        prompt = self.tr("Make sure the robot's head is in the center of the camera view. Then, click the mouse on the top "  )+\
+                 self.tr("\nright corner of the marker, and drag it to the bottom right corner of the marker.\n\n"            )+\
+                 self.tr("The camera will begin tracking the marker. Try to have more than 500 points on the marker. Move\n"  )+\
+                 self.tr("the robot around and make sure that the object can be recognized for the majority of the cameras\n" )+\
+                 self.tr("view.\n")
 
-        stepLbl    = QtWidgets.QLabel("Step 4: Selecting the Marker")
+        stepLbl    = QtWidgets.QLabel(self.tr("Step 4: Selecting the Marker"))
         promptLbl  = QtWidgets.QLabel(prompt)
 
 
@@ -667,13 +667,13 @@ class CWPage4(QtWidgets.QWizardPage):
         # Analyze it, and make sure it's a valid target. If not, return the camera to selection mode.
         if len(target.descrs) == 0 or len(target.keypoints) == 0:
             self.cameraWidget.takeAnother()
-            self.hintLbl.setText("You must select an object with more detail.")
+            self.hintLbl.setText(self.tr("You must select an object with more detail."))
             return
 
         if len(target.descrs) < 450:
             self.movieLbl.setMovie(self.detMovie)
-            self.hintLbl.setText("Your selected marker does not have enough detail. Only " + str(len(target.descrs)) +
-                                 " points were found.\nAdd detail to your marker and try again.")
+            self.hintLbl.setText(self.tr("Your selected marker does not have enough detail. Only ") + str(len(target.descrs)) +
+                                 self.tr(" points were found.\nAdd detail to your marker and try again."))
             self.cameraWidget.takeAnother()
             return
 
@@ -686,11 +686,11 @@ class CWPage4(QtWidgets.QWizardPage):
         # If the object was not very good, warn the user. Otherwise, state the # of points on the object
         if len(target.descrs) < 600:
             self.movieLbl.setMovie(self.detMovie)
-            self.hintLbl.setText("Your selected marker is not very detailed, or is too small, only " +
-                                 str(len(target.descrs)) + " points were found.\n"
-                                 "Tracking may not be very accurate.")
+            self.hintLbl.setText(self.tr("Your selected marker is not very detailed, or is too small, only ") +
+                                 str(len(target.descrs)) + self.tr(" points were found.\n") +
+                                 self.tr("Tracking may not be very accurate."))
         else:
-            self.hintLbl.setText("Found " + str(len(target.descrs)) + " Points")
+            self.hintLbl.setText(self.tr("Found ") + str(len(target.descrs)) + self.tr(" Points"))
 
         # Turn on the camera, and start tracking
         self.cameraWidget.play()
@@ -717,7 +717,7 @@ class CWPage5(QtWidgets.QWizardPage):
 
 
         # Initialize GUI globals
-        self.startBtn       = QtWidgets.QPushButton("Start Calibration")
+        self.startBtn       = QtWidgets.QPushButton(self.tr("Start Calibration"))
         self.hintLbl        = QtWidgets.QLabel("\n\n\n\n\n\t\t\t\t")  # Add newlines since window resizing is broken
         self.testLbl        = QtWidgets.QLabel()        # Updates during calibration to notify user of progress
         self.progressBar    = QtWidgets.QProgressBar()  # Tells the user how far the calibration is from completion
@@ -732,16 +732,16 @@ class CWPage5(QtWidgets.QWizardPage):
         self.progressBar.hide()
         self.testLbl.hide()
 
-        prompt = "When you press the Start Calibration button, the robot will go through a set of predefined moves\n"\
-                 "and record the information that it needs." \
-                 "Before beginning:\n\n\n" \
-                 "1) Make sure that the robot's head is more or less centered under the cameras view, and the\n" \
-                 "    Robot Marker is being tracked.\n" \
-                 "2) Make sure there is ample space for the robot to move around.\n" \
-                 "3) Make sure the robot is immobile, and mounted to the ground. If you move the robot,\n" \
-                 "    you will have to re-run this calibration.\n"
+        prompt = self.tr("When you press the Start Calibration button, the robot will go through a set of predefined moves\n" ) +\
+                 self.tr("and record the information that it needs."  ) +\
+                 self.tr("Before beginning:\n\n\n"  ) +\
+                 self.tr("1) Make sure that the robot's head is more or less centered under the cameras view, and the\n"  ) +\
+                 self.tr("    Robot Marker is being tracked.\n") + \
+                 self.tr("2) Make sure there is ample space for the robot to move around.\n"  ) +\
+                 self.tr("3) Make sure the robot is immobile, and mounted to the ground. If you move the robot,\n" ) +  \
+                 self.tr("    you will have to re-run this calibration.\n" )
 
-        step1Lbl   = QtWidgets.QLabel("\n\nFinal Step:")
+        step1Lbl   = QtWidgets.QLabel(self.tr("\n\nFinal Step:"))
         promptLbl  = QtWidgets.QLabel(prompt)
 
         # Set titles bold
@@ -853,19 +853,19 @@ class CWPage5(QtWidgets.QWizardPage):
         if len(newCalibrations["ptPairs"]) < minPointCount:
             # If not enough points were found, append an error to the error array
             if len(newCalibrations["ptPairs"]) == 0:
-                errors.append("The robot marker was never seen! Try restarting the calibration and creating the"
-                        "\n\t  marker again, making sure that the robot's head is in view of the camera."
-                        "\n\n\t  Also make sure that the area in the camera view is clear, blank, without too much"
-                        "\n\t  detail around it- try having a clear workspace with white paper as a background.")
+                errors.append(self.tr("The robot marker was never seen! Try restarting the calibration and creating the")+
+                        self.tr("\n\t  marker again, making sure that the robot's head is in view of the camera.")+
+                        self.tr("\n\n\t  Also make sure that the area in the camera view is clear, blank, without too much")+
+                        self.tr("\n\t  detail around it- try having a clear workspace with white paper as a background."))
             else:
-                errors.append("The marker was not recognized in enough points- it was only seen "           +
-                          str(len(newCalibrations["ptPairs"])) + " time(s)!"
-                          "\n\t  It must be seen at least " +
+                errors.append(self.tr("The marker was not recognized in enough points- it was only seen " )          +
+                          str(len(newCalibrations["ptPairs"])) + " time(s)!" +
+                          self.tr("\n\t  It must be seen at least ") +
                           str(minPointCount) + " times." +
-                          "\n\n\t  Try making sure that the robot's head is centered in the middle of the cameras"
-                          "\n\t  view in the previous step, and try placing the camera in a higher location."
-                          "\n\n\t  Also make sure that the area around the camera view is clear, blank, without too"
-                          "\n\t  much detail around it- try having a clear workspace with white paper as a background.")
+                          self.tr("\n\n\t  Try making sure that the robot's head is centered in the middle of the cameras")+
+                          self.tr("\n\t  view in the previous step, and try placing the camera in a higher location.")+
+                          self.tr("\n\n\t  Also make sure that the area around the camera view is clear, blank, without too")+
+                          self.tr("\n\t  much detail around it- try having a clear workspace with white paper as a background."))
 
 
         # Return the robot to home and turn off tracking
@@ -877,16 +877,16 @@ class CWPage5(QtWidgets.QWizardPage):
         # Print out the errors, and set the appropriate GUI elements
         hintText = ""
         if len(errors):
-            hintText += "Calibration did not complete successfully. The following errors occured:\n"
+            hintText += self.tr("Calibration did not complete successfully. The following errors occured:\n")
             for error in errors:
                 hintText += "\t- " + error + "\n"
             self.newCalibrations = None
-            self.startBtn.setText("Try Again")
+            self.startBtn.setText(self.tr("Try Again"))
         else:
-            hintText += "Calibration was successful, " + str(len(newCalibrations["ptPairs"])) + "/"  +\
-                     str(len(testCoords)) + " points were found.\nResults will be saved when you click Apply " +\
-                     "on the calibrations page. Feel free to try this again.\n" +\
-                     "Make sure to repeat this calibration whenever you move your camera or move your robot."
+            hintText += self.tr("Calibration was successful, ") + str(len(newCalibrations["ptPairs"])) + "/"  +\
+                     str(len(testCoords)) + self.tr(" points were found.\nResults will be saved when you click Apply ") +\
+                     self.tr("on the calibrations page. Feel free to try this again.\n") +\
+                     self.tr("Make sure to repeat this calibration whenever you move your camera or move your robot.")
             self.testLbl.setPixmap(QtGui.QPixmap(Paths.help_star))
             self.testLbl.show()
             self.newCalibrations = newCalibrations
@@ -912,14 +912,14 @@ class CWPage5(QtWidgets.QWizardPage):
         text  = "Calibration Progress: \n"
         if currentPoint > len(testCoords) * .25:
             if recFailCount / currentPoint > .85:  # If over 85% of tests failed so far
-                text += "    Progress Report: The robot marker has failed to be recognized " + \
+                text += self.tr("    Progress Report: The robot marker has failed to be recognized ") + \
                         str(recFailCount) + " times\n"
             else:
-                text += "    Progress Report: The calibration is going well.\n"
+                text += self.tr("    Progress Report: The calibration is going well.\n")
 
 
-        text += "    Testing Point:\t" + str(currentPoint) + "/" + str(len(testCoords)) + "\n"
-        text += "    Valid Points: \t" + str(successCount) + "\n"
+        text += self.tr("    Testing Point:\t") + str(currentPoint) + "/" + str(len(testCoords)) + "\n"
+        text += self.tr("    Valid Points: \t") + str(successCount) + "\n"
         # text += "    Failed Points:\t" + str(currentPoint - successCount) + "\n"
 
         self.testLbl.setText(text)
@@ -953,7 +953,7 @@ class CWPage5(QtWidgets.QWizardPage):
 
         # Make sure the robot is still connected before checking anything else
         if not robot.connected():
-            errors.append("Robot was disconnected during calibration")
+            errors.append(self.tr("Robot was disconnected during calibration"))
             self.endCalibration(errors, newCalibrations, testCoords)
             return
 
