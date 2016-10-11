@@ -65,3 +65,6 @@ Settings.txt
 
 # IntelliJ stuff
 .idea/
+.pioenvs/
+.travis.yml
+platformio.ini
