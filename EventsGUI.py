@@ -119,12 +119,12 @@ class EventPromptWindow(QtWidgets.QDialog):
         # Finalize everything
         self.setLayout(mainVLayout)
         self.setFixedSize(self.sizeHint())  #Make the window a fixed size
-        self.setWindowTitle('Add an Event')
+        self.setWindowTitle(self.tr('Add an Event'))
 
     def initButtons(self):
 
         # Create the cancel button
-        self.cancelBtn    = QtWidgets.QPushButton('Cancel')
+        self.cancelBtn    = QtWidgets.QPushButton(self.tr('Cancel'))
         self.cancelBtn    .setFixedWidth(self.buttonWidth * 1.5)
         self.cancelBtn    .setFixedHeight(25)
         # self.cancelBtn    .setIcon(QtGui.QIcon(Icons.cancel))  # With this there, I feel like I'm copying game maker
@@ -304,23 +304,25 @@ class NameEvent(EventGUI):
 
 #   SIMPLE, NO-PARAMETER EVENTS
 class InitEvent(EventGUI):
-    title     = QtCore.QCoreApplication.translate("EventsGUI", 'Initialization')
-    tooltip   = QtCore.QCoreApplication.translate('EventsGUI', "Activates once each time the task is run")
+
     icon      = Paths.event_creation
     priority  = 0
 
     def __init__(self, parameters):
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", 'Initialization')
+        self.tooltip = QtCore.QCoreApplication.translate('EventsGUI', "Activates once each time the task is run")
         super(InitEvent, self).__init__(parameters)
 
 
 class StepEvent(EventGUI):
-    title     = QtCore.QCoreApplication.translate("EventsGUI", 'Step')
-    tooltip   = QtCore.QCoreApplication.translate("EventsGUI", 'Activates every time the events are refreshed')
+
     icon      = Paths.event_step
     priority  = 100
 
     def __init__(self, parameters):
         super(StepEvent, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", 'Step')
+        self.tooltip = QtCore.QCoreApplication.translate("EventsGUI", 'Activates every time the events are refreshed')
 
 
 class TipEvent(EventGUI):
@@ -328,25 +330,27 @@ class TipEvent(EventGUI):
     This event activates when the sensor on the tip of the robots sucker is pressed/triggered
     """
 
-    title     = QtCore.QCoreApplication.translate("EventsGUI", 'Tip Pressed')
-    tooltip   = QtCore.QCoreApplication.translate("EventsGUI", 'Activates when the sensor on the tip of the arm is pressed')
+
     icon      = Paths.event_tip
     priority  = 200
 
     def __init__(self, parameters):
         super(TipEvent, self).__init__(parameters)
+        self.title     = QtCore.QCoreApplication.translate("EventsGUI", 'Tip Pressed')
+        self.tooltip   = QtCore.QCoreApplication.translate("EventsGUI", 'Activates when the sensor on the tip of the arm is pressed')
 
 
 
 
 #   EVENTS WITH PARAMETERS
 class KeypressEvent(EventGUI):
-    title     = QtCore.QCoreApplication.translate("EventsGUI", "Key Pressed")
+
     icon      = Paths.event_keyboard
     priority  = 300
 
     def __init__(self, parameters):
         super(KeypressEvent, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", "Key Pressed")
 
     def dressWidget(self, widget):
         self.title = QtCore.QCoreApplication.translate("EventsGUI", 'KeyPress ') + self.parameters["checkKey"]
@@ -361,12 +365,13 @@ class MotionEvent(EventGUI):
     """
     This event activates when the sensor on the tip of the robots sucker is pressed/triggered
     """
-    title     = QtCore.QCoreApplication.translate("EventsGUI", "Motion Detected")
+
     icon      = Paths.event_motion
     priority  = 400
 
     def __init__(self, parameters):
         super(MotionEvent, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", "Motion Detected")
 
         title = ""
         # Figure out the naming for the event
@@ -398,12 +403,13 @@ class MotionEvent(EventGUI):
 
 
 class RecognizeObjectEvent(EventGUI):
-    title     = QtCore.QCoreApplication.translate("EventsGUI", "Object Recognized")
+
     icon      = Paths.event_recognize   # Changes in self.dressWidget in this case
     priority  = 500
 
     def __init__(self, parameters):
         super(RecognizeObjectEvent, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", "Object Recognized")
 
         if parameters["not"]: self.priority += 10
 
@@ -424,10 +430,11 @@ class RecognizeObjectEvent(EventGUI):
 
 
 class RecognizeCascadeEvent(RecognizeObjectEvent):
-    title     = QtCore.QCoreApplication.translate("EventsGUI", "Object Recognized")
+
 
     def __init__(self, parameters):
         super(RecognizeCascadeEvent, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("EventsGUI", "Object Recognized")
 
 
 

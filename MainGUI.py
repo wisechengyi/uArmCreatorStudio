@@ -181,7 +181,7 @@ class MainWindow(QtWidgets.QMainWindow):
         languageMenu = menuBar.addMenu(self.tr('Languages'))
         enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize),  self.tr('English'     )    , self)
         cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), self.tr('Chinese'          )    , self)
-        cnLanAction.triggered.connect(  QtCore.QTranslator().load(Paths.language_pack_zh_CN))
+        cnLanAction.triggered.connect(  lambda : QtCore.QTranslator().load(Paths.language_pack_zh_CN))
 
 
         app.installTranslator(trans)
