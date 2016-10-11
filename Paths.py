@@ -54,7 +54,7 @@ language_pack_zh_CN = os.path.join(languageLoc, "zh_CN.qm")
 
 # Used by Vision
 cascade_dir  = exeResourcesPath
-user_manual  = os.path.join(exeResourcesPath, "User Manual.pdf")
+user_manual  = os.path.join(exeResourcesPath, "User_Manual.pdf")
 
 
 ################        GUI PATHS         ################

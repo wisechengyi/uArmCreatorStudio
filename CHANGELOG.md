@@ -10,6 +10,10 @@
 - Support i18n(internationalization)
     - Detect user system locate load different language packs
 
+## Fix
+
+- Fix User Manual.pdf can not open in Mac & Linux
+
 ## To-Do
 
 - Switch Language from Menu item

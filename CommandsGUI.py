@@ -33,7 +33,7 @@ from os.path      import basename
 from PyQt5        import QtGui, QtCore, QtWidgets
 from CameraGUI    import CameraSelector
 from CommonGUI    import ScriptWidget
-from Logic.Global import printf, ensurePathExists
+from Logic.Global import printf, ensurePathExists, openPDFFile
 __author__ = "Alexander Thiel"
 
 
@@ -324,7 +324,7 @@ class CommandGUI:
 
         prompt.applyBtn.clicked.connect(prompt.accept)
         cancelBtn.clicked.connect(prompt.reject)
-        helpBtn.clicked.connect(lambda: webbrowser.open_new(Paths.user_manual))
+        helpBtn.clicked.connect(lambda: openPDFFile(Paths.user_manual))
         prompt.applyBtn.setDefault(True)
 
 

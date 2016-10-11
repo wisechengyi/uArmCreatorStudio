@@ -27,6 +27,8 @@ License:
 """
 import os
 import errno
+import platform
+import webbrowser
 from time import time, sleep
 __author__ = "Alexander Thiel"
 
@@ -218,6 +220,19 @@ def getModuleClasses(module):
     """
     return dict([(name, cls) for name, cls in module.__dict__.items() if isinstance(cls, type)])
 
+
+def openPDFFile(path):
+    """
+    This will open a pdf file, but different system will be different.
+    :param path: PDF File Path
+    :return:
+    """
+    if platform.system() == 'Darwin':
+        os.system("open "+path)
+    elif platform.system() == 'Windows':
+        webbrowser.open_new(path)
+    elif platform.system() == 'Linux':
+        os.system('xdg-open '+path)
 
 
 
