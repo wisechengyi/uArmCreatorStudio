@@ -619,8 +619,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if not self.loadData == self.controlPanel.getSaveData():
             printf("GUI| Prompting user to save changes")
-            reply = QtWidgets.QMessageBox.question(self, 'Warning',
-                                    "You have unsaved changes. Would you like to save before continuing?",
+            reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
+                                    self.tr("You have unsaved changes. Would you like to save before continuing?"),
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel,
                                     QtWidgets.QMessageBox.Yes)
 
