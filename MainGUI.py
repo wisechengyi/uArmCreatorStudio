@@ -47,6 +47,7 @@ from ObjectManagerGUI  import MakeGroupWindow           # For creating various r
 from ObjectManagerGUI  import MakeRecordingWindow
 from ObjectManagerGUI  import MakeFunctionWindow
 from ObjectManagerGUI  import MakeObjectWindow
+import Version
 __author__ = "Alexander Thiel"
 
 global app
@@ -60,6 +61,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
         self.env         = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)
+        if self.env.getSetting("language") is None:
+            try:
+                if locale.getdefaultlocale()[0] == 'zh_CN':
+                    self.switchLanguage('zh_CN')
+            except ValueError:
+                printf("Can not detect system locale")
+        elif self.env.getSetting("language") == 'zh_CN':
+            self.switchLanguage('zh_CN')
+
         self.interpreter = Interpreter(self.env)
 
 
@@ -120,6 +130,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def initUI(self):
         # Create "File" Menu
         menuBar       = self.menuBar()
+        menuBar.setNativeMenuBar(False)
 
         # Connect any slots that need connecting
         self.consoleWidget.settingsChanged.connect(lambda: self.env.updateSettings("consoleSettings",
@@ -127,19 +138,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create File Menu and actions
         fileMenu      = menuBar.addMenu(self.tr('File'))
+        aboutAction   = QtWidgets.QAction(QtGui.QIcon(Paths.file_about), self.tr('About'       ) , self)
         newAction     = QtWidgets.QAction(QtGui.QIcon(Paths.file_new),  self.tr('New Task'    )  , self)
         saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task'   )  , self)
         saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As')  , self)
         loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load), self.tr('Load Task'   )  , self)
 
         saveAction.setShortcut("Ctrl+S")
-
+        aboutAction.triggered.connect(  lambda : QtWidgets.QMessageBox.information(self, self.tr("About"), self.tr("Version: ")+ Version.version))
         newAction.triggered.connect(    lambda: self.newTask(promptSave=True))
         saveAction.triggered.connect(   self.saveTask)
         saveAsAction.triggered.connect( lambda: self.saveTask(True))
         loadAction.triggered.connect(   self.loadTask)
 
-
+        fileMenu.addAction(aboutAction)
         fileMenu.addAction(newAction)
         fileMenu.addAction(saveAction)
         fileMenu.addAction(saveAsAction)
@@ -179,16 +191,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create Languages Menu
         languageMenu = menuBar.addMenu(self.tr('Languages'))
-        enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize),  self.tr('English'     )    , self)
-        cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), self.tr('Chinese'          )    , self)
-        cnLanAction.triggered.connect(  lambda : QtCore.QTranslator().load(Paths.language_pack_zh_CN))
+        enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english),  self.tr('English'     )    , self)
+        cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'          )    , self)
+        cnLanAction.triggered.connect(  lambda: self.switchLanguage('zh_CN'))
+        enLanAction.triggered.connect(  lambda: app.removeTranslator(trans))
 
-
-        app.installTranslator(trans)
 
         languageMenu.addAction(enLanAction)
         languageMenu.addAction(cnLanAction)
-
 
         # Add menus to menuBar
         menuBar.addMenu(fileMenu)
@@ -682,6 +692,35 @@ class MainWindow(QtWidgets.QMainWindow):
         printf("GUI| Done closing all objects and threads.")
 
 
+    def switchLanguage(self, language):
+        """
+        This function will switch whole Program language
+        :param language:
+        :return:
+        """
+        if language == 'zh_CN':
+            trans.load(Paths.language_pack_zh_CN)
+            app.installTranslator(trans)
+            self.env.updateSettings("language", language)
+            if self.env.getSetting("language") is None:
+                reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
+                                                       self.tr(
+                                                           "Language switching need restart to apply, Would you like to continue?"),
+                                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel,
+                                                       QtWidgets.QMessageBox.Yes)
+            if reply == QtWidgets.QMessageBox.Yes:
+                printf("GUI| Restart")
+                success = self.saveTask(False)
+                return not success
+
+            if reply == QtWidgets.QMessageBox.No:
+                printf("GUI| Not Restart")
+
+            if reply == QtWidgets.QMessageBox.Cancel:
+                printf("GUI| User canceled- aborting close!")
+                return True
+
+
 
 ##########    VIEWS    ##########
 class DeviceWindow(QtWidgets.QDialog):
@@ -866,8 +905,6 @@ class Application(QtWidgets.QApplication):
 
 
 
-
-
 if __name__ == '__main__':
     # Install a global exception hook to catch pyQt errors that fall through (helps with debugging a ton) #TODO: Remove for builds
     sys.__excepthook = sys.excepthook
@@ -883,13 +920,10 @@ if __name__ == '__main__':
 
 
     # Create the Application base
-    global app
+    global app,trans
     app = Application(sys.argv)
+    trans = QtCore.QTranslator(app)
     # app = QtGui.QApplication(sys.argv)
-    if locale.getdefaultlocale()[0] != 'zh_CN':
-        trans = QtCore.QTranslator()
-        trans.load(Paths.language_pack_zh_CN)
-        app.installTranslator(trans)
 
     # Apply a stylesheet (theme) of choice here
     # app.setStyleSheet(fancyqt.firefox.style)

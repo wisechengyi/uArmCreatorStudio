@@ -68,3 +68,5 @@ Settings.txt
 .pioenvs/
 .travis.yml
 platformio.ini
+dist/
+build/

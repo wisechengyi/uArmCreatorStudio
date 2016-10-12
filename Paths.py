@@ -65,6 +65,7 @@ delete              = os.path.join(imageLoc, "button_delete.png")
 
 
 # "File" Menu
+file_about          = os.path.join(imageLoc, "file_about.png")
 file_new            = os.path.join(imageLoc, "file_new.png")
 file_save           = os.path.join(imageLoc, "file_save.png")
 file_load           = os.path.join(imageLoc, "file_load.png")
@@ -89,6 +90,10 @@ devices_robot       = os.path.join(imageLoc, "window_devices_robot.png")
 devices_camera      = os.path.join(imageLoc, "window_devices_camera.png")
 devices_both        = os.path.join(imageLoc, "window_devices_both.png")
 devices_neither     = os.path.join(imageLoc, "window_devices_neither.png")
+
+# Languages
+languages_chinese    = os.path.join(imageLoc, "languages_chinese.png")
+languages_english    = os.path.join(imageLoc, "languages_english.png")
 
 
 # Events

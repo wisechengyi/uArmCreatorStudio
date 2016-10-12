@@ -194,7 +194,8 @@ class Environment:
 
                             "windowGeometry":       None,  # The size and shape of the main window
                             "windowState":          None,  # Location and size of dockWidgets on the mainWindow
-                            "lastOpenedFile":       None   # So the GUI can open the last file you had
+                            "lastOpenedFile":       None,   # So the GUI can open the last file you had
+                            "language":             None   # So the GUI can detect the language
                           }
 
         # Load the settings config and set them

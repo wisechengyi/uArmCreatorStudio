@@ -12,7 +12,7 @@ icons_dir    = os.path.join(resource_dir, "Icons") # Icons directory in resource
 resourceList   = ["face_cascade.xml",
                   "smile_cascade.xml",
                   "eye_cascade.xml",
-                  "User Manual.pdf"]
+                  "User_Manual.pdf"]
 
 # Files that need to be bundled that are in icons_dir
 iconsList = ["cancel.png",
