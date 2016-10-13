@@ -50,26 +50,18 @@ from ObjectManagerGUI  import MakeObjectWindow
 import Version
 __author__ = "Alexander Thiel"
 
-global app
+
+global app, trans
 
 ########## MAIN WINDOW ##########
 class MainWindow(QtWidgets.QMainWindow):
+    EXIT_CODE_REBOOT = -983242194
     # For debugging object count, use: print("CHILDREN: ", len(self.findChildren(QtCore.QObject)))
-    def __init__(self):
+    def __init__(self, env):
         super(MainWindow, self).__init__()
 
 
-        # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
-        self.env         = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)
-        if self.env.getSetting("language") is None:
-            try:
-                if locale.getdefaultlocale()[0] == 'zh_CN':
-                    self.switchLanguage('zh_CN')
-            except ValueError:
-                printf("Can not detect system locale")
-        elif self.env.getSetting("language") == 'zh_CN':
-            self.switchLanguage('zh_CN')
-
+        self.env         = env
         self.interpreter = Interpreter(self.env)
 
 
@@ -193,8 +185,8 @@ class MainWindow(QtWidgets.QMainWindow):
         languageMenu = menuBar.addMenu(self.tr('Languages'))
         enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english),  self.tr('English'     )    , self)
         cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'          )    , self)
-        cnLanAction.triggered.connect(  lambda: self.switchLanguage('zh_CN'))
-        enLanAction.triggered.connect(  lambda: app.removeTranslator(trans))
+        cnLanAction.triggered.connect(  lambda: self.updateLanguageSetting('zh_CN'))
+        enLanAction.triggered.connect(  lambda: self.updateLanguageSetting('en_US'))
 
 
         languageMenu.addAction(enLanAction)
@@ -636,8 +628,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             if reply == QtWidgets.QMessageBox.Yes:
                 printf("GUI| Saving changes")
-                success = self.saveTask(False)
-                return not success
+                app.exit(MainWindow.EXIT_CODE_REBOOT)
 
             if reply == QtWidgets.QMessageBox.No:
                 printf("GUI| Not saving changes")
@@ -692,33 +683,30 @@ class MainWindow(QtWidgets.QMainWindow):
         printf("GUI| Done closing all objects and threads.")
 
 
-    def switchLanguage(self, language):
+    def updateLanguageSetting(self, language):
         """
         This function will switch whole Program language
         :param language:
         :return:
         """
-        if language == 'zh_CN':
-            trans.load(Paths.language_pack_zh_CN)
-            app.installTranslator(trans)
+        reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
+                                               self.tr(
+                                                   "Language switching need restart to apply, Would you like to continue?"),
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel,
+                                               QtWidgets.QMessageBox.Yes)
+        if reply == QtWidgets.QMessageBox.Yes:
+            printf("GUI| Restart")
             self.env.updateSettings("language", language)
-            if self.env.getSetting("language") is None:
-                reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
-                                                       self.tr(
-                                                           "Language switching need restart to apply, Would you like to continue?"),
-                                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel,
-                                                       QtWidgets.QMessageBox.Yes)
-            if reply == QtWidgets.QMessageBox.Yes:
-                printf("GUI| Restart")
-                success = self.saveTask(False)
-                return not success
+            app.exit(MainWindow.EXIT_CODE_REBOOT)
 
-            if reply == QtWidgets.QMessageBox.No:
-                printf("GUI| Not Restart")
+        if reply == QtWidgets.QMessageBox.No:
+            self.env.updateSettings("language", language)
+            printf("GUI| Not Restart")
 
-            if reply == QtWidgets.QMessageBox.Cancel:
-                printf("GUI| User canceled- aborting close!")
-                return True
+        if reply == QtWidgets.QMessageBox.Cancel:
+            printf("GUI| User canceled- aborting close!")
+            return True
+
 
 
 
@@ -905,6 +893,13 @@ class Application(QtWidgets.QApplication):
 
 
 
+def switchingLanugage(country_code, save_to_config=False):
+    if country_code != 'en_US':
+        trans.load(Paths.language_pack_zh_CN)
+        app.installTranslator(trans)
+    if save_to_config:
+        env.updateSettings("language", country_code)
+
 if __name__ == '__main__':
     # Install a global exception hook to catch pyQt errors that fall through (helps with debugging a ton) #TODO: Remove for builds
     sys.__excepthook = sys.excepthook
@@ -913,34 +908,39 @@ if __name__ == '__main__':
         sys._excepthook(exctype, value, traceback)
         sys.exit(1)
     sys.excepthook   = exception_hook
-
-
     # Initialize global variables
     Global.init()
 
+    # exit code could help program to restart by itself
+    currentExitCode = MainWindow.EXIT_CODE_REBOOT
+    global app, trans
+    while currentExitCode == MainWindow.EXIT_CODE_REBOOT:
+        # Create the Application base
+        app = Application(sys.argv)
 
-    # Create the Application base
-    global app,trans
-    app = Application(sys.argv)
-    trans = QtCore.QTranslator(app)
-    # app = QtGui.QApplication(sys.argv)
+        # Set Application Font
+        font = QtGui.QFont()
+        font.setFamily("Verdana")
+        font.setPixelSize(12)
+        app.setFont(font)
 
-    # Apply a stylesheet (theme) of choice here
-    # app.setStyleSheet(fancyqt.firefox.style)
+        # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
+        env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
 
+        # Create Language pack installer
+        trans = QtCore.QTranslator()
 
-    # Set Application Font
-    font = QtGui.QFont()
-    font.setFamily("Verdana")
-    font.setPixelSize(12)
-    app.setFont(font)
+        # Check if settings include language config
+        if env.getSetting("language") is None:
+            try:
+                if locale.getdefaultlocale()[0] == 'zh_CN': # If no language config detect the locale
+                    switchingLanugage('zh_CN', True)
+            except ValueError:
+                printf("Can not detect system locale")
+        elif env.getSetting("language") == 'zh_CN':
+            switchingLanugage('zh_CN', False)
 
-
-    # Actually start the program
-    mainWindow = MainWindow()
-    sys.exit(app.exec_())
-
-
-
-
-
+        w = MainWindow(env)
+        w.show()
+        currentExitCode = app.exec_()
+        app = None # Clear the App

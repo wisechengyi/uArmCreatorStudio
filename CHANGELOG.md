@@ -13,6 +13,7 @@
     - Save Language to settings.txt
 - Add About Menu Action to File Menu (display UCS version)
 - Rename Robot Firmware folder, Add FlashFirmware tool and firmware hex
+- Switch Language from Menu item will prompt user to restart program
 
 ## Fix
 
@@ -21,5 +22,5 @@
 
 ## To-Do
 
-- Switch Language from Menu item & Restart Program
+- Switching Language restart & Save User Task
 - UCS version and firmware version compatible mechanism
