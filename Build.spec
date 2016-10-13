@@ -5,7 +5,7 @@ import os
 project_dir  = "."
 resource_dir = "Resources"                         # Resources directory
 icons_dir    = os.path.join(resource_dir, "Icons") # Icons directory in resources
-
+languages_dir= os.path.join(resource_dir, "Languages")
 
 
 # Files that need to be bundled that are in resource_dir
@@ -20,6 +20,9 @@ iconsList = ["cancel.png",
              "record_end.png",
              "button_delete.png",
              "button_create.png",
+             "languages_chinese.png",
+             "languages_english.png",
+             "file_about.png",
              "file_new.png",
              "file_save.png",
              "file_load.png",
@@ -88,6 +91,9 @@ iconsList = ["cancel.png",
              "help_rob_connect.gif",
              "help_star.png"]
 
+languageList   = ["zh_CN.qm",
+                  ]
+
 # Create a list of all the necessary resources in the format that pyInstaller wants it in
 d = []
 
@@ -99,6 +105,9 @@ for icon in iconsList:
 for resource in resourceList:
     d.append((os.path.join(resource_dir, resource), os.path.join(resource_dir, resource), 'DATA'))
 
+# Add the language from the languages directory
+for language in languageList:
+    d.append((os.path.join(languages_dir, language), os.path.join(languages_dir, language), 'DATA'))
 
 "smile_cascade.xml"
 # Actual spec file here
