@@ -30,6 +30,13 @@ import errno
 import platform
 import webbrowser
 from time import time, sleep
+
+import logging
+
+__version__ = '1.1.3'
+
+version = __version__
+
 __author__ = "Alexander Thiel"
 
 """
@@ -37,7 +44,6 @@ Global is a set of functions that are used in many places around the project and
 
 It also holds the actual global variable "keysPressed", and "printRedirectFunc". More documentation below.
 """
-
 
 # Special 'sleep' commands that can exit immediately if 'exitFunc()' returns false
 def wait(waitTime, exitFunc):
@@ -134,6 +140,7 @@ def init():
     global keysPressed
     global printRedirectFunc
     global exitScriptFlag
+    global env
 
     """
       Used in keyboardEvent. Updated through Main.Application.notify() Format: ['a', 'b', '5', 'z']
@@ -149,7 +156,26 @@ def init():
     printRedirectFunc  = lambda classString, string: None  # print(classString + " "*(30 - len(classString)) + string)
 
 
-
+def initLogger():
+    logger = logging.getLogger('application')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    consoleSettings = env.getSetting('consoleSettings')
+    if consoleSettings['saveToFile']:
+        if consoleSettings['logFileName'] is None:
+            fh = logging.FileHandler('ucs.log')
+            fh.setLevel(logging.INFO)
+        else:
+            fh = logging.FileHandler(consoleSettings['logFileName'])
+            fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    logger.info('---------------------------Logging Start------------------------------------------')
+    logger.info('Version: ' + version)
 
 
 def printf(*args):
@@ -191,7 +217,7 @@ def printf(*args):
 
     # Filter out any serial communication since it clutters up the console
 
-    print(header + " " * (15 - len(header)) + content)
+    logging.getLogger('application').info(header + " " * (15 - len(header)) + content)
 
 
 

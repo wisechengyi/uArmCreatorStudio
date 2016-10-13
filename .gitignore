@@ -70,3 +70,4 @@ Settings.txt
 platformio.ini
 dist/
 build/
+*.log

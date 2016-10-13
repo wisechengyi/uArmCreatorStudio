@@ -29,6 +29,9 @@ import ast  # To check if a statement is python parsible, for evals
 import Paths
 from threading    import RLock
 from PyQt5        import QtGui, QtCore, QtWidgets
+from Logic        import Global                    # For keeping track of keypresses
+import logging
+
 __author__ = "Alexander Thiel"
 
 
@@ -409,13 +412,13 @@ class Console(QtWidgets.QWidget):
     # Have clear button, settings (for which classes to display responses from), exec stuff,
     settingsChanged = QtCore.pyqtSignal()
 
-    def __init__(self, consoleSettings, parent, fps=4.0):
+    def __init__(self, parent, fps=4.0):
         super(Console, self).__init__(parent)
         # Since prints might come from different threads, lock before adding stuff to self.text
         self.printLock    = RLock()
         self.execFunction = None
         self.printBuffer  = []  # A buffer of strings to print
-        self.settings     = consoleSettings
+        self.settings     = Global.env.getSetting('consoleSettings')
 
 
 
@@ -590,6 +593,7 @@ class Console(QtWidgets.QWidget):
         scriptLbl = QtWidgets.QLabel(self.tr("Script Logs "))
         guiLbl    = QtWidgets.QLabel(self.tr("GUI Logs "))
         othLbl    = QtWidgets.QLabel(self.tr("Other Logs "))
+        stfLbl    = QtWidgets.QLabel(self.tr("Save to File"))
 
         window.wrapChk   = QtWidgets.QCheckBox()
         window.robotChk  = QtWidgets.QCheckBox()   # Show prints from robot class
@@ -599,6 +603,7 @@ class Console(QtWidgets.QWidget):
         window.scriptChk = QtWidgets.QCheckBox()   # Show prints from Command and Event Elements
         window.guiChk    = QtWidgets.QCheckBox()   # Show prints from GUI Elements
         window.othChk    = QtWidgets.QCheckBox()   # Show prints from anything else
+        window.stfChk    = QtWidgets.QCheckBox()   # Save Logs to Files
 
         window.wrapChk  .setChecked(self.settings["wordWrap"])
         window.robotChk .setChecked(self.settings["robot"])
@@ -608,6 +613,7 @@ class Console(QtWidgets.QWidget):
         window.scriptChk.setChecked(self.settings["script"])
         window.guiChk   .setChecked(self.settings["gui"])
         window.othChk   .setChecked(self.settings["other"])
+        window.stfChk   .setChecked(self.settings['saveToFile'])
 
         window.content.addWidget(descLbl)
         addRow(wrapLbl,   window.wrapChk)
@@ -619,6 +625,7 @@ class Console(QtWidgets.QWidget):
         addRow(scriptLbl, window.scriptChk)
         addRow(guiLbl,    window.guiChk)
         addRow(othLbl,    window.othChk)
+        addRow(stfLbl,    window.stfChk)
 
         window.mainVLayout.addLayout(buttonRow)  # Add button after, so hints appear above buttons
 
@@ -634,12 +641,16 @@ class Console(QtWidgets.QWidget):
             self.settings["script"]      = window.scriptChk.isChecked()
             self.settings["gui"]         = window.guiChk.isChecked()
             self.settings["other"]       = window.othChk.isChecked()
+            self.settings["saveToFile"] = window.othChk.isChecked()
 
             # Update the wordWrap settings
             if self.settings["wordWrap"]:
                 self.text.setWordWrapMode(QtGui.QTextOption.WordWrap)
             else:
                 self.text.setWordWrapMode(QtGui.QTextOption.NoWrap)
+
+            # Update log file settings
+            Global.initLogger()
 
             self.settingsChanged.emit()
 

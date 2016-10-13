@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## V1.1.3
+- Update - Alex Tan
+- Date   - 2016-10-13
+
+## Changes
+
+- User could save log to file.
+- Program crash would save log to file
 
 ## V1.1.2
 - Update - Alex Tan

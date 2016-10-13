@@ -619,120 +619,120 @@ Results will be saved when you click Apply
         <translation>用户指南</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="340"/>
+        <location filename="../../CommandsGUI.py" line="339"/>
         <source>Parameters</source>
         <translation>参数</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="505"/>
+        <location filename="../../CommandsGUI.py" line="504"/>
         <source>You have not created any trackable objects yet.</source>
         <translation>你还没有创建任何可以被追踪的物体。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="506"/>
+        <location filename="../../CommandsGUI.py" line="505"/>
         <source> Try adding new objects in the Resource Manager!</source>
         <translation> 尝试在资源管理器中添加新物体！</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="509"/>
+        <location filename="../../CommandsGUI.py" line="508"/>
         <source>It looks like you&apos;ve only created one object.</source>
         <translation>看起来你只添加一个识别物体。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="510"/>
+        <location filename="../../CommandsGUI.py" line="509"/>
         <source> Feel free to add new objects in the Resource Manager!</source>
         <translation> 请随便在资源管理器里面添加一些新物体！</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="520"/>
+        <location filename="../../CommandsGUI.py" line="519"/>
         <source>You have not created any Movement Recordings yet. </source>
         <translation>你还没有创建任何轨迹录制。 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="521"/>
+        <location filename="../../CommandsGUI.py" line="520"/>
         <source>Try creating new recordings in the Resource Manager!</source>
         <translation>尝试在资源管理器创建新的录制！</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="526"/>
+        <location filename="../../CommandsGUI.py" line="525"/>
         <source>You have not created any Functions yet. </source>
         <translation>你还没有创建任何函数。 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="527"/>
+        <location filename="../../CommandsGUI.py" line="526"/>
         <source>Try creating new functions in the Resource Manager!</source>
         <translation>尝试在资源管理器中创建新函数！</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="604"/>
+        <location filename="../../CommandsGUI.py" line="603"/>
         <source>Move XYZ</source>
         <translation>移动 XYZ</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="605"/>
+        <location filename="../../CommandsGUI.py" line="604"/>
         <source>Set the robots position.
 </source>
         <translation>设置机械臂的位置。
 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="606"/>
+        <location filename="../../CommandsGUI.py" line="605"/>
         <source>If you do not want to set one of the robots axis, simply leave it empty. For example, put y and z 
 </source>
         <translation>如果你不想设置一个机械臂坐标，可以不填。例如，保持 y 和 z </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="608"/>
+        <location filename="../../CommandsGUI.py" line="607"/>
         <source>empty and x to 5 will set the robots x position to 5 while keeping the current Y and Z the same.</source>
         <translation>为空并且 x 为 5，这时候会把机械臂的 x 坐标设置为 5 并且保持现在的 y 和 z。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="632"/>
+        <location filename="../../CommandsGUI.py" line="631"/>
         <source>Get Position</source>
         <translation>获取坐标</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="712"/>
+        <location filename="../../CommandsGUI.py" line="711"/>
         <source>Relative </source>
         <translation>相对</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="734"/>
+        <location filename="../../CommandsGUI.py" line="733"/>
         <source>   Relative</source>
         <translation>   相对</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="688"/>
+        <location filename="../../CommandsGUI.py" line="687"/>
         <source>Set Wrist Angle</source>
         <translation>设置末端角度</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="689"/>
+        <location filename="../../CommandsGUI.py" line="688"/>
         <source>This command sets the angle of the robots 4th axis, the wrist.</source>
         <translation>这个命令设置机械臂的第四轴，末端角度。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="706"/>
+        <location filename="../../CommandsGUI.py" line="705"/>
         <source>Get Angle</source>
         <translation>获取角度</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="711"/>
+        <location filename="../../CommandsGUI.py" line="710"/>
         <source>Angle </source>
         <translation>角度</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="732"/>
+        <location filename="../../CommandsGUI.py" line="731"/>
         <source>Set the wrist position to </source>
         <translation>设置末端位置到</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="732"/>
+        <location filename="../../CommandsGUI.py" line="731"/>
         <source> degrees</source>
         <translation>度</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="743"/>
+        <location filename="../../CommandsGUI.py" line="742"/>
         <source>Play Movement Recording</source>
         <translation>播放轨迹录制</translation>
     </message>
@@ -749,27 +749,27 @@ Results will be saved when you click Apply
         <translation type="obsolete">轨迹录制，只要在工具栏上简单的点击 &apos;资源&apos; 并且创建一个新的录制。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="763"/>
+        <location filename="../../CommandsGUI.py" line="762"/>
         <source>Choose a Recording </source>
         <translation>选择一个录制 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="772"/>
+        <location filename="../../CommandsGUI.py" line="771"/>
         <source>Playback Speed </source>
         <translation>回放速度 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="779"/>
+        <location filename="../../CommandsGUI.py" line="778"/>
         <source>Play in reverse?</source>
         <translation>倒序播放？</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="797"/>
+        <location filename="../../CommandsGUI.py" line="796"/>
         <source>Play movement recording </source>
         <translation>播放轨迹录制 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="808"/>
+        <location filename="../../CommandsGUI.py" line="807"/>
         <source>Set Speed</source>
         <translation>设置速度</translation>
     </message>
@@ -793,147 +793,147 @@ Results will be saved when you click Apply
         <translation type="obsolete">目标位置以 20 cm/s 的速度。默认速度为 10cm/s。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="825"/>
+        <location filename="../../CommandsGUI.py" line="824"/>
         <source>Speed (cm/s) </source>
         <translation>速度 (cm/s) </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="852"/>
+        <location filename="../../CommandsGUI.py" line="851"/>
         <source>Detach Servos</source>
         <translation>解除电机锁定</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="853"/>
+        <location filename="../../CommandsGUI.py" line="852"/>
         <source>Disengage the specified servos on the robot</source>
         <translation>解除机械臂的电机锁定</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="937"/>
+        <location filename="../../CommandsGUI.py" line="936"/>
         <source>Base Servo </source>
         <translation>底部电机 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="938"/>
+        <location filename="../../CommandsGUI.py" line="937"/>
         <source>Stretch Servo </source>
         <translation>伸展电机 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="939"/>
+        <location filename="../../CommandsGUI.py" line="938"/>
         <source>Height Servo </source>
         <translation>上下电机 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="940"/>
+        <location filename="../../CommandsGUI.py" line="939"/>
         <source>Wrist Servo </source>
         <translation>末端电机 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="967"/>
+        <location filename="../../CommandsGUI.py" line="966"/>
         <source>  Base</source>
         <translation>  底部</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="968"/>
+        <location filename="../../CommandsGUI.py" line="967"/>
         <source>  Stretch</source>
         <translation>  伸展</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="969"/>
+        <location filename="../../CommandsGUI.py" line="968"/>
         <source>  Height</source>
         <translation>  上下</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="970"/>
+        <location filename="../../CommandsGUI.py" line="969"/>
         <source>  Wrist</source>
         <translation>  末端</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="917"/>
+        <location filename="../../CommandsGUI.py" line="916"/>
         <source>Attach Servos</source>
         <translation>锁定电机</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="918"/>
+        <location filename="../../CommandsGUI.py" line="917"/>
         <source>Re-engage servos on the robot. This will &apos;stiffen&apos; the servos, and they will resist movement.</source>
         <translation>锁定机械臂的电机，锁定后，你将不能移动机械臂。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="966"/>
+        <location filename="../../CommandsGUI.py" line="965"/>
         <source>Servos</source>
         <translation>电机</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="981"/>
+        <location filename="../../CommandsGUI.py" line="980"/>
         <source>Activate Gripper</source>
         <translation>激活夹子</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="982"/>
+        <location filename="../../CommandsGUI.py" line="981"/>
         <source>Activates the robots gripper</source>
         <translation>激活机械臂夹子</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="990"/>
+        <location filename="../../CommandsGUI.py" line="989"/>
         <source>Wait</source>
         <translation>等待</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="991"/>
+        <location filename="../../CommandsGUI.py" line="990"/>
         <source>This command will wait for a certain amount of time. Time is measured in seconds.</source>
         <translation>这个命令将会等待一个具体的时间，时间单位是秒。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1002"/>
+        <location filename="../../CommandsGUI.py" line="1001"/>
         <source>Number of seconds </source>
         <translation>具体的时间数字</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1085"/>
+        <location filename="../../CommandsGUI.py" line="1084"/>
         <source> seconds</source>
         <translation> 秒</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1029"/>
+        <location filename="../../CommandsGUI.py" line="1028"/>
         <source>Deactivate Gripper</source>
         <translation>关闭夹子</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1030"/>
+        <location filename="../../CommandsGUI.py" line="1029"/>
         <source>Deactivates the robots gripper</source>
         <translation>关闭机械臂夹子</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1039"/>
+        <location filename="../../CommandsGUI.py" line="1038"/>
         <source>Play Tone</source>
         <translation>播放音调</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1040"/>
+        <location filename="../../CommandsGUI.py" line="1039"/>
         <source>This tool uses the robots buzzer to play a tone at a certain frequency for a certain amount of time</source>
         <translation>这个工具使用机械臂的蜂鸣器以一定的频率和一定次数去播放音调</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1056"/>
+        <location filename="../../CommandsGUI.py" line="1055"/>
         <source>Frequency </source>
         <translation>频率</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1057"/>
+        <location filename="../../CommandsGUI.py" line="1056"/>
         <source>Duration </source>
         <translation>时长</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1058"/>
+        <location filename="../../CommandsGUI.py" line="1057"/>
         <source>Wait </source>
         <translation>等待</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1084"/>
+        <location filename="../../CommandsGUI.py" line="1083"/>
         <source>Play a tone of </source>
         <translation>播放一段音调</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1100"/>
+        <location filename="../../CommandsGUI.py" line="1099"/>
         <source>Move Relative To Object</source>
         <translation>对物体识别移动相对位置</translation>
     </message>
@@ -966,12 +966,12 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
         <translation type="obsolete">为空并且 x 为 5，将会把机械臂的 x 位置设置为 objX + 5，并且保持 y 和 z 不变。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1547"/>
+        <location filename="../../CommandsGUI.py" line="1546"/>
         <source>Choose an object </source>
         <translation>选择一个物体识别 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1190"/>
+        <location filename="../../CommandsGUI.py" line="1189"/>
         <source>Set Wrist Relative To Object</source>
         <translation>设置末端识别物体的相对位置</translation>
     </message>
@@ -981,32 +981,32 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
         <translation type="obsolete"> 感觉它是怎么工作的！</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1213"/>
+        <location filename="../../CommandsGUI.py" line="1212"/>
         <source>Choose an Object</source>
         <translation>选择一个需要识别的物体</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1238"/>
+        <location filename="../../CommandsGUI.py" line="1237"/>
         <source>Relative to X Axis </source>
         <translation>相对于 X 轴</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1239"/>
+        <location filename="../../CommandsGUI.py" line="1238"/>
         <source>Relative to Robot Base </source>
         <translation>相对于机械臂底部 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1259"/>
+        <location filename="../../CommandsGUI.py" line="1258"/>
         <source>Set the wrist </source>
         <translation>设置末端 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1260"/>
+        <location filename="../../CommandsGUI.py" line="1259"/>
         <source> degrees relative to </source>
         <translation>度相对于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1269"/>
+        <location filename="../../CommandsGUI.py" line="1268"/>
         <source>Pick Up Object</source>
         <translation>拣起一个物体</translation>
     </message>
@@ -1022,22 +1022,22 @@ object. If the object cannot be found or picked up, then False will be returned<
         <translation type="obsolete">这个物体。如果这个物体找不到或者无法拣起， 会返回 False</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1312"/>
+        <location filename="../../CommandsGUI.py" line="1311"/>
         <source>Pick Up </source>
         <translation>拣起</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1313"/>
+        <location filename="../../CommandsGUI.py" line="1312"/>
         <source>Find </source>
         <translation>查找</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1313"/>
+        <location filename="../../CommandsGUI.py" line="1312"/>
         <source> and pick it up</source>
         <translation> 并且拣起</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1322"/>
+        <location filename="../../CommandsGUI.py" line="1321"/>
         <source>Test If Object Seen</source>
         <translation>测试是否能看见物体</translation>
     </message>
@@ -1052,52 +1052,52 @@ object. If the object cannot be found or picked up, then False will be returned<
         <translation type="obsolete">识别。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1343"/>
+        <location filename="../../CommandsGUI.py" line="1342"/>
         <source>If recognized </source>
         <translation>如果识别</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1344"/>
+        <location filename="../../CommandsGUI.py" line="1343"/>
         <source>Confidence level </source>
         <translation>可信度 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1345"/>
+        <location filename="../../CommandsGUI.py" line="1344"/>
         <source>When </source>
         <translation>当 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1446"/>
+        <location filename="../../CommandsGUI.py" line="1445"/>
         <source>NOT</source>
         <translation>不</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1511"/>
+        <location filename="../../CommandsGUI.py" line="1510"/>
         <source>Test If </source>
         <translation>测试如果 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1406"/>
+        <location filename="../../CommandsGUI.py" line="1405"/>
         <source> Seen</source>
         <translation> 看见</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1410"/>
+        <location filename="../../CommandsGUI.py" line="1409"/>
         <source>If</source>
         <translation>如果</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1596"/>
+        <location filename="../../CommandsGUI.py" line="1595"/>
         <source> NOT</source>
         <translation> 不是</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1412"/>
+        <location filename="../../CommandsGUI.py" line="1411"/>
         <source> confident object was seen</source>
         <translation> 确信物体被看见</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1421"/>
+        <location filename="../../CommandsGUI.py" line="1420"/>
         <source>Test If Object Inside Region</source>
         <translation>测试如果物体在范围里</translation>
     </message>
@@ -1112,47 +1112,47 @@ object. If the object cannot be found or picked up, then False will be returned<
         <translation type="obsolete">并且物体位置在一个具体的位置里。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1443"/>
+        <location filename="../../CommandsGUI.py" line="1442"/>
         <source>Choose an Object </source>
         <translation>选择一个物体 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1444"/>
+        <location filename="../../CommandsGUI.py" line="1443"/>
         <source>What part of object must enter the location </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1445"/>
+        <location filename="../../CommandsGUI.py" line="1444"/>
         <source>Click and drag the area of the screen that the object will be in</source>
         <translation>点击并且拖拽物体屏幕的范围</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1511"/>
+        <location filename="../../CommandsGUI.py" line="1510"/>
         <source> Inside Region</source>
         <translation>在范围里</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1753"/>
+        <location filename="../../CommandsGUI.py" line="1752"/>
         <source>If </source>
         <translation>如果 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1514"/>
+        <location filename="../../CommandsGUI.py" line="1513"/>
         <source> of </source>
         <translation> 在 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1754"/>
+        <location filename="../../CommandsGUI.py" line="1753"/>
         <source> is</source>
         <translation> 是</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1516"/>
+        <location filename="../../CommandsGUI.py" line="1515"/>
         <source> seen within a region</source>
         <translation>在范围里面被看见</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1525"/>
+        <location filename="../../CommandsGUI.py" line="1524"/>
         <source>Test Angle Of Object</source>
         <translation>测试物体的角度</translation>
     </message>
@@ -1183,122 +1183,122 @@ object. If the object cannot be found or picked up, then False will be returned<
         <translation type="obsolete">等等。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1591"/>
+        <location filename="../../CommandsGUI.py" line="1590"/>
         <source>Test Angle of </source>
         <translation>测试角度</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1594"/>
+        <location filename="../../CommandsGUI.py" line="1593"/>
         <source>If angle is</source>
         <translation>如果角度是</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1597"/>
+        <location filename="../../CommandsGUI.py" line="1596"/>
         <source> between (</source>
         <translation>在 X 轴的(</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1598"/>
+        <location filename="../../CommandsGUI.py" line="1597"/>
         <source>) degrees from the X Axis</source>
         <translation>) 度之间</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1616"/>
+        <location filename="../../CommandsGUI.py" line="1615"/>
         <source>This is the start of a block of commands that only run if a conditional statement is met.</source>
         <translation>这是命令块的开始，</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1630"/>
+        <location filename="../../CommandsGUI.py" line="1629"/>
         <source>This is the end of a block of commands.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1643"/>
+        <location filename="../../CommandsGUI.py" line="1642"/>
         <source>This will run commands if a test evaluates to False</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1652"/>
+        <location filename="../../CommandsGUI.py" line="1651"/>
         <source>Set Variable</source>
         <translation>设置变量</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1653"/>
+        <location filename="../../CommandsGUI.py" line="1652"/>
         <source>This command can create a variable or set an existing variable to a value or an expression.</source>
         <translation>这个命令会创建一个变量或者设置一个已存在的变量，或者一个表达式。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1669"/>
+        <location filename="../../CommandsGUI.py" line="1668"/>
         <source>Variable Name </source>
         <translation>变量名 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1725"/>
+        <location filename="../../CommandsGUI.py" line="1724"/>
         <source>Expression </source>
         <translation>表达式</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1702"/>
+        <location filename="../../CommandsGUI.py" line="1701"/>
         <source>Test Value</source>
         <translation>测试值</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1703"/>
+        <location filename="../../CommandsGUI.py" line="1702"/>
         <source>This will allow/disallow code to run that is in blocked brackets below it IF the test is true.</source>
         <translation>这个允许/不允许执行代码块，如果测试为真。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1717"/>
+        <location filename="../../CommandsGUI.py" line="1716"/>
         <source>Equal To</source>
         <translation>等于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1718"/>
+        <location filename="../../CommandsGUI.py" line="1717"/>
         <source>Not Equal To</source>
         <translation>不等于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1719"/>
+        <location filename="../../CommandsGUI.py" line="1718"/>
         <source>Greater Than</source>
         <translation>大于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1720"/>
+        <location filename="../../CommandsGUI.py" line="1719"/>
         <source>Less Than</source>
         <translation>小于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1724"/>
+        <location filename="../../CommandsGUI.py" line="1723"/>
         <source>Test </source>
         <translation>测试</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1749"/>
+        <location filename="../../CommandsGUI.py" line="1748"/>
         <source> equal to</source>
         <translation>等于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1750"/>
+        <location filename="../../CommandsGUI.py" line="1749"/>
         <source> not equal to</source>
         <translation> 不等于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1751"/>
+        <location filename="../../CommandsGUI.py" line="1750"/>
         <source> greater than</source>
         <translation> 大于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1752"/>
+        <location filename="../../CommandsGUI.py" line="1751"/>
         <source> less than</source>
         <translation> 小于</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1755"/>
+        <location filename="../../CommandsGUI.py" line="1754"/>
         <source> then</source>
         <translation>然后</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1764"/>
+        <location filename="../../CommandsGUI.py" line="1763"/>
         <source>Loop While Test Is True</source>
         <translation>循环，当测试是真</translation>
     </message>
@@ -1315,32 +1315,32 @@ object. If the object cannot be found or picked up, then False will be returned<
         <translation type="obsolete">将会被用到。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1797"/>
+        <location filename="../../CommandsGUI.py" line="1796"/>
         <source>Choose a Test</source>
         <translation>选择一个测试</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1853"/>
+        <location filename="../../CommandsGUI.py" line="1852"/>
         <source>End Task</source>
         <translation>结束测试</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1854"/>
+        <location filename="../../CommandsGUI.py" line="1853"/>
         <source>When the code reaches this point, the program will end.</source>
         <translation>当代码执行到这个点，程序将会结束。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1863"/>
+        <location filename="../../CommandsGUI.py" line="1862"/>
         <source>Exit Current Event</source>
         <translation>退出当前事件</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1864"/>
+        <location filename="../../CommandsGUI.py" line="1863"/>
         <source>When the code reaches this point, the program will not process the rest of this event.</source>
         <translation>当代码执行到这个点，程序将不会执行剩下的事件。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1876"/>
+        <location filename="../../CommandsGUI.py" line="1875"/>
         <source>Run Python Code</source>
         <translation>执行 Python 代码</translation>
     </message>
@@ -1358,7 +1358,7 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
         <translation type="obsolete">你最检查代码并且知道它做了些什么！</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1918"/>
+        <location filename="../../CommandsGUI.py" line="1917"/>
         <source>Run Task</source>
         <translation>执行任务</translation>
     </message>
@@ -1389,7 +1389,7 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
         <translation type="obsolete">会返回。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1942"/>
+        <location filename="../../CommandsGUI.py" line="1941"/>
         <source>
 
 Make sure the task you run has an
@@ -1398,39 +1398,39 @@ Make sure the task you run has an
 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1942"/>
+        <location filename="../../CommandsGUI.py" line="1941"/>
         <source>&apos;End Task&apos; command in it, to return to
 </source>
         <translation>包含 &apos;结束任务&apos; 任务在里面，能返回到
 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1942"/>
+        <location filename="../../CommandsGUI.py" line="1941"/>
         <source>this task when its finished</source>
         <translation>当前任务当它结束时</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1950"/>
+        <location filename="../../CommandsGUI.py" line="1949"/>
         <source>Select Task</source>
         <translation>选择任务</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1954"/>
+        <location filename="../../CommandsGUI.py" line="1953"/>
         <source>Share Current Tasks Variables</source>
         <translation>共享当前任务的变量</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1976"/>
+        <location filename="../../CommandsGUI.py" line="1975"/>
         <source>No Task Selected</source>
         <translation>没有选中任何任务</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1978"/>
+        <location filename="../../CommandsGUI.py" line="1977"/>
         <source>Run </source>
         <translation>执行 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2092"/>
+        <location filename="../../CommandsGUI.py" line="2091"/>
         <source>Run Function</source>
         <translation>执行函数</translation>
     </message>
@@ -1447,17 +1447,17 @@ Make sure the task you run has an
         <translation type="obsolete">参数，用户会被提示输入这些参数</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2041"/>
+        <location filename="../../CommandsGUI.py" line="2040"/>
         <source>Choose a Function </source>
         <translation>选择一个函数 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2091"/>
+        <location filename="../../CommandsGUI.py" line="2090"/>
         <source>No function selected</source>
         <translation>没有选中函数</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2106"/>
+        <location filename="../../CommandsGUI.py" line="2105"/>
         <source>Vision Assisted Move XYZ</source>
         <translation>视觉辅助移动 XYZ</translation>
     </message>
@@ -1481,12 +1481,12 @@ Make sure the task you run has an
         <translation type="obsolete">这个命令要求摄像头/机械臂已校正。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2114"/>
+        <location filename="../../CommandsGUI.py" line="2113"/>
         <source>This function is experimental. It may not yield more accurate results.</source>
         <translation>这个函数现在还是实验性，它也许还不能很准确。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="744"/>
+        <location filename="../../CommandsGUI.py" line="743"/>
         <source>
                                                     This will play back a &apos;Movement recording&apos; at a playback speed of your choosing. To create robot
 &quot;
@@ -1495,7 +1495,7 @@ Make sure the task you run has an
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="809"/>
+        <location filename="../../CommandsGUI.py" line="808"/>
         <source>
                                                     This tool sets the speed of the robot for any move commands that are done after this. 
 
@@ -1506,7 +1506,7 @@ Make sure the task you run has an
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1101"/>
+        <location filename="../../CommandsGUI.py" line="1100"/>
         <source>
                                                     This tool uses computer vision to recognize an object of your choice, and position the robot directly
                                                     
@@ -1520,7 +1520,7 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1191"/>
+        <location filename="../../CommandsGUI.py" line="1190"/>
         <source>
                                                     This tool will look at the orientation of an object in the cameras view, and align the wrist with 
 
@@ -1533,7 +1533,7 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1270"/>
+        <location filename="../../CommandsGUI.py" line="1269"/>
         <source>
                                                     This tool uses computer vision to recognize an object of your choice, and attempt to pick up the
                                                     
@@ -1542,12 +1542,12 @@ object. If the object cannot be found or picked up, then False will be returned
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1323"/>
+        <location filename="../../CommandsGUI.py" line="1322"/>
         <source>This command will allow code in blocked brackets below it to run IF the specified object has been recognized.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1422"/>
+        <location filename="../../CommandsGUI.py" line="1421"/>
         <source>
                                                     This command will allow code in blocked brackets below it to run IF the specified object has been
                                                     recognized and the objects location in a particular location.
@@ -1555,7 +1555,7 @@ object. If the object cannot be found or picked up, then False will be returned
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1526"/>
+        <location filename="../../CommandsGUI.py" line="1525"/>
         <source>
                                                     This command will allow code in blocked brackets below it to run IF the object&apos;s rotation is
 
@@ -1568,13 +1568,13 @@ object. If the object cannot be found or picked up, then False will be returned
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1765"/>
+        <location filename="../../CommandsGUI.py" line="1764"/>
         <source>Repeat this section of commands while a certain test returns true. You can choose what type of test will be used.
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1877"/>
+        <location filename="../../CommandsGUI.py" line="1876"/>
         <source>This tool will execute a script made by the user.
 DO NOT RUN PROGRAMS WITH SCRIPTS WRITTEN BY OTHER
                                                     
@@ -1582,7 +1582,7 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1919"/>
+        <location filename="../../CommandsGUI.py" line="1918"/>
         <source>This tool will run  another task file and run it inside of this task, until the &apos;End Task&apos;
 
                                                     command is called within the task, then it will return to the currently running task.
@@ -1593,14 +1593,14 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1988"/>
+        <location filename="../../CommandsGUI.py" line="1987"/>
         <source>This will run a custom function that the user defines in the Resources menu. If the function has 
 
                                                     arguments, the user will be prompted to fill out the arguments</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2107"/>
+        <location filename="../../CommandsGUI.py" line="2106"/>
         <source>This works like the normal Move XYZ command, but uses vision to verify the robots position and
 
                                                         perform a &apos;correction&apos; move after an initial move. 
@@ -1609,7 +1609,7 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1891"/>
+        <location filename="../../CommandsGUI.py" line="1890"/>
         <source>Description </source>
         <translation type="unfinished">描述 </translation>
     </message>
@@ -1617,7 +1617,7 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
 <context>
     <name>CommonGUI</name>
     <message>
-        <location filename="../../CommonGUI.py" line="161"/>
+        <location filename="../../CommonGUI.py" line="164"/>
         <source>
     Using this scripting module, the possibilities are endless. You can directly inject python code into your program
 without a hassle. You can use any of the libraries and modules that are built into this software, real time, and
@@ -1768,64 +1768,69 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 <context>
     <name>Console</name>
     <message>
-        <location filename="../../CommonGUI.py" line="454"/>
+        <location filename="../../CommonGUI.py" line="457"/>
         <source>Run Code: </source>
         <translation>执行代码： </translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="581"/>
+        <location filename="../../CommonGUI.py" line="584"/>
         <source>Console Settings</source>
         <translation>控制台设置</translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="583"/>
+        <location filename="../../CommonGUI.py" line="586"/>
         <source>Here you can change settings about what you see in the console</source>
         <translation>这里你可以改变控制台有关你看到信息设置</translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="587"/>
+        <location filename="../../CommonGUI.py" line="590"/>
         <source>Customize what you see printed on the Console</source>
         <translation>自定义控制台里你能看到打印的信息</translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="589"/>
+        <location filename="../../CommonGUI.py" line="592"/>
         <source>Wrap Lines </source>
         <translation>换行 </translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="590"/>
+        <location filename="../../CommonGUI.py" line="593"/>
         <source>Robot Logs </source>
         <translation>机械臂日志</translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="591"/>
+        <location filename="../../CommonGUI.py" line="594"/>
         <source>Vision Logs </source>
         <translation>视觉日志 </translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="592"/>
+        <location filename="../../CommonGUI.py" line="595"/>
         <source>Communication Logs </source>
         <translation>通信协议日志 </translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="593"/>
+        <location filename="../../CommonGUI.py" line="596"/>
         <source>Interpreter Logs </source>
         <translation>解析器日志 </translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="594"/>
+        <location filename="../../CommonGUI.py" line="597"/>
         <source>Script Logs </source>
         <translation>脚本日志 </translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="595"/>
+        <location filename="../../CommonGUI.py" line="598"/>
         <source>GUI Logs </source>
         <translation>图形化日志 </translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="596"/>
+        <location filename="../../CommonGUI.py" line="599"/>
         <source>Other Logs </source>
         <translation>其它日志 </translation>
+    </message>
+    <message>
+        <location filename="../../CommonGUI.py" line="600"/>
+        <source>Save to File</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1872,52 +1877,52 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 <context>
     <name>DeviceWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="712"/>
+        <location filename="../../MainGUI.py" line="739"/>
         <source>Please select the robot you will be using:</source>
         <translation>请选择你要用到的机械臂：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="713"/>
+        <location filename="../../MainGUI.py" line="740"/>
         <source>Please select the camera you will be using:</source>
         <translation>请选择你要用到的摄像头：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="717"/>
+        <location filename="../../MainGUI.py" line="744"/>
         <source>Scan for Robots</source>
         <translation>扫描机械臂</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="718"/>
+        <location filename="../../MainGUI.py" line="745"/>
         <source>Scan for Cameras</source>
         <translation>扫描摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="719"/>
+        <location filename="../../MainGUI.py" line="746"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="720"/>
+        <location filename="../../MainGUI.py" line="747"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="781"/>
+        <location filename="../../MainGUI.py" line="808"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="800"/>
+        <location filename="../../MainGUI.py" line="827"/>
         <source>No devices were found.</source>
         <translation>没有找到设备。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="813"/>
+        <location filename="../../MainGUI.py" line="840"/>
         <source>Camera </source>
         <translation>摄像头 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="820"/>
+        <location filename="../../MainGUI.py" line="847"/>
         <source>No cameras were found.</source>
         <translation>没有找到摄像头。</translation>
     </message>
@@ -2169,112 +2174,112 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="76"/>
+        <location filename="../../MainGUI.py" line="78"/>
         <source>uArm Creator Studio</source>
         <translation>uArm 创造工具</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="77"/>
+        <location filename="../../MainGUI.py" line="79"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="78"/>
+        <location filename="../../MainGUI.py" line="80"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="130"/>
+        <location filename="../../MainGUI.py" line="134"/>
         <source>New Task</source>
         <translation>新建任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="131"/>
+        <location filename="../../MainGUI.py" line="135"/>
         <source>Save Task</source>
         <translation>保存任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="132"/>
+        <location filename="../../MainGUI.py" line="136"/>
         <source>Save Task As</source>
         <translation>保存任务为</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="133"/>
+        <location filename="../../MainGUI.py" line="137"/>
         <source>Load Task</source>
         <translation>加载任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="152"/>
+        <location filename="../../MainGUI.py" line="156"/>
         <source>Visit the forum!</source>
         <translation>访问论坛！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="153"/>
+        <location filename="../../MainGUI.py" line="157"/>
         <source>Visit our subreddit!</source>
         <translation>访问我们的 subreddit!</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="164"/>
+        <location filename="../../MainGUI.py" line="168"/>
         <source>Vision Object</source>
         <translation>视觉对象</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="165"/>
+        <location filename="../../MainGUI.py" line="169"/>
         <source>Vision Group</source>
         <translation>视觉组</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="166"/>
+        <location filename="../../MainGUI.py" line="170"/>
         <source>Movement Recording</source>
         <translation>轨迹录制</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="167"/>
+        <location filename="../../MainGUI.py" line="171"/>
         <source>Function</source>
         <translation>函数</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="204"/>
+        <location filename="../../MainGUI.py" line="206"/>
         <source>Calibrate</source>
         <translation>校正</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="205"/>
+        <location filename="../../MainGUI.py" line="207"/>
         <source>Resources</source>
         <translation>资源</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="207"/>
+        <location filename="../../MainGUI.py" line="209"/>
         <source>Run/Pause the command script (Ctrl+R)</source>
         <translation>运行/暂停 命令脚本 (Ctrl+R)</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="208"/>
+        <location filename="../../MainGUI.py" line="210"/>
         <source>Open Camera and Robot settings</source>
         <translation>打开摄像头和机械臂设置</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="209"/>
+        <location filename="../../MainGUI.py" line="211"/>
         <source>Open Robot and Camera Calibration Center</source>
         <translation>打开机械臂和摄像头校正</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="210"/>
+        <location filename="../../MainGUI.py" line="212"/>
         <source>Open Resource Manager</source>
         <translation>打开资源管理器</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="212"/>
+        <location filename="../../MainGUI.py" line="214"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="247"/>
+        <location filename="../../MainGUI.py" line="249"/>
         <source>Camera</source>
         <translation>摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="248"/>
+        <location filename="../../MainGUI.py" line="250"/>
         <source>Console</source>
         <translation>控制台</translation>
     </message>
@@ -2294,21 +2299,21 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         <translation type="obsolete">GUI|控制器已经准备好，正在加载脚本和打开任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="339"/>
+        <location filename="../../MainGUI.py" line="341"/>
         <source>Certain Events and Commands are missing the following requirements to work properly: 
 
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="341"/>
+        <location filename="../../MainGUI.py" line="343"/>
         <source>
 Would you like to continue anyways? Events and commands with errors will not activate.</source>
         <translation>
 事件(Events)和命令(Commands)因为有错误不会运行，你还要继续执行吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="626"/>
+        <location filename="../../MainGUI.py" line="696"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -2318,7 +2323,7 @@ Would you like to continue anyways? Events and commands with errors will not act
         <translation type="obsolete">GUI|脚本被取消。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="380"/>
+        <location filename="../../MainGUI.py" line="382"/>
         <source>The script was unable to end.
 This may mean the script crashed, or it is taking time finishing.
 
@@ -2328,17 +2333,17 @@ If you are running Python code inside of this script, make sure you check isExit
 如果在脚本中运行 python 代码，确保你检查 isExiting() 是否在循环里，这个可以确保脚本可以在按下[停止]后很快的终止。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="407"/>
+        <location filename="../../MainGUI.py" line="409"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="424"/>
+        <location filename="../../MainGUI.py" line="426"/>
         <source>Communication Errors</source>
         <translation>通信协议错误</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="424"/>
+        <location filename="../../MainGUI.py" line="426"/>
         <source>The following errors have occured communicating with your robot.
 Try reconnecting under the Devices menu.
 
@@ -2351,19 +2356,19 @@ ERROR:
 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="595"/>
+        <location filename="../../MainGUI.py" line="597"/>
         <source>not found!</source>
         <translation>未找到！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="613"/>
+        <location filename="../../MainGUI.py" line="615"/>
         <source>Warning</source>
         <comment>The program was unable to load the following script:
 </comment>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="613"/>
+        <location filename="../../MainGUI.py" line="615"/>
         <source>
 
  The following error occured: </source>
@@ -2372,44 +2377,59 @@ ERROR:
  接下来的错误发生了：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="129"/>
+        <location filename="../../MainGUI.py" line="132"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="151"/>
+        <location filename="../../MainGUI.py" line="155"/>
         <source>Community</source>
         <translation>社区</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="163"/>
+        <location filename="../../MainGUI.py" line="167"/>
         <source>New Resource</source>
         <translation>新建资源</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="181"/>
+        <location filename="../../MainGUI.py" line="185"/>
         <source>Languages</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="182"/>
+        <location filename="../../MainGUI.py" line="186"/>
         <source>English</source>
-        <translation>英语</translation>
+        <translation>英语(English)</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="183"/>
+        <location filename="../../MainGUI.py" line="187"/>
         <source>Chinese</source>
-        <translation>中文</translation>
+        <translation>中文(Chinese)</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="201"/>
+        <location filename="../../MainGUI.py" line="203"/>
         <source>MainToolbar</source>
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="626"/>
+        <location filename="../../MainGUI.py" line="628"/>
         <source>You have unsaved changes. Would you like to save before continuing?</source>
         <translation>你还没有保存，是否要选择保存？</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="140"/>
+        <source>About</source>
+        <translation>关于</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="140"/>
+        <source>Version: </source>
+        <translation>版本：</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="696"/>
+        <source>Language switching need restart to apply, Would you like to continue?</source>
+        <translation>语言切换需要重启，你是否要继续？</translation>
     </message>
 </context>
 <context>
@@ -3568,12 +3588,12 @@ This will now be saved in a seperate file, and can be used in any project.</sour
 <context>
     <name>ScriptWidget</name>
     <message>
-        <location filename="../../CommonGUI.py" line="377"/>
+        <location filename="../../CommonGUI.py" line="380"/>
         <source>Show Documentation</source>
         <translation>显示文档</translation>
     </message>
     <message>
-        <location filename="../../CommonGUI.py" line="382"/>
+        <location filename="../../CommonGUI.py" line="385"/>
         <source>Show Code</source>
         <translation>显示代码</translation>
     </message>
