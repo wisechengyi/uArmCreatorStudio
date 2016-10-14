@@ -45,8 +45,10 @@ elif __file__:
 ## Check OS type
 if platform.system() == 'Darwin' and getattr(sys, 'frozen', False):
     resourcesLoc = os.path.join(APPLICATION_PATH, "..", "Resources")
-else:
+elif platform.system() == 'Darwin' and __file__:
     resourcesLoc = os.path.join(APPLICATION_PATH, "Resources")
+elif platform.system() == 'Windows':
+    resourcesLoc = os.path.join('.', "Resources")
 
 
 def resourcePath(relative_path):
