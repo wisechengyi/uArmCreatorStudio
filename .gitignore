@@ -71,3 +71,4 @@ platformio.ini
 dist/
 build/
 *.log
+.eggs/

@@ -7,7 +7,8 @@
 ## Changes
 
 - User could save log to file.
-- Program crash would save log to file
+- Program crash would save log to file.
+- Add Help menu item to File Menu.
 
 ## V1.1.2
 - Update - Alex Tan

@@ -23,6 +23,7 @@ iconsList = ["cancel.png",
              "languages_chinese.png",
              "languages_english.png",
              "file_about.png",
+             "file_help.png",
              "file_new.png",
              "file_save.png",
              "file_load.png",
@@ -143,4 +144,13 @@ exe = EXE(pyz,
           console=False,
           upx=True,
           icon=os.path.join(icons_dir, "exe_icon.ico"))
+
+app = BUNDLE(exe,
+         name='uArmCreatorStudio.app',
+         icon=os.path.join(icons_dir, "exe_icon.icns"),
+         bundle_identifier=None,
+         info_plist={
+            'NSHighResolutionCapable': 'True'
+            },
+         )
 

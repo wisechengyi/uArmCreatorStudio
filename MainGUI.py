@@ -131,6 +131,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Create File Menu and actions
         fileMenu      = menuBar.addMenu(self.tr('File'))
         aboutAction   = QtWidgets.QAction(QtGui.QIcon(Paths.file_about), self.tr('About'       ) , self)
+        helpAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_help), self.tr('Help'), self)
         newAction     = QtWidgets.QAction(QtGui.QIcon(Paths.file_new),  self.tr('New Task'    )  , self)
         saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task'   )  , self)
         saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As')  , self)
@@ -138,12 +139,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         saveAction.setShortcut("Ctrl+S")
         aboutAction.triggered.connect(  lambda : QtWidgets.QMessageBox.information(self, self.tr("About"), self.tr("Version: ")+ Global.version))
+        helpAction.triggered.connect( lambda : Global.openPDFFile(Paths.user_manual))
         newAction.triggered.connect(    lambda: self.newTask(promptSave=True))
         saveAction.triggered.connect(   self.saveTask)
         saveAsAction.triggered.connect( lambda: self.saveTask(True))
         loadAction.triggered.connect(   self.loadTask)
 
         fileMenu.addAction(aboutAction)
+        fileMenu.addAction(helpAction)
         fileMenu.addAction(newAction)
         fileMenu.addAction(saveAction)
         fileMenu.addAction(saveAsAction)

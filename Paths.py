@@ -66,6 +66,7 @@ delete              = os.path.join(imageLoc, "button_delete.png")
 
 # "File" Menu
 file_about          = os.path.join(imageLoc, "file_about.png")
+file_help           = os.path.join(imageLoc, "file_help.png")
 file_new            = os.path.join(imageLoc, "file_new.png")
 file_save           = os.path.join(imageLoc, "file_save.png")
 file_load           = os.path.join(imageLoc, "file_load.png")
