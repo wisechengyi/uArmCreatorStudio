@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## V1.1.4
+- Update - Alex Tan
+- Date   - 2016-10-14
+
+## Changes
+
+- Fix Mac bundle app crash on startup
+- Objects and Save Tasks Location move to `user home directory\uArmCreatorStudio`
+
 ## V1.1.3
 - Update - Alex Tan
 - Date   - 2016-10-13

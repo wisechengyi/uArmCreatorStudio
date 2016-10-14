@@ -28,12 +28,11 @@ License:
 import os
 import errno
 import platform
-import webbrowser
 from time import time, sleep
 
 import logging
 
-__version__ = '1.1.3'
+__version__ = '1.1.4'
 
 version = __version__
 
@@ -155,28 +154,6 @@ def init():
     printRedirectFunc  = lambda classString, string: None  # print(classString + " "*(30 - len(classString)) + string)
 
 
-def initLogger(consoleSettings):
-    logger = logging.getLogger('application')
-    logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    if consoleSettings['saveToFile']:
-        if consoleSettings['logFileName'] is None:
-            fh = logging.FileHandler('ucs.log')
-            fh.setLevel(logging.INFO)
-        else:
-            fh = logging.FileHandler(consoleSettings['logFileName'])
-            fh.setLevel(logging.INFO)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-    logger.info('---------------------------Logging Start------------------------------------------')
-    logger.info('Version: ' + version)
-
-
 def printf(*args):
     """
     This print redirects prints to the GUI console, when the the global printRedirectFunc is set.
@@ -246,7 +223,7 @@ def getModuleClasses(module):
     return dict([(name, cls) for name, cls in module.__dict__.items() if isinstance(cls, type)])
 
 
-def openPDFFile(path):
+def openFile(path):
     """
     This will open a pdf file, but different system will be different.
     :param path: PDF File Path
@@ -255,7 +232,7 @@ def openPDFFile(path):
     if platform.system() == 'Darwin':
         os.system("open "+path)
     elif platform.system() == 'Windows':
-        webbrowser.open_new(path)
+        os.startfile(path)
     elif platform.system() == 'Linux':
         os.system('xdg-open '+path)
 

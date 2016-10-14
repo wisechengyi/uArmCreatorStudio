@@ -1,5 +1,6 @@
 # -*- mode: python -*-
 import os
+import platform
 
 # Set up some convenience variables to shorten up the path names
 project_dir  = "."
@@ -132,25 +133,37 @@ pyz = PYZ(a.pure,
           a.zipped_data,
           cipher=block_cipher)
 
+if platform.system() == 'Darwin':
+    app = BUNDLE(EXE(pyz,
+              a.scripts,
+              a.binaries,
+              a.zipfiles,
+              a.datas,   # Add the icons list to the data
+              name='ucs',
+              debug=False,
+              strip=False,
+              console=False,
+              upx=True,
+               ),
+             name='uArmCreatorStudio.app',
+             icon=os.path.join(icons_dir, "exe_icon.icns"),
+             bundle_identifier='ucs',
+             info_plist={
+                'NSHighResolutionCapable': 'True'
+                },
+             )
+else:
+    exe = EXE(pyz,
+              a.scripts,
+              a.binaries,
+              a.zipfiles,
+              a.datas + d,   # Add the icons list to the data
+              name='uArmCreatorStudio',
+              debug=False,
+              strip=False,
+              console=False,
+              upx=True,
+              icon=os.path.join(icons_dir, "exe_icon.ico"))
 
-exe = EXE(pyz,
-          a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas + d,   # Add the icons list to the data
-          name='uArmCreatorStudio',
-          debug=False,
-          strip=False,
-          console=False,
-          upx=True,
-          icon=os.path.join(icons_dir, "exe_icon.ico"))
 
-app = BUNDLE(exe,
-         name='uArmCreatorStudio.app',
-         icon=os.path.join(icons_dir, "exe_icon.icns"),
-         bundle_identifier=None,
-         info_plist={
-            'NSHighResolutionCapable': 'True'
-            },
-         )
 

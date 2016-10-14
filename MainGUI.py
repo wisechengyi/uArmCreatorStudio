@@ -32,6 +32,7 @@ import ControlPanelGUI
 import Paths
 import locale
 import logging
+import os
 from CommonGUI         import Console
 from copy              import deepcopy                  # For copying saves and comparing later
 from PyQt5             import QtCore, QtWidgets, QtGui  # All GUI things
@@ -130,6 +131,7 @@ class MainWindow(QtWidgets.QMainWindow):
         fileMenu      = menuBar.addMenu(self.tr('File'))
         aboutAction   = QtWidgets.QAction(QtGui.QIcon(Paths.file_about), self.tr('About'       ) , self)
         helpAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_help), self.tr('Help'), self)
+        homeDirAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_homedir), self.tr('Open Home Folder'), self)
         newAction     = QtWidgets.QAction(QtGui.QIcon(Paths.file_new),  self.tr('New Task'    )  , self)
         saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task'   )  , self)
         saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As')  , self)
@@ -137,7 +139,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         saveAction.setShortcut("Ctrl+S")
         aboutAction.triggered.connect(  lambda : QtWidgets.QMessageBox.information(self, self.tr("About"), self.tr("Version: ")+ Global.version))
-        helpAction.triggered.connect( lambda : Global.openPDFFile(Paths.user_manual))
+        helpAction.triggered.connect(lambda : Global.openFile(Paths.user_manual))
+        homeDirAction.triggered.connect(lambda : Global.openFile(Paths.ucs_home_dir))
         newAction.triggered.connect(    lambda: self.newTask(promptSave=True))
         saveAction.triggered.connect(   self.saveTask)
         saveAsAction.triggered.connect( lambda: self.saveTask(True))
@@ -145,6 +148,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         fileMenu.addAction(aboutAction)
         fileMenu.addAction(helpAction)
+        fileMenu.addAction(homeDirAction)
         fileMenu.addAction(newAction)
         fileMenu.addAction(saveAction)
         fileMenu.addAction(saveAsAction)
@@ -900,6 +904,28 @@ def switchingLanugage(country_code):
         trans.load(Paths.language_pack_zh_CN)
         app.installTranslator(trans)
 
+def initLogger(consoleSettings):
+    logger = logging.getLogger('application')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    if consoleSettings['saveToFile']:
+        if consoleSettings['logFileName'] is None:
+            log_file = os.path.join(Paths.ucs_home_dir, 'ucs.log')
+        else:
+            log_file = os.path.join(Paths.ucs_home_dir, consoleSettings['logFileName'])
+        fh = logging.FileHandler(log_file)
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    logger.info('---------------------------Logging Start------------------------------------------')
+    logger.info('Version: ' + Global.version)
+
+
 if __name__ == '__main__':
     # Install a global exception hook to catch pyQt errors that fall through (helps with debugging a ton) #TODO: Remove for builds
     sys.__excepthook = sys.excepthook
@@ -926,7 +952,7 @@ if __name__ == '__main__':
 
         # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
         env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
-        Global.initLogger(env.getSetting('consoleSettings'))
+        initLogger(env.getSetting('consoleSettings'))
         try:
             # Create Language pack installer
             trans = QtCore.QTranslator()

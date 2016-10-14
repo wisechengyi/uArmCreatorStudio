@@ -25,19 +25,28 @@ License:
     You should have received a copy of the GNU General Public License
     along with uArmCreatorStudio.  If not, see <http://www.gnu.org/licenses/>.
 """
+__author__ = "Alexander Thiel"
 import os
 import sys
-__author__ = "Alexander Thiel"
+import platform
+from os.path import expanduser
+
+if getattr(sys, 'frozen', False):
+    APPLICATION_PATH = os.path.dirname(sys.executable)
+elif __file__:
+    APPLICATION_PATH = os.path.dirname(__file__)
+
 
 #TODO: Make it possible to check if this is being run from within a package manager, and load icons from a diff dir.
 
-################        PATHS FOR ALL       ################
-resourcesLoc = "Resources"
-settings_txt = os.path.join(resourcesLoc, "Settings.txt")
-objects_dir  = os.path.join(resourcesLoc, "Objects", "")
-saves_dir    = os.path.join(resourcesLoc, "Save Files", "")
 
+################        PROGRAM RESOUCES    ################
 
+## Check OS type
+if platform.system() == 'Darwin' and getattr(sys, 'frozen', False):
+    resourcesLoc = os.path.join(APPLICATION_PATH, "..", "Resources")
+else:
+    resourcesLoc = os.path.join(APPLICATION_PATH, "Resources")
 
 
 def resourcePath(relative_path):
@@ -67,6 +76,7 @@ delete              = os.path.join(imageLoc, "button_delete.png")
 # "File" Menu
 file_about          = os.path.join(imageLoc, "file_about.png")
 file_help           = os.path.join(imageLoc, "file_help.png")
+file_homedir        = os.path.join(imageLoc, "file_homedir.png")
 file_new            = os.path.join(imageLoc, "file_new.png")
 file_save           = os.path.join(imageLoc, "file_save.png")
 file_load           = os.path.join(imageLoc, "file_load.png")
@@ -154,3 +164,9 @@ help_connect_camera = os.path.join(imageLoc, "help_connect_camera.gif")
 help_rob_connect    = os.path.join(imageLoc, "help_rob_connect.gif")
 
 
+################        USERS RESOUCES    ################
+ucs_home_dir = os.path.join(expanduser("~"), "uArmCreatorStudio") # uArmCreatorStudio home dir
+
+settings_txt = os.path.join(ucs_home_dir, "Settings.txt")
+objects_dir  = os.path.join(ucs_home_dir, "Objects", "")
+saves_dir    = os.path.join(ucs_home_dir, "Save Files", "")
