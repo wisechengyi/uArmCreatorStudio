@@ -695,6 +695,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if reply == QtWidgets.QMessageBox.Yes:
             printf("GUI| Restart")
             self.env.updateSettings("language", language)
+            self.close()
             app.exit(MainWindow.EXIT_CODE_REBOOT)
 
         if reply == QtWidgets.QMessageBox.No:
