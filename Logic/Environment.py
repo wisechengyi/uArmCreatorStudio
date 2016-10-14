@@ -100,7 +100,6 @@ class Environment:
             self.__transform = Transform(ptPairs)
 
 
-
     # Getting System Objects
     def getRobot(self):
         return self.__robot

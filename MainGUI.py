@@ -56,18 +56,17 @@ global app, trans
 ########## MAIN WINDOW ##########
 class MainWindow(QtWidgets.QMainWindow):
     EXIT_CODE_REBOOT = -983242194
-    # For debugging object count, use: print("CHILDREN: ", len(self.findChildren(QtCore.QObject)))
-    def __init__(self):
+
+    def __init__(self, environment):
         super(MainWindow, self).__init__()
 
-
-        # Global.env         = env
-        self.interpreter = Interpreter(Global.env)
+        self.env         = environment
+        self.interpreter = Interpreter(self.env)
 
 
 
         # Set the ConsoleWidget parameters immediately, so even early prints are captured
-        self.consoleWidget       = Console(parent=self)
+        self.consoleWidget       = Console(self.env.getSetting("consoleSettings"), parent=self)
         Global.printRedirectFunc = self.consoleWidget.write
         self.consoleWidget.setExecFunction(self.interpreter.evaluateExpression)
 
@@ -79,8 +78,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.scriptToggleBtn = QtWidgets.QAction(QtGui.QIcon(Paths.run_script), self.tr('Run'), self)
         self.devicesBtn      = QtWidgets.QAction(QtGui.QIcon(Paths.devices_neither), self.tr('Devices'), self)
         self.centralWidget   = QtWidgets.QStackedWidget()
-        self.controlPanel    = ControlPanelGUI.ControlPanel(Global.env, parent=self)
-        self.cameraWidget    = CameraWidget(Global.env.getVStream(), parent=self)
+        self.controlPanel    = ControlPanelGUI.ControlPanel(self.env, parent=self)
+        self.cameraWidget    = CameraWidget(self.env.getVStream(), parent=self)
         self.floatingHint    = QtWidgets.QLabel()  # Used to display floating banners to inform the user of something
 
 
@@ -91,24 +90,24 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # After initUI: Restore the window geometry to the state it was when the user last closed the window
-        if Global.env.getSetting("windowGeometry") is not None:
-            state = Global.env.getSetting("windowGeometry")
+        if self.env.getSetting("windowGeometry") is not None:
+            state = self.env.getSetting("windowGeometry")
             state = bytearray(state, 'utf-8')
             bArr = QtCore.QByteArray.fromHex(state)
             self.restoreGeometry(bArr)
 
 
         # After initUI: Restore size and position of dockwidgets to their previous state
-        if Global.env.getSetting("windowState") is not None:
-            state = Global.env.getSetting("windowState")
+        if self.env.getSetting("windowState") is not None:
+            state = self.env.getSetting("windowState")
             state = bytearray(state, 'utf-8')
             bArr = QtCore.QByteArray.fromHex(state)
             self.restoreState(bArr)
 
 
         # If any file is specified in "lastOpenedFile" then load it.
-        if Global.env.getSetting("lastOpenedFile") is not None:
-            self.loadTask(filename=Global.env.getSetting("lastOpenedFile"))
+        if self.env.getSetting("lastOpenedFile") is not None:
+            self.loadTask(filename=self.env.getSetting("lastOpenedFile"))
         else:
             self.newTask(False)
 
@@ -118,14 +117,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.refreshTimer.timeout.connect(self.refreshDevicesIcon)
         self.refreshTimer.start(5000)  # Once every five seconds
 
-
     def initUI(self):
         # Create "File" Menu
         menuBar       = self.menuBar()
         menuBar.setNativeMenuBar(False)
 
         # Connect any slots that need connecting
-        self.consoleWidget.settingsChanged.connect(lambda: Global.env.updateSettings("consoleSettings",
+        self.consoleWidget.settingsChanged.connect(lambda: self.env.updateSettings("consoleSettings",
                                                                                    self.consoleWidget.settings))
 
         # Create File Menu and actions
@@ -171,10 +169,10 @@ class MainWindow(QtWidgets.QMainWindow):
         fncAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), self.tr('Function'          )    , self)
 
 
-        visAction.triggered.connect(  lambda: MakeObjectWindow(   None, Global.env, parent=self))
-        grpAction.triggered.connect(  lambda: MakeGroupWindow(    None, Global.env, parent=self))
-        recAction.triggered.connect(  lambda: MakeRecordingWindow(None, Global.env, parent=self))
-        fncAction.triggered.connect(  lambda: MakeFunctionWindow( None, Global.env, parent=self))
+        visAction.triggered.connect(lambda: MakeObjectWindow(   None, self.env, parent=self))
+        grpAction.triggered.connect(lambda: MakeGroupWindow(    None, self.env, parent=self))
+        recAction.triggered.connect(lambda: MakeRecordingWindow(None, self.env, parent=self))
+        fncAction.triggered.connect(lambda: MakeFunctionWindow( None, self.env, parent=self))
 
         resourceMenu.addAction(visAction)
         resourceMenu.addAction(grpAction)
@@ -185,8 +183,8 @@ class MainWindow(QtWidgets.QMainWindow):
         languageMenu = menuBar.addMenu(self.tr('Languages'))
         enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english),  self.tr('English'     )    , self)
         cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'          )    , self)
-        cnLanAction.triggered.connect(  lambda: self.updateLanguageSetting('zh_CN'))
-        enLanAction.triggered.connect(  lambda: self.updateLanguageSetting('en_US'))
+        cnLanAction.triggered.connect(lambda: self.updateLanguageSetting('zh_CN'))
+        enLanAction.triggered.connect(lambda: self.updateLanguageSetting('en_US'))
 
 
         languageMenu.addAction(enLanAction)
@@ -277,12 +275,12 @@ class MainWindow(QtWidgets.QMainWindow):
         printf("GUI| Setting video to state: ", state)
 
         # Don't change anything if no camera ID has been added yet
-        cameraID = Global.env.getSetting("cameraID")
+        cameraID = self.env.getSetting("cameraID")
         if cameraID is None: return
 
 
         if state == "toggle":
-            if Global.env.getVStream().paused:
+            if self.env.getVStream().paused:
                 self.setVideo("play")
                 return
             else:
@@ -290,7 +288,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
 
 
-        vStream = Global.env.getVStream()
+        vStream = self.env.getVStream()
         if state == "play":
             # Make sure the videoStream object has a camera, or if the cameras changed, change it
             # if not vStream.connected() or not vStream.cameraID == cameraID:
@@ -348,13 +346,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
             if reply == QtWidgets.QMessageBox.Cancel:
                 printf("GUI| Script run canceled by user before starting.")
-                vision = Global.env.getVision()
+                vision = self.env.getVision()
                 vision.endAllTrackers()  # Clear any tracking that was started during interpreter initialization
                 return
 
 
         # Prep the robot to start, so it always starts with servos attached and speed at 10
-        robot  = Global.env.getRobot()
+        robot  = self.env.getRobot()
         robot.setActiveServos(all=True)
         robot.setSpeed(10)
 
@@ -388,9 +386,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # Turn off the gripper, just in case. Do this AFTER interpreter ends, so as to not use Serial twice...
-        vision = Global.env.getVision()
+        vision = self.env.getVision()
 
-        robot  = Global.env.getRobot()
+        robot  = self.env.getRobot()
         robot.setExiting(False)
         vision.setExiting(False)
         robot.setPump(False)
@@ -416,15 +414,15 @@ class MainWindow(QtWidgets.QMainWindow):
         if the robot thread was able to connect or not.
         """
 
-        camera = Global.env.getVStream()
-        robot  = Global.env.getRobot()
+        camera = self.env.getVStream()
+        robot  = self.env.getRobot()
 
         robotErrors = robot.getErrorsToDisplay()
         if len(robotErrors) > 0:
             reply = QtWidgets.QMessageBox.question(self, self.tr('Communication Errors'), self.tr("The following errors have occured "
                             "communicating with your robot.\nTry reconnecting under the Devices menu."
                             "\n\nERROR:\n") + "\n".join(robotErrors), QtWidgets.QMessageBox.Ok)
-            Global.env.updateSettings("robotID", None)
+            self.env.updateSettings("robotID", None)
 
         robCon = robot.connected()
         camCon = camera.connected()
@@ -457,19 +455,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
         printf("GUI| Apply clicked, applying settings...")
         if deviceWindow.getRobotSetting() is not None:
-            Global.env.updateSettings("robotID", deviceWindow.getRobotSetting())
+            self.env.updateSettings("robotID", deviceWindow.getRobotSetting())
 
         if deviceWindow.getCameraSetting() is not None:
-            Global.env.updateSettings("cameraID", deviceWindow.getCameraSetting())
+            self.env.updateSettings("cameraID", deviceWindow.getCameraSetting())
 
-        vStream = Global.env.getVStream()
-        vStream.setNewCamera(Global.env.getSetting('cameraID'))
+        vStream = self.env.getVStream()
+        vStream.setNewCamera(self.env.getSetting('cameraID'))
 
 
         # If the robots not connected, attempt to reestablish connection
-        robot   = Global.env.getRobot()
+        robot   = self.env.getRobot()
         if not robot.connected():
-            robot.setUArm(Global.env.getSetting('robotID'))
+            robot.setUArm(self.env.getSetting('robotID'))
 
 
 
@@ -482,9 +480,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.interpreter.threadRunning(): self.endScript()
         self.cameraWidget.pause()
 
-        coordSettings = Global.env.getSetting("coordCalibrations")
-        motionSettings = Global.env.getSetting("motionCalibrations")
-        calibrationsWindow = CalibrateWindow(coordSettings, motionSettings, Global.env, parent=self)
+        coordSettings = self.env.getSetting("coordCalibrations")
+        motionSettings = self.env.getSetting("motionCalibrations")
+        calibrationsWindow = CalibrateWindow(coordSettings, motionSettings, self.env, parent=self)
         accepted           = calibrationsWindow.exec_()
 
         if accepted:
@@ -492,8 +490,8 @@ class MainWindow(QtWidgets.QMainWindow):
             printf("GUI| Apply clicked, applying calibrations...")
 
             # Update the settings
-            Global.env.updateSettings("coordCalibrations", calibrationsWindow.getCoordSettings())
-            Global.env.updateSettings("motionCalibrations", calibrationsWindow.getMotionSettings())
+            self.env.updateSettings("coordCalibrations", calibrationsWindow.getCoordSettings())
+            self.env.updateSettings("motionCalibrations", calibrationsWindow.getMotionSettings())
 
         else:
             printf("GUI| Cancel clicked, no calibrations applied.")
@@ -510,7 +508,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setVideo("play")
 
         self.cameraWidget.pause()
-        objMngrWindow = ObjectManagerWindow(Global.env, self)
+        objMngrWindow = ObjectManagerWindow(self.env, self)
         accepted      = objMngrWindow.exec_()
         objMngrWindow.close()
         objMngrWindow.deleteLater()
@@ -551,7 +549,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             if filename == "": return False  #If user hit cancel
             self.fileName = filename
-            Global.env.updateSettings("lastOpenedFile", self.fileName)
+            self.env.updateSettings("lastOpenedFile", self.fileName)
 
 
         # Update the save file
@@ -592,7 +590,7 @@ class MainWindow(QtWidgets.QMainWindow):
         except IOError:
             printf("GUI| ERROR: Task file "), filename, self.tr("not found!")
             self.fileName = None
-            Global.env.updateSettings("lastOpenedFile", None)
+            self.env.updateSettings("lastOpenedFile", None)
             return
 
 
@@ -602,7 +600,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.controlPanel.loadData(deepcopy(self.loadData))
             self.fileName = filename
-            Global.env.updateSettings("lastOpenedFile", filename)
+            self.env.updateSettings("lastOpenedFile", filename)
             self.setWindowTitle(self.programTitle + '      ' + self.fileName)
             printf("GUI| Project loaded successfully")
         except Exception as e:
@@ -652,16 +650,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Save the window geometry as a string representation of a hex number
         saveGeometry = ''.join([str(char) for char in self.saveGeometry().toHex()])
-        Global.env.updateSettings("windowGeometry", saveGeometry)
+        self.env.updateSettings("windowGeometry", saveGeometry)
 
 
         # Save the dockWidget positions/states as a string representation of a hex number
         saveState    = ''.join([str(char) for char in self.saveState().toHex()])
-        Global.env.updateSettings("windowState", saveState)
+        self.env.updateSettings("windowState", saveState)
 
 
         # Deactivate the robots servos
-        robot = Global.env.getRobot()
+        robot = self.env.getRobot()
         robot.setActiveServos(all=False)
 
 
@@ -678,7 +676,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # Close threads
-        Global.env.close()
+        self.env.close()
 
         printf("GUI| Done closing all objects and threads.")
 
@@ -696,11 +694,11 @@ class MainWindow(QtWidgets.QMainWindow):
                                                QtWidgets.QMessageBox.Yes)
         if reply == QtWidgets.QMessageBox.Yes:
             printf("GUI| Restart")
-            Global.env.updateSettings("language", language)
+            self.env.updateSettings("language", language)
             app.exit(MainWindow.EXIT_CODE_REBOOT)
 
         if reply == QtWidgets.QMessageBox.No:
-            Global.env.updateSettings("language", language)
+            self.env.updateSettings("language", language)
             printf("GUI| Not Restart")
 
         if reply == QtWidgets.QMessageBox.Cancel:
@@ -923,28 +921,28 @@ if __name__ == '__main__':
         app.setFont(font)
 
         # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
-        Global.env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
-        Global.initLogger()
+        env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
+        Global.initLogger(env.getSetting('consoleSettings'))
         try:
             # Create Language pack installer
             trans = QtCore.QTranslator()
 
             # Check if settings include language config
-            if Global.env.getSetting("language") is None:
+            if env.getSetting("language") is None:
                 try:
-                    if locale.getdefaultlocale()[0] == 'zh_CN': # If no language config detect the locale
+                    if locale.getdefaultlocale()[0] == 'zh_CN':  # If no language config detect the locale
                         switchingLanugage('zh_CN')
-                        Global.env.updateSettings("language", 'zh_CN')
+                        env.updateSettings("language", 'zh_CN')
                 except ValueError:
                     printf("Can not detect system locale")
-            elif Global.env.getSetting("language") == 'zh_CN':
+            elif env.getSetting("language") == 'zh_CN':
                 switchingLanugage('zh_CN')
-                Global.env.updateSettings("language", 'zh_CN')
+                env.updateSettings("language", 'zh_CN')
 
-            w = MainWindow()
+            w = MainWindow(env)
             w.show()
             currentExitCode = app.exec_()
-            app = None # Clear the App
+            app = None  # Clear the App
         except SystemExit as e:
             logging.getLogger("application").error("System Exit - " + str(e))
 

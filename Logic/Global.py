@@ -140,7 +140,6 @@ def init():
     global keysPressed
     global printRedirectFunc
     global exitScriptFlag
-    global env
 
     """
       Used in keyboardEvent. Updated through Main.Application.notify() Format: ['a', 'b', '5', 'z']
@@ -156,11 +155,11 @@ def init():
     printRedirectFunc  = lambda classString, string: None  # print(classString + " "*(30 - len(classString)) + string)
 
 
-def initLogger():
+def initLogger(consoleSettings):
     logger = logging.getLogger('application')
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    consoleSettings = env.getSetting('consoleSettings')
+
     if consoleSettings['saveToFile']:
         if consoleSettings['logFileName'] is None:
             fh = logging.FileHandler('ucs.log')

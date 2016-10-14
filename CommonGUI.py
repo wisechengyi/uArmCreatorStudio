@@ -412,13 +412,13 @@ class Console(QtWidgets.QWidget):
     # Have clear button, settings (for which classes to display responses from), exec stuff,
     settingsChanged = QtCore.pyqtSignal()
 
-    def __init__(self, parent, fps=4.0):
+    def __init__(self, consoleSettings, parent, fps=4.0):
         super(Console, self).__init__(parent)
         # Since prints might come from different threads, lock before adding stuff to self.text
         self.printLock    = RLock()
         self.execFunction = None
         self.printBuffer  = []  # A buffer of strings to print
-        self.settings     = Global.env.getSetting('consoleSettings')
+        self.settings     = consoleSettings
 
 
 
@@ -650,7 +650,7 @@ class Console(QtWidgets.QWidget):
                 self.text.setWordWrapMode(QtGui.QTextOption.NoWrap)
 
             # Update log file settings
-            Global.initLogger()
+            Global.initLogger(self.settings)
 
             self.settingsChanged.emit()
 
