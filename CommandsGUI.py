@@ -1768,7 +1768,9 @@ class LoopCommand(CommandGUI):
         def updateTestParameters():
             clearLayout(prompt.fakePrompt.content)
             currTitle = prompt.testChoices.currentText()
-
+            print("Thing: ", prompt.testChoices)
+            print("text: ", str(prompt.testChoices.currentText()))
+            print(currTitle, prompt.titleTypeHash)
             testType = prompt.titleTypeHash[currTitle]
 
             # print(self.parameters["testType"] == testType, self.parameters["testType"], testType)
@@ -1794,13 +1796,14 @@ class LoopCommand(CommandGUI):
 
         # Get the title of the currently selected testType when loading
         for testType in testTypes:
-            prompt.titleTypeHash[testType.title] = testType
+            prompt.titleTypeHash[testType.__name__] = testType
 
             if self.parameters["testType"] == testType.__name__:
-                prompt.testChoices.addItem(testType.title)
+                prompt.testChoices.addItem(testType.__name__)
 
 
-        for testType in testTypes: prompt.testChoices.addItem(testType.title)
+        for testType in testTypes:
+            prompt.testChoices.addItem(testType.__name__)
 
 
 
@@ -1820,13 +1823,14 @@ class LoopCommand(CommandGUI):
         prompt.commandObject._updateDescription()
 
         chosenType = type(prompt.commandObject)
+        print("Chosen type: ", type(prompt.commandObject).__name__)
         chosenParams = prompt.commandObject.parameters
         description  = prompt.commandObject.description
 
         # Find the matching type for the currently selected title
-        newParameters = {"testType": chosenType.__name__,
+        newParameters = {"testType":        chosenType.__name__,
                          "testParameters": chosenParams,
-                         "description": description}  # Get the parameters from the 'prompt' GUI elements. Put numbers through self.sanitizeFloat
+                         "description":     description}
 
         self.parameters.update(newParameters)
 
