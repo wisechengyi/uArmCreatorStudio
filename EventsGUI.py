@@ -415,7 +415,8 @@ class RecognizeObjectEvent(EventGUI):
 
     def dressWidget(self, widget):
         self.title = QtCore.QCoreApplication.translate("EventsGUI", "Object '")
-        + self.parameters["objectID"] + QtCore.QCoreApplication.translate("EventsGUI", "' Recognized")
+        self.title += self.parameters["objectID"]
+        self.title += QtCore.QCoreApplication.translate("EventsGUI", "' Recognized")
 
         # Format the widget that will show up to make it unique. Not necessary in non-parameter events
         if self.parameters["not"]:

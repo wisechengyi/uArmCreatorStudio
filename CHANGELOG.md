@@ -8,6 +8,7 @@
 
 - Fix prompt save issue after user close
 - Fix Test loop Command - Alex Thiel
+- Fix RecognizeObjectEvent crash issue
 
 ## V1.1.4
 - Update - Alex Tan
