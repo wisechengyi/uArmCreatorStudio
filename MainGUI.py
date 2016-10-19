@@ -973,7 +973,7 @@ if __name__ == '__main__':
             currentExitCode = app.exec_()
             logging.getLogger("application").info("System Exit - Exit Code" + str(currentExitCode))
             app = None  # Clear the App
-        except SystemExit as e:
+        except Exception as e:
             logging.getLogger("application").error("System Exit - " + str(e))
 
     logging.getLogger("application").info('---------------------------Logging End------------------------------------------\n')
