@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## V1.1.5
+- Update - Alex Tan
+- Date   - 2016-10-19
+
+## Changes
+
+- Fix prompt save issue after user close
+- Fix Test loop Command - Alex Thiel
+
 ## V1.1.4
 - Update - Alex Tan
 - Date   - 2016-10-14

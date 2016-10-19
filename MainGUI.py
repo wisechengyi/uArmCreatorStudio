@@ -613,9 +613,9 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             printf("GUI| ERROR: Could not load task: ", e)
             self.newTask(promptSave=False)
-            QtWidgets.QMessageBox.question(self, self.tr('Warning', "The program was unable to load the following script:\n") +
-                                    filename + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": " + str(e),
-                                           QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, self.tr('Warning'), self.tr("The program was unable to load the following script:\n") +
+                                    str(filename) + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": " + str(e)
+                                           )
 
 
 
@@ -633,7 +633,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
             if reply == QtWidgets.QMessageBox.Yes:
                 printf("GUI| Saving changes")
-                app.exit(MainWindow.EXIT_CODE_REBOOT)
+                self.saveTask(None)
+                app.exit(0)
 
             if reply == QtWidgets.QMessageBox.No:
                 printf("GUI| Not saving changes")
@@ -686,7 +687,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.env.close()
 
         printf("GUI| Done closing all objects and threads.")
-
 
     def updateLanguageSetting(self, language):
         """
@@ -936,7 +936,9 @@ if __name__ == '__main__':
     sys.excepthook   = exception_hook
     # Initialize global variables
     Global.init()
-
+    # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
+    env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
+    initLogger(env.getSetting('consoleSettings'))
     # exit code could help program to restart by itself
     currentExitCode = MainWindow.EXIT_CODE_REBOOT
     global app, trans
@@ -950,9 +952,6 @@ if __name__ == '__main__':
         font.setPixelSize(12)
         app.setFont(font)
 
-        # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
-        env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
-        initLogger(env.getSetting('consoleSettings'))
         try:
             # Create Language pack installer
             trans = QtCore.QTranslator()
@@ -972,6 +971,7 @@ if __name__ == '__main__':
             w = MainWindow(env)
             w.show()
             currentExitCode = app.exec_()
+            logging.getLogger("application").info("System Exit - Exit Code" + str(currentExitCode))
             app = None  # Clear the App
         except SystemExit as e:
             logging.getLogger("application").error("System Exit - " + str(e))
