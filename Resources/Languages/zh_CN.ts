@@ -70,15 +70,14 @@
         <location filename="../../CalibrationsGUI.py" line="378"/>
         <source>The algorithms in this software will only work if the
 </source>
-        <translation>软件中的算法只能工作在
-</translation>
+        <translation>若想使用视觉功能，</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="379"/>
         <source>camera is placed above the robot, and doesn&apos;t move. 
 
 </source>
-        <translation>摄像头在机械臂之上，而且不能移动。
+        <translation>请将摄像头固定在机械臂正上方。
 
 </translation>
     </message>
@@ -86,27 +85,27 @@
         <location filename="../../CalibrationsGUI.py" line="380"/>
         <source>Please find a way to mount your webcam above the robot,
 </source>
-        <translation>请想办法固定摄像头在机械臂之上，
+        <translation>请想办法将摄像头固定在机械臂正上方，
 </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="381"/>
         <source>in such a way that it has a wide field of view of the
 </source>
-        <translation>并且有一个宽阔的视野</translation>
+        <translation>并保证摄像头的视野</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="382"/>
         <source>robots workspace.
 </source>
-        <translation>在机械臂工作区域。
+        <translation>足以涵盖机械臂工作区域。
 </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="385"/>
         <source>Welcome Coordinate Calibration Wizard!
 </source>
-        <translation>欢迎来到坐标校正向导！
+        <translation>欢迎使用视觉校正向导！
 </translation>
     </message>
     <message>
@@ -121,7 +120,7 @@
 Step 1: Setup</source>
         <translation>
 
-步骤 1：安装</translation>
+第1步：安装</translation>
     </message>
 </context>
 <context>
@@ -154,7 +153,7 @@ Step 1: Setup</source>
 Step 2: Robot Placement</source>
         <translation>
 
-步骤 2：机械臂布置</translation>
+第2步：调整uArm姿势</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="453"/>
@@ -164,26 +163,26 @@ Step 2: Robot Placement</source>
     <message>
         <location filename="../../CalibrationsGUI.py" line="491"/>
         <source>Getting Height of Ground</source>
-        <translation>正在获取地面的高度</translation>
+        <translation>正在获取离地面的高度</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="492"/>
         <source>Yes, the end effector is touching the ground</source>
-        <translation>是，末端已经触控到地面</translation>
+        <translation>是的，末端吸盘已经触碰到桌面/地面</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="494"/>
         <source>Important!
 Before continuing, make sure the robots end effector is touching the ground, </source>
-        <translation>重要！
-在继续之前，请确保机械臂末端已经触控到地面， </translation>
+        <translation>重要提示：
+在继续下一步之前，请确保uArm末端已经触碰到桌面/地面， </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="494"/>
         <source>and that it is centered below the camera. The program will read the robots coordinates.
 
 </source>
-        <translation>并且它必须是在摄像头下的正中央。程序会读取机械臂的坐标。
+        <translation>并且uArm位于摄像头正下方。程序会读取uArm坐标。
 </translation>
     </message>
     <message>
@@ -207,7 +206,12 @@ Before continuing, make sure the robots end effector is touching the ground, </s
                  center of the cameras view, and the sucker is touching the
 
                  ground.</source>
-        <translation type="unfinished"></translation>
+        <translation>校正前请固定uArm。
+若在校正过程中，以及校正后移动了uArm，你需要重新做一次校正。
+
+请按照右边的GIF指引，在保证uArm底座固定的情况下，让uArm末端吸盘触碰到桌面/地面（uArm底部所在的平面）。
+
+请确保uArm吸盘在摄像头视野的中心，且吸盘已经触碰到地面。</translation>
     </message>
 </context>
 <context>
@@ -219,7 +223,8 @@ Before continuing, make sure the robots end effector is touching the ground, </s
 Step 3: Make a Robot Marker</source>
         <translation>
 
-步骤 3：制造一个机械臂标记</translation>
+第3步：添加一个Robot Marker
+（使摄像头识别uArm位置）</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="518"/>
@@ -244,7 +249,17 @@ Step 3: Make a Robot Marker</source>
                  track properly. If you finish this tutorial and tracking is
 
                  not sufficient, then draw on the marker to add more detail.</source>
-        <translation type="unfinished"></translation>
+        <translation>为了让摄像头识别uArm位置，请在uArm末端上方贴上一个标记，我们叫它“Robot Marker”。
+
+要求：
+1. 有丰富的细节特征。（如：二维码，图案复杂的贴纸，等等。）
+    为保证识别效果，Robot Marker必须有大量的细节特征可供识别。
+    若细节特征不够丰富，系统会提醒你重新换一个Robot Marker。
+     
+2. 不反光。
+
+手边没有现成的素材可以做成Robot Marker？
+马上拿起纸笔，发挥你的想象力，画一个能展示你风格的独特Marker吧！</translation>
     </message>
 </context>
 <context>
@@ -252,41 +267,41 @@ Step 3: Make a Robot Marker</source>
     <message>
         <location filename="../../CalibrationsGUI.py" line="596"/>
         <source>Step 4: Selecting the Marker</source>
-        <translation>步骤 4：选择一个标记</translation>
+        <translation>第4步：选取Robot Marker</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="669"/>
         <source>You must select an object with more detail.</source>
-        <translation>你必须选择一个有详细细节的物体。</translation>
+        <translation>请选取一个细节特征更丰富的识别对象。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="674"/>
         <source>Your selected marker does not have enough detail. Only </source>
-        <translation>你选择的标志没有足够细节。只有 </translation>
+        <translation>你选取的Robot Marker没有足够多的细节特征。只检测到 </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="674"/>
         <source> points were found.
 Add detail to your marker and try again.</source>
-        <translation> 点被发现。
-添加细节到你的标记并重新尝试。</translation>
+        <translation> 特征点。
+请在你的Robot Marker上添加更多细节后再试一次。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="688"/>
         <source>Your selected marker is not very detailed, or is too small, only </source>
-        <translation type="unfinished"> 
+        <translation>你选取的Robot Marker比较小，或细节特征不是非常丰富， 
 </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="688"/>
         <source> points were found.
 </source>
-        <translation> 点被发现。</translation>
+        <translation> 只检测到 个特征点。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="688"/>
         <source>Tracking may not be very accurate.</source>
-        <translation>追踪也许不能很精准。</translation>
+        <translation>追踪效果可能不会非常准确。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="692"/>
@@ -296,7 +311,7 @@ Add detail to your marker and try again.</source>
     <message>
         <location filename="../../CalibrationsGUI.py" line="692"/>
         <source> Points</source>
-        <translation> 点</translation>
+        <translation> 特征点</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="590"/>
@@ -311,7 +326,9 @@ right corner of the marker, and drag it to the bottom right corner of the marker
 
                  view.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>请确保uArm末端处于摄像头视野的中心，然后用鼠标拖拽选取Robot Marker，摄像头即开始识别Robot Marker。
+尽量保证摄像头能检测到至少500个特征点。
+移动uArm末端以确保摄像头能持续跟踪Robot Marker的位置。</translation>
     </message>
 </context>
 <context>
@@ -328,41 +345,41 @@ right corner of the marker, and drag it to the bottom right corner of the marker
 Final Step:</source>
         <translation>
 
-最终步骤：</translation>
+最后一步：</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="861"/>
         <source>The marker was not recognized in enough points- it was only seen </source>
-        <translation>标记没有足够能识别的点，它只能看到 </translation>
+        <translation>无法有效识别Robot Marker。 </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="861"/>
         <source>
 	  It must be seen at least </source>
         <translation>
-  至少要被看到 </translation>
+  至少要检测到500个特征点</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="881"/>
         <source>Calibration did not complete successfully. The following errors occured:
 </source>
-        <translation>校正并没有全部完成，发生了下面错误：
+        <translation>校正失败，错误信息如下：
 </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="885"/>
         <source>Try Again</source>
-        <translation>重新测试</translation>
+        <translation>重试</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="887"/>
         <source>Calibration was successful, </source>
-        <translation>校正已经成功，</translation>
+        <translation>校正成功，</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="917"/>
         <source>    Progress Report: The robot marker has failed to be recognized </source>
-        <translation>   进度报告： 机械臂标记识别未成功。</translation>
+        <translation>   进度报告： 摄像头没有识别到Robot Marker。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="920"/>
@@ -374,17 +391,17 @@ Final Step:</source>
     <message>
         <location filename="../../CalibrationsGUI.py" line="923"/>
         <source>    Testing Point:	</source>
-        <translation>    测试点： </translation>
+        <translation>    检测点： </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="924"/>
         <source>    Valid Points: 	</source>
-        <translation>   合理点： </translation>
+        <translation>   有效点： </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="958"/>
         <source>Robot was disconnected during calibration</source>
-        <translation>机械臂在校正过程中断开连接</translation>
+        <translation>uArm在校正过程中被断开连接</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="734"/>
@@ -405,7 +422,12 @@ Final Step:</source>
 
                             you will have to re-run this calibration.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>当你点击“开始校正”按钮后，uArm会自动完成一套校正动作。
+
+校正前，请确保：
+1）uArm末端在摄像头视野的中心，且摄像头能持续追踪Robot Marker的位置。
+2）uArm有足够的活动空间。
+3）uArm底座被固定在平面上。若移动uArm位置，则须重新校正一次才能正常使用视觉功能。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="855"/>
@@ -417,7 +439,12 @@ Final Step:</source>
 	  Also make sure that the area in the camera view is clear, blank, without too much
                         
 	  detail around it- try having a clear workspace with white paper as a background.</source>
-        <translation type="unfinished"></translation>
+        <translation>很抱歉，摄像头没有检测到Robot Marker。
+请试着重来一次校正，或更换/加工你的Robot Marker使其细节特征更丰富。
+
+请确保：
+1）uArm末端在摄像头视野的中心；
+2）背景干净，无过多杂物。可选择用不反光的白纸/白板作为背景。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="861"/>
@@ -431,7 +458,10 @@ Final Step:</source>
 	  Also make sure that the area around the camera view is clear, blank, without too
                           
 	  much detail around it- try having a clear workspace with white paper as a background.</source>
-        <translation type="unfinished"></translation>
+        <translation>小提示：
+1）请确保uArm末端在摄像头视野的中心；
+2）可试着将摄像头架在更高的位置，以获得更广的视野。
+2）请确保背景干净，无过多杂物。可选择用不反光的白纸/白板作为背景。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="889"/>
@@ -440,7 +470,10 @@ Results will be saved when you click Apply
                         on the calibrations page. Feel free to try this again.
 
                         Make sure to repeat this calibration whenever you move your camera or move your robot.</source>
-        <translation type="unfinished"></translation>
+        <translation>检测到 个特征点。
+若摄像头能持续追踪Robot Marker，请点击“应用”保存检测结果！
+
+如果你在完成校正后移动了摄像头或uArm的位置，请重新校正一次，以正常使用相应的视觉功能。</translation>
     </message>
 </context>
 <context>
@@ -448,12 +481,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CalibrationsGUI.py" line="59"/>
         <source>A camera must be connected to run this calibration.</source>
-        <translation>校正必须得连接上才能使用。</translation>
+        <translation>请接入摄像头。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="60"/>
         <source>A robot must be connected to run this calibration.</source>
-        <translation>机械臂必须连接才能执行校正。</translation>
+        <translation>请接入uArm。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="62"/>
@@ -463,17 +496,17 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CalibrationsGUI.py" line="67"/>
         <source>No information for this calibration</source>
-        <translation>校正没有信息可以用</translation>
+        <translation>暂无校正记录</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="84"/>
         <source>Calibrate Motion Detection</source>
-        <translation>校正运动检测</translation>
+        <translation>动作检测校正</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="85"/>
         <source>Calibrate Camera/Robot Position</source>
-        <translation>校正摄像头/机械臂位置</translation>
+        <translation>“摄像头－uArm”相对位置校正</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="86"/>
@@ -488,7 +521,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CalibrationsGUI.py" line="158"/>
         <source>Calibrations</source>
-        <translation>校正</translation>
+        <translation>校正（视觉功能）</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="166"/>
@@ -498,17 +531,17 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CalibrationsGUI.py" line="166"/>
         <source>     Active Movement: </source>
-        <translation>      激活运动： </translation>
+        <translation>      运动轨迹： </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="171"/>
         <source>Calibration has been run before. </source>
-        <translation>校正已经运行过了。 </translation>
+        <translation>你已经校正过了 :) </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="171"/>
         <source> points of data were collected.</source>
-        <translation> 数据点被收集。</translation>
+        <translation>已收集 数据。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="176"/>
@@ -518,29 +551,29 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CalibrationsGUI.py" line="197"/>
         <source>Do not make any movement in the cameras view until the next message appears.</source>
-        <translation type="unfinished">不要任何移动在移动</translation>
+        <translation>在下一条提示出现前，请不要在摄像头可视范围内移动机械臂。</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="270"/>
         <source>Skip to Calibration?</source>
-        <translation>跳过校正？</translation>
+        <translation>直接开始校正？</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="271"/>
         <source>I want to set a new Robot Marker</source>
-        <translation>我想设置一个新的机械臂标志</translation>
+        <translation>我想新建一个Robot Marker</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="272"/>
         <source>Skip to Automatic Calibration</source>
-        <translation>跳过自动化的校正</translation>
+        <translation>直接跳到“自动校正”</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="273"/>
         <source>It appears this is not the first time you have run this tutorial.
 
 </source>
-        <translation>很显然你不是第一次使用这个教程。
+        <translation>你之前已使用过此教程。
 
 </translation>
     </message>
@@ -549,20 +582,20 @@ Results will be saved when you click Apply
         <source>Would you like to start from scratch, or skip to the automated calibration?
 
 </source>
-        <translation>你是否要从草稿开始，或者跳过校正？
+        <translation>你是否要从头开始，或者直接跳到自动校正？
 
 </translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="273"/>
         <source>(Automated calibration only works if the robot has the same marker on the top</source>
-        <translation type="unfinished">（自动校正只工作在机械臂标记</translation>
+        <translation>（若你在上次校正后更换了机械臂标记，则无法使用自动校正，</translation>
     </message>
     <message>
         <location filename="../../CalibrationsGUI.py" line="273"/>
         <source> of its head as it did when you first ran this calibration.)
 </source>
-        <translation type="unfinished"></translation>
+        <translation>请重新校正一次）</translation>
     </message>
 </context>
 <context>
@@ -570,7 +603,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../ControlPanelGUI.py" line="793"/>
         <source>Ayyy</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../ControlPanelGUI.py" line="794"/>
@@ -583,7 +616,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="134"/>
         <source>Basic</source>
-        <translation>基本</translation>
+        <translation>基本功能</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="135"/>
@@ -598,7 +631,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="137"/>
         <source>Functions</source>
-        <translation>函数</translation>
+        <translation>自定义</translation>
     </message>
 </context>
 <context>
@@ -626,47 +659,47 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="504"/>
         <source>You have not created any trackable objects yet.</source>
-        <translation>你还没有创建任何可以被追踪的物体。</translation>
+        <translation>你还没有创建任何视觉识别对象。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="505"/>
         <source> Try adding new objects in the Resource Manager!</source>
-        <translation> 尝试在资源管理器中添加新物体！</translation>
+        <translation>试着新建一个视觉识别对象吧！</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="508"/>
         <source>It looks like you&apos;ve only created one object.</source>
-        <translation>看起来你只添加一个识别物体。</translation>
+        <translation>你只添加过一个视觉识别对象。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="509"/>
         <source> Feel free to add new objects in the Resource Manager!</source>
-        <translation> 请随便在资源管理器里面添加一些新物体！</translation>
+        <translation> 欢迎添加新的视觉识别对象！</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="519"/>
         <source>You have not created any Movement Recordings yet. </source>
-        <translation>你还没有创建任何轨迹录制。 </translation>
+        <translation>你还没有录制过运动轨迹。 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="520"/>
         <source>Try creating new recordings in the Resource Manager!</source>
-        <translation>尝试在资源管理器创建新的录制！</translation>
+        <translation>试着给uArm录制一段新动作吧！</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="525"/>
         <source>You have not created any Functions yet. </source>
-        <translation>你还没有创建任何函数。 </translation>
+        <translation>你还没有创建任何函数/自定义功能。 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="526"/>
         <source>Try creating new functions in the Resource Manager!</source>
-        <translation>尝试在资源管理器中创建新函数！</translation>
+        <translation>试着添加新的函数/自定义功能吧！</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="603"/>
         <source>Move XYZ</source>
-        <translation>移动 XYZ</translation>
+        <translation>移动到 (X,Y,Z)</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="604"/>
@@ -679,12 +712,12 @@ Results will be saved when you click Apply
         <location filename="../../CommandsGUI.py" line="605"/>
         <source>If you do not want to set one of the robots axis, simply leave it empty. For example, put y and z 
 </source>
-        <translation>如果你不想设置一个机械臂坐标，可以不填。例如，保持 y 和 z </translation>
+        <translation>你可以只填写需要变动的坐标。例如，当你不填写 y 和 z值 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="607"/>
         <source>empty and x to 5 will set the robots x position to 5 while keeping the current Y and Z the same.</source>
-        <translation>为空并且 x 为 5，这时候会把机械臂的 x 坐标设置为 5 并且保持现在的 y 和 z。</translation>
+        <translation>并设 x 为 5，机械臂的 x 坐标即变为 5 且 y 和 z位置不便。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="631"/>
@@ -709,22 +742,22 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="688"/>
         <source>This command sets the angle of the robots 4th axis, the wrist.</source>
-        <translation>这个命令设置机械臂的第四轴，末端角度。</translation>
+        <translation>这个命令设置机械臂末端（吸盘）的角度。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="705"/>
         <source>Get Angle</source>
-        <translation>获取角度</translation>
+        <translation>获取吸盘角度</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="710"/>
         <source>Angle </source>
-        <translation>角度</translation>
+        <translation>吸盘角度</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="731"/>
         <source>Set the wrist position to </source>
-        <translation>设置末端位置到</translation>
+        <translation>将吸盘角度设置为</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="731"/>
@@ -734,7 +767,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="742"/>
         <source>Play Movement Recording</source>
-        <translation>播放轨迹录制</translation>
+        <translation>播放已录制的动作</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="733"/>
@@ -751,12 +784,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="762"/>
         <source>Choose a Recording </source>
-        <translation>选择一个录制 </translation>
+        <translation>选择一个已录制动作 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="771"/>
         <source>Playback Speed </source>
-        <translation>回放速度 </translation>
+        <translation>播放速度 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="778"/>
@@ -766,7 +799,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="796"/>
         <source>Play movement recording </source>
-        <translation>播放轨迹录制 </translation>
+        <translation>播放已录制的动作 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="807"/>
@@ -800,12 +833,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="851"/>
         <source>Detach Servos</source>
-        <translation>解除电机锁定</translation>
+        <translation>解锁电机</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="852"/>
         <source>Disengage the specified servos on the robot</source>
-        <translation>解除机械臂的电机锁定</translation>
+        <translation>解锁后，你可手动拖拽该电机控制的uArm关节</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="936"/>
@@ -815,17 +848,17 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="937"/>
         <source>Stretch Servo </source>
-        <translation>伸展电机 </translation>
+        <translation>前后方向电机（控制y轴） </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="938"/>
         <source>Height Servo </source>
-        <translation>上下电机 </translation>
+        <translation>高低方向电机（控制z轴） </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="939"/>
         <source>Wrist Servo </source>
-        <translation>末端电机 </translation>
+        <translation>吸盘电机 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="966"/>
@@ -835,17 +868,17 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="967"/>
         <source>  Stretch</source>
-        <translation>  伸展</translation>
+        <translation>  前后</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="968"/>
         <source>  Height</source>
-        <translation>  上下</translation>
+        <translation>  高低</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="969"/>
         <source>  Wrist</source>
-        <translation>  末端</translation>
+        <translation>  吸盘</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="916"/>
@@ -855,7 +888,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="917"/>
         <source>Re-engage servos on the robot. This will &apos;stiffen&apos; the servos, and they will resist movement.</source>
-        <translation>锁定机械臂的电机，锁定后，你将不能移动机械臂。</translation>
+        <translation>锁定机械臂的电机，锁定后，你将不能手动拖拽机械臂。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="965"/>
@@ -865,12 +898,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="980"/>
         <source>Activate Gripper</source>
-        <translation>激活夹子</translation>
+        <translation>吸取/夹取</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="981"/>
         <source>Activates the robots gripper</source>
-        <translation>激活机械臂夹子</translation>
+        <translation>开启吸/夹功能</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="989"/>
@@ -880,12 +913,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="990"/>
         <source>This command will wait for a certain amount of time. Time is measured in seconds.</source>
-        <translation>这个命令将会等待一个具体的时间，时间单位是秒。</translation>
+        <translation>设置等待时间（单位：秒）。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1001"/>
         <source>Number of seconds </source>
-        <translation>具体的时间数字</translation>
+        <translation>秒数</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1084"/>
@@ -895,32 +928,32 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1028"/>
         <source>Deactivate Gripper</source>
-        <translation>关闭夹子</translation>
+        <translation>停止吸/夹</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1029"/>
         <source>Deactivates the robots gripper</source>
-        <translation>关闭机械臂夹子</translation>
+        <translation>关闭吸/夹功能</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1038"/>
         <source>Play Tone</source>
-        <translation>播放音调</translation>
+        <translation>播放声音</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1039"/>
         <source>This tool uses the robots buzzer to play a tone at a certain frequency for a certain amount of time</source>
-        <translation>这个工具使用机械臂的蜂鸣器以一定的频率和一定次数去播放音调</translation>
+        <translation>让机械臂的蜂鸣器发声。你可以设置音调高低，及播放时间</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1055"/>
         <source>Frequency </source>
-        <translation>频率</translation>
+        <translation>频率（数值越大，音调越高）</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1056"/>
         <source>Duration </source>
-        <translation>时长</translation>
+        <translation>发声时长</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1057"/>
@@ -930,12 +963,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1083"/>
         <source>Play a tone of </source>
-        <translation>播放一段音调</translation>
+        <translation>播放声音</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1099"/>
         <source>Move Relative To Object</source>
-        <translation>对物体识别移动相对位置</translation>
+        <translation>移动到某物体的相对位置</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1072"/>
@@ -968,12 +1001,12 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
     <message>
         <location filename="../../CommandsGUI.py" line="1546"/>
         <source>Choose an object </source>
-        <translation>选择一个物体识别 </translation>
+        <translation>选择一个需要识别的物体 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1189"/>
         <source>Set Wrist Relative To Object</source>
-        <translation>设置末端识别物体的相对位置</translation>
+        <translation>将吸盘旋转到某物体的相对角度</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1162"/>
@@ -998,17 +1031,17 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
     <message>
         <location filename="../../CommandsGUI.py" line="1258"/>
         <source>Set the wrist </source>
-        <translation>设置末端 </translation>
+        <translation>吸盘相对该物体的 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1259"/>
         <source> degrees relative to </source>
-        <translation>度相对于</translation>
+        <translation>旋转角度为</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1268"/>
         <source>Pick Up Object</source>
-        <translation>拣起一个物体</translation>
+        <translation>捡起一个物体</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1233"/>
@@ -1024,7 +1057,7 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1311"/>
         <source>Pick Up </source>
-        <translation>拣起</translation>
+        <translation>捡起</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1312"/>
@@ -1034,12 +1067,12 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1312"/>
         <source> and pick it up</source>
-        <translation> 并且拣起</translation>
+        <translation> 并捡起</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1321"/>
         <source>Test If Object Seen</source>
-        <translation>测试是否能看见物体</translation>
+        <translation>条件：若“看见”某物体</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1282"/>
@@ -1054,7 +1087,7 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1342"/>
         <source>If recognized </source>
-        <translation>如果识别</translation>
+        <translation>如果“看见”</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1343"/>
@@ -1074,7 +1107,7 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1510"/>
         <source>Test If </source>
-        <translation>测试如果 </translation>
+        <translation>检测如果 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1405"/>
@@ -1089,17 +1122,17 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1595"/>
         <source> NOT</source>
-        <translation> 不是</translation>
+        <translation> 不</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1411"/>
         <source> confident object was seen</source>
-        <translation> 确信物体被看见</translation>
+        <translation> 确信该物体被“看见”</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1420"/>
         <source>Test If Object Inside Region</source>
-        <translation>测试如果物体在范围里</translation>
+        <translation>条件：如果物体在某区域范围里</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1380"/>
@@ -1114,22 +1147,22 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1442"/>
         <source>Choose an Object </source>
-        <translation>选择一个物体 </translation>
+        <translation>选择一个要识别的物体 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1443"/>
         <source>What part of object must enter the location </source>
-        <translation></translation>
+        <translation>你想把该物体的哪部分放置在规定区域内？</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1444"/>
         <source>Click and drag the area of the screen that the object will be in</source>
-        <translation>点击并且拖拽物体屏幕的范围</translation>
+        <translation>请用鼠标拖拽出指定区域（如果物体被放置在该区域内，则执行接下来的命令）</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1510"/>
         <source> Inside Region</source>
-        <translation>在范围里</translation>
+        <translation>在区域内</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1752"/>
@@ -1149,12 +1182,12 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1515"/>
         <source> seen within a region</source>
-        <translation>在范围里面被看见</translation>
+        <translation>被放置在该区域内</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1524"/>
         <source>Test Angle Of Object</source>
-        <translation>测试物体的角度</translation>
+        <translation>条件：如果物体的摆放角度为...</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1481"/>
@@ -1185,37 +1218,37 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1590"/>
         <source>Test Angle of </source>
-        <translation>测试角度</translation>
+        <translation>检测角度</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1593"/>
         <source>If angle is</source>
-        <translation>如果角度是</translation>
+        <translation>如果该物体的X轴</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1596"/>
         <source> between (</source>
-        <translation>在 X 轴的(</translation>
+        <translation>和机械臂 X 轴的夹角为(</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1597"/>
         <source>) degrees from the X Axis</source>
-        <translation>) 度之间</translation>
+        <translation>) 度</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1615"/>
         <source>This is the start of a block of commands that only run if a conditional statement is met.</source>
-        <translation>这是命令块的开始，</translation>
+        <translation>若满足上述条件，则开始执行以下命令</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1629"/>
         <source>This is the end of a block of commands.</source>
-        <translation type="unfinished"></translation>
+        <translation>上述命令到此为止。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1642"/>
         <source>This will run commands if a test evaluates to False</source>
-        <translation type="unfinished"></translation>
+        <translation>若不符合条件，则执行以下命令</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1651"/>
@@ -1225,27 +1258,27 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1652"/>
         <source>This command can create a variable or set an existing variable to a value or an expression.</source>
-        <translation>这个命令会创建一个变量或者设置一个已存在的变量，或者一个表达式。</translation>
+        <translation>你可创建一个变量，或为已存在的变量设置内容。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1668"/>
         <source>Variable Name </source>
-        <translation>变量名 </translation>
+        <translation>变量名称 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1724"/>
         <source>Expression </source>
-        <translation>表达式</translation>
+        <translation>变量内容 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1701"/>
         <source>Test Value</source>
-        <translation>测试值</translation>
+        <translation>检测值</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1702"/>
         <source>This will allow/disallow code to run that is in blocked brackets below it IF the test is true.</source>
-        <translation>这个允许/不允许执行代码块，如果测试为真。</translation>
+        <translation>如果检测到的值符合标准，则执行/跳过以下命令</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1716"/>
@@ -1270,7 +1303,7 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1723"/>
         <source>Test </source>
-        <translation>测试</translation>
+        <translation>检测</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1748"/>
@@ -1295,12 +1328,12 @@ object. If the object cannot be found or picked up, then False will be returned<
     <message>
         <location filename="../../CommandsGUI.py" line="1754"/>
         <source> then</source>
-        <translation>然后</translation>
+        <translation>那么</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1763"/>
         <source>Loop While Test Is True</source>
-        <translation>循环，当测试是真</translation>
+        <translation>当满足条件时，循环执行命令</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1708"/>
@@ -1315,32 +1348,32 @@ object. If the object cannot be found or picked up, then False will be returned<
         <translation type="obsolete">将会被用到。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1796"/>
+        <location filename="../../CommandsGUI.py" line="1798"/>
         <source>Choose a Test</source>
-        <translation>选择一个测试</translation>
+        <translation>选择一个检测项目</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1852"/>
+        <location filename="../../CommandsGUI.py" line="1856"/>
         <source>End Task</source>
-        <translation>结束测试</translation>
+        <translation>结束任务（包括所有事件）</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1853"/>
+        <location filename="../../CommandsGUI.py" line="1857"/>
         <source>When the code reaches this point, the program will end.</source>
-        <translation>当代码执行到这个点，程序将会结束。</translation>
+        <translation>该任务内的所有事件终止运行</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1862"/>
+        <location filename="../../CommandsGUI.py" line="1866"/>
         <source>Exit Current Event</source>
         <translation>退出当前事件</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1863"/>
+        <location filename="../../CommandsGUI.py" line="1867"/>
         <source>When the code reaches this point, the program will not process the rest of this event.</source>
-        <translation>当代码执行到这个点，程序将不会执行剩下的事件。</translation>
+        <translation>该事件终止运行</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1875"/>
+        <location filename="../../CommandsGUI.py" line="1879"/>
         <source>Run Python Code</source>
         <translation>执行 Python 代码</translation>
     </message>
@@ -1358,7 +1391,7 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
         <translation type="obsolete">你最检查代码并且知道它做了些什么！</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1917"/>
+        <location filename="../../CommandsGUI.py" line="1921"/>
         <source>Run Task</source>
         <translation>执行任务</translation>
     </message>
@@ -1389,50 +1422,50 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
         <translation type="obsolete">会返回。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1941"/>
+        <location filename="../../CommandsGUI.py" line="1945"/>
         <source>
 
 Make sure the task you run has an
 </source>
-        <translation>确保你运行的任务是一个
+        <translation>请务必在你的任务中
 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1941"/>
+        <location filename="../../CommandsGUI.py" line="1945"/>
         <source>&apos;End Task&apos; command in it, to return to
 </source>
-        <translation>包含 &apos;结束任务&apos; 任务在里面，能返回到
+        <translation>加入“结束任务”命令
 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1941"/>
+        <location filename="../../CommandsGUI.py" line="1945"/>
         <source>this task when its finished</source>
-        <translation>当前任务当它结束时</translation>
+        <translation>当该任务结束时</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1949"/>
+        <location filename="../../CommandsGUI.py" line="1953"/>
         <source>Select Task</source>
         <translation>选择任务</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1953"/>
+        <location filename="../../CommandsGUI.py" line="1957"/>
         <source>Share Current Tasks Variables</source>
         <translation>共享当前任务的变量</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1975"/>
+        <location filename="../../CommandsGUI.py" line="1979"/>
         <source>No Task Selected</source>
         <translation>没有选中任何任务</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1977"/>
+        <location filename="../../CommandsGUI.py" line="1981"/>
         <source>Run </source>
         <translation>执行 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2091"/>
+        <location filename="../../CommandsGUI.py" line="2095"/>
         <source>Run Function</source>
-        <translation>执行函数</translation>
+        <translation>执行函数/自定义功能</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1924"/>
@@ -1447,19 +1480,19 @@ Make sure the task you run has an
         <translation type="obsolete">参数，用户会被提示输入这些参数</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2040"/>
+        <location filename="../../CommandsGUI.py" line="2044"/>
         <source>Choose a Function </source>
-        <translation>选择一个函数 </translation>
+        <translation>选择一个函数/自定义功能 </translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2090"/>
+        <location filename="../../CommandsGUI.py" line="2094"/>
         <source>No function selected</source>
-        <translation>没有选中函数</translation>
+        <translation>没有选中函数/自定义功能</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2105"/>
+        <location filename="../../CommandsGUI.py" line="2109"/>
         <source>Vision Assisted Move XYZ</source>
-        <translation>视觉辅助移动 XYZ</translation>
+        <translation>视觉辅助下移动到 (X,Y,Z)</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="2041"/>
@@ -1481,9 +1514,9 @@ Make sure the task you run has an
         <translation type="obsolete">这个命令要求摄像头/机械臂已校正。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2113"/>
+        <location filename="../../CommandsGUI.py" line="2117"/>
         <source>This function is experimental. It may not yield more accurate results.</source>
-        <translation>这个函数现在还是实验性，它也许还不能很准确。</translation>
+        <translation>此功能还在开发中，效果有待改进。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="743"/>
@@ -1492,7 +1525,8 @@ Make sure the task you run has an
 &quot;
                                                     movement recordings, simply click on &apos;Resources&apos; on the toolbar and add a new recording.
                                                     </source>
-        <translation type="unfinished"></translation>
+        <translation>根据你设置的速度来播放已录制的动作。
+若想录制一段新动作，可进入“菜单栏－－素材库”进行录制。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="808"/>
@@ -1503,7 +1537,9 @@ Make sure the task you run has an
 
                                                     those locations with a speed of 20 cm/s. The default robot speed is 10 cm/s.
                                                     </source>
-        <translation type="unfinished"></translation>
+        <translation>通过此工具，你可设置uArm的运动速度。
+如：当你设置速度为“20”，并让uArm移动到某个位置(x,y,z)，
+uArm会以20厘米/秒的速度运动到该位置。uArm的默认运动速度为10厘米/秒。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1100"/>
@@ -1517,7 +1553,10 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
 
                                                     empty and x o 5 will set the robots x position to objX + 5 while keeping the current Y and Z the same.
                                                     </source>
-        <translation type="unfinished"></translation>
+        <translation>选择你想让uArm“看见”的物体，利用视觉识别来引导uArm移动到该物体的相对位置。
+如：
+1）若(x,y,z)=(0,0,0)，uArm会识别指定物体，并移动到该物体的正上方。
+2）若(x,y,z)=( , ,5)，即只设置z值为5，不填写x和y值，uArm会识别指定物体，并移动到比该物体高5厘米的位置。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1190"/>
@@ -1530,7 +1569,16 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
 
                                                     get a feel for how it works!
                                                     </source>
-        <translation type="unfinished"></translation>
+        <translation>选择你想让uArm“看见”的物体，让uArm根据该物体的旋转角度来转动吸盘。
+通过此功能，你可以让uArm将多个物体整齐叠放。
+不熟悉“角度”概念？试着旋转物体，看看吸盘是怎么跟着动的？你很快就会摸索出该功能的使用方法！
+
+问：什么是物体摆放角度？
+当你在素材库中创建视觉识别对象时，屏幕会显示该物体的三维坐标（蓝－x轴；红－y轴；绿－z轴）。
+1）相对于uArm X轴的摆放角度：蓝色箭头（正方向）与uArmX轴的夹角
+2）相对于uArm底座的摆放角度：在uArm底座中点和该物体中点间连一条线，这条线与蓝色箭头（正方向）的夹角。
+
+若想了解详情，请见《用户指南》中的图示说明。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1269"/>
@@ -1539,12 +1587,12 @@ If you don&apos;t want to set one of the robots axis, simply leave it empty. For
                                                     
 object. If the object cannot be found or picked up, then False will be returned
                                                     </source>
-        <translation type="unfinished"></translation>
+        <translation>选择你想让uArm“看见”的物体，让uArm“看见”后捡起该物体。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1322"/>
         <source>This command will allow code in blocked brackets below it to run IF the specified object has been recognized.</source>
-        <translation type="unfinished"></translation>
+        <translation>如果uArm“看见”某物体，则运行“上下箭头”之间的命令块。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1421"/>
@@ -1552,7 +1600,7 @@ object. If the object cannot be found or picked up, then False will be returned
                                                     This command will allow code in blocked brackets below it to run IF the specified object has been
                                                     recognized and the objects location in a particular location.
                                                     </source>
-        <translation type="unfinished"></translation>
+        <translation>如果uArm“看见”某物体在指定区域内，则运行“上下箭头”之间的命令块。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1525"/>
@@ -1565,24 +1613,29 @@ object. If the object cannot be found or picked up, then False will be returned
 
                                                      and so on.
                                                         </source>
-        <translation type="unfinished"></translation>
+        <translation>让uArm“看见”某物体，若该物体的摆放角度在某个范围内（如：30－60度之间），则运行“上下箭头”之间的命令块。
+
+问：什么是物体的摆放角度？
+以uArm X轴正方向为起点，即0度，逆时针旋转至物体坐标的蓝箭头（正方向）所得到的角度。
+如，当uArm X轴指向3点钟方向，物体的蓝箭头指向12点钟方向，则物体摆放角度为90度。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1764"/>
         <source>Repeat this section of commands while a certain test returns true. You can choose what type of test will be used.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>请设置一个条件。当这个条件被满足时，以下命令将被重复执行。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1876"/>
+        <location filename="../../CommandsGUI.py" line="1880"/>
         <source>This tool will execute a script made by the user.
 DO NOT RUN PROGRAMS WITH SCRIPTS WRITTEN BY OTHER
                                                     
 USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
-        <translation type="unfinished"></translation>
+        <translation>直接运行自己编写的代码
+不建议直接运行别人编写的代码。如果你想这样做，务必在使用前检查一遍他/她写的代码。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1918"/>
+        <location filename="../../CommandsGUI.py" line="1922"/>
         <source>This tool will run  another task file and run it inside of this task, until the &apos;End Task&apos;
 
                                                     command is called within the task, then it will return to the currently running task.
@@ -1590,28 +1643,31 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
                                                     All tasks are preloaded when script is launched, so if a child class runs a parent class, an error
 
                                                     will be returned.</source>
-        <translation type="unfinished"></translation>
+        <translation>在本任务中运行其它任务。
+如：在任务A中运行任务B，当运行到任务B中的“结束任务”命令时，任务B结束，uArm会继续执行任务A。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1987"/>
+        <location filename="../../CommandsGUI.py" line="1991"/>
         <source>This will run a custom function that the user defines in the Resources menu. If the function has 
 
                                                     arguments, the user will be prompted to fill out the arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>运行素材库中的函数/自定义功能。
+如果函数/自定义功能中涉及变量，你需要填写变量的值。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="2106"/>
+        <location filename="../../CommandsGUI.py" line="2110"/>
         <source>This works like the normal Move XYZ command, but uses vision to verify the robots position and
 
                                                         perform a &apos;correction&apos; move after an initial move. 
 
                                                         This command requires Camera/Robot Calibrations to be done.</source>
-        <translation type="unfinished"></translation>
+        <translation>让uArm在“看见”的情况下移动到某位置。
+完成视觉校正后才可使用此功能。</translation>
     </message>
     <message>
-        <location filename="../../CommandsGUI.py" line="1890"/>
+        <location filename="../../CommandsGUI.py" line="1894"/>
         <source>Description </source>
-        <translation type="unfinished">描述 </translation>
+        <translation>描述 </translation>
     </message>
 </context>
 <context>
@@ -1762,7 +1818,10 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         # ... code ...
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">编程的可能性是无限的:D！欢迎直接用Python代码实现你脑海中的酷炫想法💡
+同时，此软件为开发者们准备了内置的代码库和模组，欢迎使用！
+
+</translation>
     </message>
 </context>
 <context>
@@ -1780,22 +1839,22 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../CommonGUI.py" line="586"/>
         <source>Here you can change settings about what you see in the console</source>
-        <translation>这里你可以改变控制台有关你看到信息设置</translation>
+        <translation>请自定义你想在控制台中看到的信息</translation>
     </message>
     <message>
         <location filename="../../CommonGUI.py" line="590"/>
         <source>Customize what you see printed on the Console</source>
-        <translation>自定义控制台里你能看到打印的信息</translation>
+        <translation>自定义你能在控制台看到的信息</translation>
     </message>
     <message>
         <location filename="../../CommonGUI.py" line="592"/>
         <source>Wrap Lines </source>
-        <translation>换行 </translation>
+        <translation>代码换行 </translation>
     </message>
     <message>
         <location filename="../../CommonGUI.py" line="593"/>
         <source>Robot Logs </source>
-        <translation>机械臂日志</translation>
+        <translation>uArm日志</translation>
     </message>
     <message>
         <location filename="../../CommonGUI.py" line="594"/>
@@ -1805,7 +1864,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../CommonGUI.py" line="595"/>
         <source>Communication Logs </source>
-        <translation>通信协议日志 </translation>
+        <translation>通信日志 </translation>
     </message>
     <message>
         <location filename="../../CommonGUI.py" line="596"/>
@@ -1820,7 +1879,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../CommonGUI.py" line="598"/>
         <source>GUI Logs </source>
-        <translation>图形化日志 </translation>
+        <translation>GUI(图形化界面)日志 </translation>
     </message>
     <message>
         <location filename="../../CommonGUI.py" line="599"/>
@@ -1830,7 +1889,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../CommonGUI.py" line="600"/>
         <source>Save to File</source>
-        <translation type="unfinished"></translation>
+        <translation>保存到文件</translation>
     </message>
 </context>
 <context>
@@ -1838,7 +1897,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../ControlPanelGUI.py" line="151"/>
         <source>Command List</source>
-        <translation>任务列表</translation>
+        <translation>命令列表</translation>
     </message>
     <message>
         <location filename="../../ControlPanelGUI.py" line="82"/>
@@ -1853,12 +1912,12 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../ControlPanelGUI.py" line="84"/>
         <source>Change</source>
-        <translation>改变</translation>
+        <translation>修改</translation>
     </message>
     <message>
         <location filename="../../ControlPanelGUI.py" line="157"/>
         <source> Command List</source>
-        <translation> 任务列表</translation>
+        <translation> 命令列表</translation>
     </message>
     <message>
         <location filename="../../ControlPanelGUI.py" line="242"/>
@@ -1877,52 +1936,52 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 <context>
     <name>DeviceWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="739"/>
-        <source>Please select the robot you will be using:</source>
-        <translation>请选择你要用到的机械臂：</translation>
-    </message>
-    <message>
-        <location filename="../../MainGUI.py" line="740"/>
-        <source>Please select the camera you will be using:</source>
-        <translation>请选择你要用到的摄像头：</translation>
-    </message>
-    <message>
-        <location filename="../../MainGUI.py" line="744"/>
-        <source>Scan for Robots</source>
-        <translation>扫描机械臂</translation>
-    </message>
-    <message>
         <location filename="../../MainGUI.py" line="745"/>
-        <source>Scan for Cameras</source>
-        <translation>扫描摄像头</translation>
+        <source>Please select the robot you will be using:</source>
+        <translation>请选择你正在使用的uArm端口：</translation>
     </message>
     <message>
         <location filename="../../MainGUI.py" line="746"/>
+        <source>Please select the camera you will be using:</source>
+        <translation>请选择你正在使用的摄像头：</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="750"/>
+        <source>Scan for Robots</source>
+        <translation>查找uArm</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="751"/>
+        <source>Scan for Cameras</source>
+        <translation>查找摄像头</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="752"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="747"/>
+        <location filename="../../MainGUI.py" line="753"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="808"/>
+        <location filename="../../MainGUI.py" line="814"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="827"/>
+        <location filename="../../MainGUI.py" line="833"/>
         <source>No devices were found.</source>
         <translation>没有找到设备。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="840"/>
+        <location filename="../../MainGUI.py" line="846"/>
         <source>Camera </source>
         <translation>摄像头 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="847"/>
+        <location filename="../../MainGUI.py" line="853"/>
         <source>No cameras were found.</source>
         <translation>没有找到摄像头。</translation>
     </message>
@@ -1932,22 +1991,22 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="134"/>
         <source>Initialization</source>
-        <translation>初始化</translation>
+        <translation>初始事件(只运行1次)</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="135"/>
         <source>Step</source>
-        <translation>步骤</translation>
+        <translation>循环运行</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="136"/>
         <source>Tip Sensor</source>
-        <translation>限位传感器</translation>
+        <translation>按压吸盘控制</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="137"/>
         <source>Keyboard</source>
-        <translation>键盘</translation>
+        <translation>键盘控制</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="138"/>
@@ -1957,12 +2016,12 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="139"/>
         <source>Recognized</source>
-        <translation>已识别</translation>
+        <translation>视觉识别</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="140"/>
         <source>Not Recognized</source>
-        <translation>未识别</translation>
+        <translation>视觉未识别</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="164"/>
@@ -1987,27 +2046,27 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="193"/>
         <source>Above &apos;High&apos; Speed</source>
-        <translation>在高速之上</translation>
+        <translation>高速运动</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="194"/>
         <source>Less than &apos;High&apos; Speed</source>
-        <translation>在高速之下</translation>
+        <translation>中速运动</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="196"/>
         <source>Between &apos;Low&apos; to &apos;High&apos; Speed</source>
-        <translation>在低和高之间</translation>
+        <translation>低速运动</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="212"/>
         <source>Face Detected</source>
-        <translation>人脸已识别</translation>
+        <translation>人脸识别</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="213"/>
         <source>Face Not Detected</source>
-        <translation>人脸未识别</translation>
+        <translation>没识别到人脸</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="214"/>
@@ -2017,7 +2076,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="215"/>
         <source>Smile Not Detected</source>
-        <translation>微笑未识别</translation>
+        <translation>没识别到微笑</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="216"/>
@@ -2027,7 +2086,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="217"/>
         <source>Eye Not Detected</source>
-        <translation>人眼未识别</translation>
+        <translation>没识别到人眼</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="122"/>
@@ -2053,37 +2112,37 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="314"/>
         <source>Initialization</source>
-        <translation>初始化</translation>
+        <translation>初始事件</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="315"/>
         <source>Activates once each time the task is run</source>
-        <translation>任务运行自动激活</translation>
+        <translation>任务开始后，仅运行1次右边的命令</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="326"/>
         <source>Step</source>
-        <translation>步骤</translation>
+        <translation>循环运行</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="327"/>
         <source>Activates every time the events are refreshed</source>
-        <translation>事件刷新时激活</translation>
+        <translation>任务开始后，重复运行右边的命令</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="341"/>
         <source>Tip Pressed</source>
-        <translation>按下限位开关</translation>
+        <translation>按压uArm吸盘</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="342"/>
         <source>Activates when the sensor on the tip of the arm is pressed</source>
-        <translation>限位开关按下时激活</translation>
+        <translation>当按压uArm末端吸盘时，运行右边的命令</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="355"/>
         <source>Key Pressed</source>
-        <translation>键按下</translation>
+        <translation>按键</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="358"/>
@@ -2098,12 +2157,12 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="361"/>
         <source>Activates when the letter </source>
-        <translation>当按字母按键激活 </translation>
+        <translation>当输入字母 </translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="361"/>
         <source> is pressed</source>
-        <translation> 被按下</translation>
+        <translation> 时运行右边的命令</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="376"/>
@@ -2128,7 +2187,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="387"/>
         <source>Low to High Speed</source>
-        <translation>小于高速</translation>
+        <translation>低速</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="391"/>
@@ -2143,10 +2202,10 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="403"/>
         <source>Activates when there is motion detected</source>
-        <translation>检测到动作时激活</translation>
+        <translation>当摄像头检测到动作时，运行右边的命令</translation>
     </message>
     <message>
-        <location filename="../../EventsGUI.py" line="440"/>
+        <location filename="../../EventsGUI.py" line="441"/>
         <source>Object Recognized</source>
         <translation>物体识别</translation>
     </message>
@@ -2156,19 +2215,19 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         <translation>物体 &apos;</translation>
     </message>
     <message>
-        <location filename="../../EventsGUI.py" line="421"/>
+        <location filename="../../EventsGUI.py" line="422"/>
         <source>&apos; Recognized</source>
-        <translation>&apos; 已识别</translation>
+        <translation>&apos;已识别 </translation>
     </message>
     <message>
-        <location filename="../../EventsGUI.py" line="430"/>
+        <location filename="../../EventsGUI.py" line="431"/>
         <source>Activates when the object </source>
-        <translation>当物体检测时激活 </translation>
+        <translation>当摄像头检测到 </translation>
     </message>
     <message>
-        <location filename="../../EventsGUI.py" line="430"/>
+        <location filename="../../EventsGUI.py" line="431"/>
         <source> is seen on camera.</source>
-        <translation> 被摄像头捕捉。</translation>
+        <translation> 时运行右边的命令。</translation>
     </message>
 </context>
 <context>
@@ -2176,7 +2235,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../MainGUI.py" line="78"/>
         <source>uArm Creator Studio</source>
-        <translation>uArm 创造工具</translation>
+        <translation>uArm创意百宝箱</translation>
     </message>
     <message>
         <location filename="../../MainGUI.py" line="79"/>
@@ -2189,97 +2248,97 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="134"/>
+        <location filename="../../MainGUI.py" line="135"/>
         <source>New Task</source>
         <translation>新建任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="135"/>
+        <location filename="../../MainGUI.py" line="136"/>
         <source>Save Task</source>
         <translation>保存任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="136"/>
-        <source>Save Task As</source>
-        <translation>保存任务为</translation>
-    </message>
-    <message>
         <location filename="../../MainGUI.py" line="137"/>
+        <source>Save Task As</source>
+        <translation>另存为任务</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="138"/>
         <source>Load Task</source>
-        <translation>加载任务</translation>
+        <translation>导入任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="156"/>
+        <location filename="../../MainGUI.py" line="161"/>
         <source>Visit the forum!</source>
-        <translation>访问论坛！</translation>
+        <translation>欢迎访问论坛！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="157"/>
+        <location filename="../../MainGUI.py" line="162"/>
         <source>Visit our subreddit!</source>
-        <translation>访问我们的 subreddit!</translation>
+        <translation>欢迎参与 subreddit讨论!</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="168"/>
+        <location filename="../../MainGUI.py" line="173"/>
         <source>Vision Object</source>
-        <translation>视觉对象</translation>
+        <translation>可识别物体</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="169"/>
+        <location filename="../../MainGUI.py" line="174"/>
         <source>Vision Group</source>
-        <translation>视觉组</translation>
+        <translation>可识别物体分组</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="170"/>
+        <location filename="../../MainGUI.py" line="175"/>
         <source>Movement Recording</source>
-        <translation>轨迹录制</translation>
+        <translation>录制新动作</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="171"/>
+        <location filename="../../MainGUI.py" line="176"/>
         <source>Function</source>
-        <translation>函数</translation>
+        <translation>函数/自定义功能</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="206"/>
+        <location filename="../../MainGUI.py" line="211"/>
         <source>Calibrate</source>
         <translation>校正</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="207"/>
-        <source>Resources</source>
-        <translation>资源</translation>
-    </message>
-    <message>
-        <location filename="../../MainGUI.py" line="209"/>
-        <source>Run/Pause the command script (Ctrl+R)</source>
-        <translation>运行/暂停 命令脚本 (Ctrl+R)</translation>
-    </message>
-    <message>
-        <location filename="../../MainGUI.py" line="210"/>
-        <source>Open Camera and Robot settings</source>
-        <translation>打开摄像头和机械臂设置</translation>
-    </message>
-    <message>
-        <location filename="../../MainGUI.py" line="211"/>
-        <source>Open Robot and Camera Calibration Center</source>
-        <translation>打开机械臂和摄像头校正</translation>
-    </message>
-    <message>
         <location filename="../../MainGUI.py" line="212"/>
-        <source>Open Resource Manager</source>
-        <translation>打开资源管理器</translation>
+        <source>Resources</source>
+        <translation>素材库</translation>
     </message>
     <message>
         <location filename="../../MainGUI.py" line="214"/>
+        <source>Run/Pause the command script (Ctrl+R)</source>
+        <translation>运行/暂停任务 (Ctrl+R)</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="215"/>
+        <source>Open Camera and Robot settings</source>
+        <translation>连接摄像头和uArm</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="216"/>
+        <source>Open Robot and Camera Calibration Center</source>
+        <translation>校正中心（视觉功能 &amp; 运动检测功能）</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="217"/>
+        <source>Open Resource Manager</source>
+        <translation>进入素材库</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="219"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="249"/>
+        <location filename="../../MainGUI.py" line="254"/>
         <source>Camera</source>
         <translation>摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="250"/>
+        <location filename="../../MainGUI.py" line="255"/>
         <source>Console</source>
         <translation>控制台</translation>
     </message>
@@ -2299,21 +2358,21 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         <translation type="obsolete">GUI|控制器已经准备好，正在加载脚本和打开任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="341"/>
+        <location filename="../../MainGUI.py" line="346"/>
         <source>Certain Events and Commands are missing the following requirements to work properly: 
 
 </source>
-        <translation></translation>
+        <translation>某些事件和命令无法正常运行，请先满足以下条件：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="343"/>
+        <location filename="../../MainGUI.py" line="348"/>
         <source>
 Would you like to continue anyways? Events and commands with errors will not activate.</source>
         <translation>
-事件(Events)和命令(Commands)因为有错误不会运行，你还要继续执行吗？</translation>
+事件和命令出错，无法运行，你还要继续运行任务吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="696"/>
+        <location filename="../../MainGUI.py" line="701"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -2323,40 +2382,40 @@ Would you like to continue anyways? Events and commands with errors will not act
         <translation type="obsolete">GUI|脚本被取消。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="382"/>
+        <location filename="../../MainGUI.py" line="387"/>
         <source>The script was unable to end.
 This may mean the script crashed, or it is taking time finishing.
 
 If you are running Python code inside of this script, make sure you check isExiting() during loops, to exit code quickly when the stop button is pressed.</source>
-        <translation>脚本无法停止。
-这意味着脚本已经崩溃，或者它需要时间去停止。
-如果在脚本中运行 python 代码，确保你检查 isExiting() 是否在循环里，这个可以确保脚本可以在按下[停止]后很快的终止。</translation>
+        <translation>命令无法结束运行。
+
+这意味着命令已经崩溃，或无法马上停止运行。
+如果你在命令中运行了 python 代码，请确保 isExiting() 在循环命令中。这可以确保当你按下“停止”后，命令能快速终止。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="409"/>
+        <location filename="../../MainGUI.py" line="414"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="426"/>
+        <location filename="../../MainGUI.py" line="431"/>
         <source>Communication Errors</source>
         <translation>通信协议错误</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="426"/>
+        <location filename="../../MainGUI.py" line="431"/>
         <source>The following errors have occured communicating with your robot.
 Try reconnecting under the Devices menu.
 
 ERROR:
 </source>
-        <translation>与机械臂通信时错误发生了。
-正在尝试重新连接。
+        <translation>此软件在连接uArm时出错，正在尝试重新连接。
 
-错误：
+错误信息：
 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="597"/>
+        <location filename="../../MainGUI.py" line="602"/>
         <source>not found!</source>
         <translation>未找到！</translation>
     </message>
@@ -2365,71 +2424,88 @@ ERROR:
         <source>Warning</source>
         <comment>The program was unable to load the following script:
 </comment>
-        <translation>警告</translation>
+        <translation type="obsolete">警告</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="615"/>
+        <location filename="../../MainGUI.py" line="620"/>
         <source>
 
  The following error occured: </source>
         <translation>
 
- 接下来的错误发生了：</translation>
+出现以下错误：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="132"/>
+        <location filename="../../MainGUI.py" line="131"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="155"/>
+        <location filename="../../MainGUI.py" line="160"/>
         <source>Community</source>
         <translation>社区</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="167"/>
+        <location filename="../../MainGUI.py" line="172"/>
         <source>New Resource</source>
-        <translation>新建资源</translation>
+        <translation>新建素材</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="185"/>
+        <location filename="../../MainGUI.py" line="190"/>
         <source>Languages</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="186"/>
+        <location filename="../../MainGUI.py" line="191"/>
         <source>English</source>
-        <translation>英语(English)</translation>
+        <translation>英语</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="187"/>
+        <location filename="../../MainGUI.py" line="192"/>
         <source>Chinese</source>
-        <translation>中文(Chinese)</translation>
+        <translation>中文</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="203"/>
+        <location filename="../../MainGUI.py" line="208"/>
         <source>MainToolbar</source>
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="628"/>
+        <location filename="../../MainGUI.py" line="633"/>
         <source>You have unsaved changes. Would you like to save before continuing?</source>
-        <translation>你还没有保存，是否要选择保存？</translation>
+        <translation>你是否要保存刚刚的修改？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="140"/>
+        <location filename="../../MainGUI.py" line="141"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="140"/>
+        <location filename="../../MainGUI.py" line="141"/>
         <source>Version: </source>
         <translation>版本：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="696"/>
+        <location filename="../../MainGUI.py" line="701"/>
         <source>Language switching need restart to apply, Would you like to continue?</source>
-        <translation>语言切换需要重启，你是否要继续？</translation>
+        <translation>切换语言后需要重启软件。你要继续切换吗？</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="133"/>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="134"/>
+        <source>Open Home Folder</source>
+        <translation>打开主目录</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="620"/>
+        <source>The program was unable to load the following script:
+</source>
+        <translation>程序无法加载以下脚本：
+</translation>
     </message>
 </context>
 <context>
@@ -2810,37 +2886,37 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1721"/>
         <source>You must input a name to continue</source>
-        <translation>你必须输入下个名字才能继续</translation>
+        <translation>请输入名称后再继续下一步</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1736"/>
         <source>You cannot have the following characters in the resource name: </source>
-        <translation>资源名字里面不能包含以下字府：</translation>
+        <translation>素材名称不能包含以下字符：</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1743"/>
         <source>There is already a resource named </source>
-        <translation>资源名字已存在 </translation>
+        <translation>该名称已存在。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1744"/>
         <source> If you want to replace it, delete the original and try again.</source>
-        <translation> 如果你要替换它，删除原来的文件并重试。</translation>
+        <translation> 如果你要替换它，请删除原来的文件后重试。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1747"/>
         <source>That name is too long.</source>
-        <translation>名字太长。</translation>
+        <translation>名称过长，再取一个吧。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1750"/>
         <source>Names cannot end with a space.</source>
-        <translation>名字不能以空格结尾。</translation>
+        <translation>名称不能以空格结尾。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="74"/>
         <source>New Vision Object</source>
-        <translation>新建视觉物体</translation>
+        <translation>新建可识别物体</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="75"/>
@@ -2851,47 +2927,47 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="76"/>
         <source>New Move Recording</source>
-        <translation>新建迹录制</translation>
+        <translation>录制新动作</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="77"/>
         <source>New Function</source>
-        <translation>新建函数</translation>
+        <translation>新建自定义功能</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="107"/>
         <source>Loaded Objects</source>
-        <translation>加载对象</translation>
+        <translation>可用素材</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="114"/>
         <source>Selected Resource</source>
-        <translation>选择资源</translation>
+        <translation>已选素材</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="150"/>
         <source>Resource Manager</source>
-        <translation>资源管理器</translation>
+        <translation>素材库</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="181"/>
         <source>Vision Objects</source>
-        <translation>视觉物体</translation>
+        <translation>可识别物体</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="182"/>
         <source>Vision Groups</source>
-        <translation>视觉分组</translation>
+        <translation>可识别物体分组</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="183"/>
         <source>Movement Recordings</source>
-        <translation>轨迹录制</translation>
+        <translation>已录制的动作</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="184"/>
         <source>Functions</source>
-        <translation>函数</translation>
+        <translation>自定义</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="337"/>
@@ -2901,27 +2977,27 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="253"/>
         <source>Add Orientation</source>
-        <translation>添加方向</translation>
+        <translation>添加新的识别角度</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="352"/>
         <source>Name: 
 </source>
-        <translation>命名：
+        <translation>名称：
 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="275"/>
         <source>Detail Points: 
 </source>
-        <translation>具体点： 
+        <translation>可识别特征总数： 
 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="275"/>
         <source>Orientations: 
 </source>
-        <translation>方向：
+        <translation>可识别角度：
 </translation>
     </message>
     <message>
@@ -2945,36 +3021,36 @@ This will now be saved in a seperate file, and can be used in any project.</sour
         <location filename="../../ObjectManagerGUI.py" line="299"/>
         <source>Group Members: 
 </source>
-        <translation>分组人员：
+        <translation>此分组包括：
 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="312"/>
         <source>Edit Recording</source>
-        <translation>编辑录制</translation>
+        <translation>编辑已录制动作</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="323"/>
         <source>Move Count: 
 </source>
-        <translation>运动点总数：</translation>
+        <translation>运动数据总量：</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="352"/>
         <source>Length: 
 </source>
-        <translation>长度：</translation>
+        <translation>录制时长/命令总数：</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="323"/>
         <source>Moves/Second:
 </source>
-        <translation>运动点/秒：</translation>
+        <translation>运动数据量/秒：</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="338"/>
         <source>Edit Function</source>
-        <translation>编辑函数</translation>
+        <translation>编辑自定义功能</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="352"/>
@@ -2993,7 +3069,7 @@ This will now be saved in a seperate file, and can be used in any project.</sour
         <location filename="../../ObjectManagerGUI.py" line="352"/>
         <source>Arguments:
 </source>
-        <translation>参数：</translation>
+        <translation>变量：</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="386"/>
@@ -3004,7 +3080,7 @@ This will now be saved in a seperate file, and can be used in any project.</sour
         <location filename="../../ObjectManagerGUI.py" line="386"/>
         <source>Deleting this object will delete it permanently.
 </source>
-        <translation>删除这个物体将会不可撤消。
+        <translation>删除后不可撤消。
 </translation>
     </message>
     <message>
@@ -3020,7 +3096,7 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="491"/>
         <source>Group Name: </source>
-        <translation>分组名：</translation>
+        <translation>分组名称：</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1101"/>
@@ -3030,7 +3106,7 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="531"/>
         <source>Add Objects to Group</source>
-        <translation>添加物体到分组</translation>
+        <translation>可识别物体分组</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="563"/>
@@ -3040,12 +3116,12 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="769"/>
         <source>Record</source>
-        <translation>记录</translation>
+        <translation>录制</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="626"/>
         <source>A robot must be connected to do movement recording.</source>
-        <translation>机械臂必须是已连接才能录制轨迹。</translation>
+        <translation>请先连接uArm，再录制新动作。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="627"/>
@@ -3065,30 +3141,30 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="646"/>
         <source>Gripper Action</source>
-        <translation>夹子动作</translation>
+        <translation>末端动作</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="652"/>
         <source>Recording Name: </source>
-        <translation>记录名称： </translation>
+        <translation>动作名称： </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="653"/>
         <source>Recorded Path</source>
-        <translation>记录路径</translation>
+        <translation>已录制的运动轨迹</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="654"/>
         <source>Press &apos;Record&apos; to start recording robot movements.
 </source>
-        <translation>请按下&apos;录制&apos;去开始录制机械臂的运动轨迹。
+        <translation>点击&apos;录制&apos;，开始录制新的uArm动作。
 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="654"/>
         <source>While recording, press the robots suction cup to activate the pump.
 </source>
-        <translation>开始录制时，按下机械臂的吸头激活吸泵。</translation>
+        <translation>开始录制时，按压uArm末端吸盘，uArm即开始吸取，再按一下，uArm停止吸取。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="654"/>
@@ -3105,12 +3181,12 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="717"/>
         <source>Create a Movement Recording</source>
-        <translation>创建一个轨迹录制</translation>
+        <translation>录制新的uArm动作</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="771"/>
         <source>Continue Recording</source>
-        <translation>继续录制</translation>
+        <translation>继续录制uArm动作</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="785"/>
@@ -3120,79 +3196,80 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../ObjectManagerGUI.py" line="955"/>
         <source>Recording must be longer than 20 points of data</source>
-        <translation>录制必须大于 20 个点</translation>
+        <translation>请控制好录制的动作幅度，
+请避免动作幅度过小导致无法录制，或幅度过大导致uArm损坏。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1002"/>
         <source>Add Argument</source>
-        <translation>添加参数</translation>
+        <translation>添加变量</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1002"/>
         <source>Variable Name: </source>
-        <translation>变量名：</translation>
+        <translation>变量名称：</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1015"/>
         <source>Invalid Variable Name</source>
-        <translation>非法变量名</translation>
+        <translation>无效变量名称</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1015"/>
         <source>The argument must be a valid python variable. This means no numbers </source>
-        <translation>参数必须是一个合法的 python 变量，不能是数字</translation>
+        <translation>变量名称只能由字母和数字组成，</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1015"/>
         <source>in the beginning, no spaces, and only numbers and letters</source>
-        <translation>不能以空格开头，只能是数字或字母</translation>
+        <translation>且不能以数字开头，不能含有空格。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1097"/>
         <source>Function Name </source>
-        <translation>函数名 </translation>
+        <translation>功能名称 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1098"/>
         <source>Function Description </source>
-        <translation>函数描述 </translation>
+        <translation>功能描述 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1099"/>
         <source>Arguments (optional)</source>
-        <translation>参数 (可选)</translation>
+        <translation>变量 (选填)</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1100"/>
         <source>Drag commands into the list to create a function</source>
-        <translation>拖拽命令到列表中创建一个函数</translation>
+        <translation>把命令拖拽到列表中，即可新建自定义功能</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1168"/>
         <source>Create a Function</source>
-        <translation>创建一个函数</translation>
+        <translation>新建函数/自定义功能</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1232"/>
         <source>Object Wizard</source>
-        <translation>物体向导</translation>
+        <translation> uArm“开眼”向导</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1242"/>
         <source>A camera must be connected to add new objects</source>
-        <translation>摄像头必须是已连接才能添加新物体</translation>
+        <translation>请先连接摄像头，再添加新的可识别物体</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1306"/>
         <source>Welcome to the Object Wizard!
 </source>
-        <translation>欢迎来到物体向导！
+        <translation>欢迎添加新的可识别物体！
 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1307"/>
         <source>This will walk you through teaching the software how to recognize a new object.</source>
-        <translation>请根据引导完成以下步骤，以使软件识别一个新物体。</translation>
+        <translation>请根据引导完成以下步骤，让uArm“看见”一个新物体。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1308"/>
@@ -3201,12 +3278,12 @@ This will now be saved in a seperate file, and can be used in any project.</sour
 Step 1: Naming</source>
         <translation>
 
-步骤 1：命名</translation>
+第1步：命名</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1309"/>
         <source>Please enter a unique name for this object.</source>
-        <translation>请输入一个唯一的物体名字。</translation>
+        <translation>给你的物体取个名字吧！</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1417"/>
@@ -3215,7 +3292,7 @@ Step 1: Naming</source>
 Step 2: Select the Object</source>
         <translation>
 
-步骤 2：选择物体</translation>
+第2步：选择物体</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1418"/>
@@ -3232,7 +3309,13 @@ should be focused, and the object in the orientation that it will be recognized 
                 When ready, Click the mouse on the corner of the object, drag it tightly over the object, then
             
 release the mouse button.</source>
-        <translation type="unfinished"></translation>
+        <translation>1. 请将你的物体置于平面上，并确保：
+
+1）物体位于摄像头视野的中心；
+2）物体的空间背景干净、无杂物；
+3）光线充足，但不会导致物体反光；
+
+2. 用鼠标拖拽选取物体（如右边GIF所示）。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1427"/>
@@ -3241,7 +3324,7 @@ release the mouse button.</source>
 Step 3: Verify</source>
         <translation>
 
-步骤 3：验证</translation>
+第3步：预览识别效果</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1428"/>
@@ -3251,7 +3334,7 @@ Step 3: Verify</source>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1464"/>
         <source>Your selected object needs more detail to be tracked</source>
-        <translation>你选择物体需要更多细节可以被追踪</translation>
+        <translation>为了更好地识别你所选取的物体，请在物体上增加更多细节特征</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1481"/>
@@ -3263,7 +3346,8 @@ reselect the object.
 
 
             Your selected object has </source>
-        <translation type="unfinished"></translation>
+        <translation>你已选取想要识别的物体。
+现在，试着移动该物体，看看摄像头是否能实时追踪它的位置。如果追踪效果不太好，你可以点击“重试”，重新选取物体。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1485"/>
@@ -3275,32 +3359,38 @@ will be found, and the better the tracking will be. If you are having trouble tr
 detail to the object by drawing on it or putting a sticker on it. 
 
             </source>
-        <translation type="unfinished"></translation>
+        <translation>你所选取的物体共有 个可识别特征。
+
+小提示：
+细节特征越多，识别效果越好。
+如果摄像头无法很好地实时追踪你的物体，请再物体上画上更多细节特征，或贴上二维码/贴纸。
+</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1495"/>
         <source>Your selected object has only </source>
-        <translation>你只选择了 </translation>
+        <translation>摄像头只识别到 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1495"/>
         <source> points to describe it. It is not very</source>
-        <translation>点去描述它，它不并是非常</translation>
+        <translation>个细节特征。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1495"/>
         <source> detailed, or is too small. Try adding more detail by drawing on it, or adding a </source>
-        <translation> 细节，或者太小，尝试添加更多的细节或者添加一个 </translation>
+        <translation>此物体特征不够明显，或太小。识别/实时追踪效果不佳。
+请增加更多细节特征或</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1495"/>
         <source>sticker to it. Tracking may not be very accurate.</source>
-        <translation>贴纸在里面。追踪也许没有很准确。</translation>
+        <translation>给物体贴上二维码/贴纸。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1499"/>
         <source>Tracking </source>
-        <translation>追踪 </translation>
+        <translation>识别到 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1528"/>
@@ -3309,52 +3399,52 @@ detail to the object by drawing on it or putting a sticker on it.
 Step 4: Measure Height</source>
         <translation>
 
-步骤 4：测量高度</translation>
+第4步：测量物体高度</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1529"/>
         <source>Please enter the height of the object in centimeters. </source>
-        <translation>请用厘米输入物体的高度</translation>
+        <translation>请输入物体的高度(cm)。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1529"/>
         <source>
 If the object is very thin, like paper, enter 0.</source>
         <translation>
-如果物体非常的薄，如纸，请输入 0。</translation>
+如果物体非常薄（如纸张），请输入0。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1529"/>
         <source>
 If the object is not flat on the top, measure the height to the part of the </source>
-        <translation>如果物体并不是平整的，请测量一部分的高度 </translation>
+        <translation>如果物体不是平整的，请测量uArm可吸起部分</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1529"/>
         <source>object that the robot will be grasping.</source>
-        <translation>机械臂可以抓到的部分。</translation>
+        <translation>的高度。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1534"/>
         <source> centimeters</source>
-        <translation> 厘米</translation>
+        <translation>厘米</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1572"/>
         <source>You must input a real number.</source>
-        <translation>你必须输入一个真实的数字。</translation>
+        <translation>请输入一个数字。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1576"/>
         <source>Height must be a number greater than or equal to 0.</source>
-        <translation>高度必须是一个数字并且大于或等于 0。</translation>
+        <translation>高度必须大于或等于 0。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1619"/>
         <source>You&apos;re almost done!
 
 </source>
-        <translation>马上就要完成了！
+        <translation>最后一步！
 
 </translation>
     </message>
@@ -3362,7 +3452,8 @@ If the object is not flat on the top, measure the height to the part of the </so
         <location filename="../../ObjectManagerGUI.py" line="1620"/>
         <source>Now that you have selected your object, please drag the mouse over THE ENTIRE AREA OF THE OBJECT 
 </source>
-        <translation>现在你已经选择你的物体，请拖拽鼠标选取整个物体的区域 
+        <translation>为方便uArm能轻松捡起此物体，
+请用鼠标在拖拽出此物体可被拾取的全部范围。
 </translation>
     </message>
     <message>
@@ -3372,7 +3463,9 @@ that is smooth, flat, and able to be picked up by the robot&apos;s suction cup.
 
 </source>
         <translation>
-确保是一个平整的并且可以被机械臂吸泵拣起 
+小提示：
+1）可拾取范围不宜过小，请选取全部可被拾取的范围；
+2）为了让吸盘能顺利吸起物体，可拾取范围内必须是平滑、不漏气（无孔）的表面。
 </translation>
     </message>
     <message>
@@ -3380,7 +3473,7 @@ that is smooth, flat, and able to be picked up by the robot&apos;s suction cup.
         <source>
 This information will be used in any commands that require the robot to pick up the object. If you</source>
         <translation>
-这个信息</translation>
+如果你不打算让uArm捡起此物体，</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1623"/>
@@ -3388,14 +3481,13 @@ This information will be used in any commands that require the robot to pick up 
 do not intend to use those functions, then just select an area around the center of the object.
 
 </source>
-        <translation>
-不打算用那些函数，只要选择一个物体中间的范围。
+        <translation>直接选取物体中心区域即可。
 </translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1625"/>
         <source>Step 5: Select the Pickup Area</source>
-        <translation>步骤 5：选择拣起的区域</translation>
+        <translation>第5步：设置物体被拾取的方式</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1637"/>
@@ -3405,19 +3497,19 @@ do not intend to use those functions, then just select an area around the center
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1685"/>
         <source>Congratulations, you&apos;ve created a new object! </source>
-        <translation>恭喜，你已经创建了一个新物体！</translation>
+        <translation>恭喜，你让uArm又“看见”了一个物体！</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1685"/>
         <source>
 This will now be saved in a seperate file, and can be used in any project.</source>
         <translation>
-它将会保存到一个单独的文件时，并且可以被任何 project 使用。</translation>
+这已被保存成独立文件，你可随时调用。</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="75"/>
         <source>New Vision Group</source>
-        <translation>新建视觉分组</translation>
+        <translation>新建可识别物体分组</translation>
     </message>
 </context>
 <context>
@@ -3590,7 +3682,7 @@ This will now be saved in a seperate file, and can be used in any project.</sour
     <message>
         <location filename="../../CommonGUI.py" line="380"/>
         <source>Show Documentation</source>
-        <translation>显示文档</translation>
+        <translation>指引文档</translation>
     </message>
     <message>
         <location filename="../../CommonGUI.py" line="385"/>
