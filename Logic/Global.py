@@ -29,6 +29,7 @@ import os
 import errno
 import platform
 from time import time, sleep
+import Paths
 
 import logging
 
@@ -236,6 +237,27 @@ def openFile(path):
     elif platform.system() == 'Linux':
         os.system('xdg-open '+path)
 
+
+def initLogger(consoleSettings):
+    logger = logging.getLogger('application')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    if consoleSettings['saveToFile']:
+        if consoleSettings['logFileName'] is None:
+            log_file = os.path.join(Paths.ucs_home_dir, 'ucs.log')
+        else:
+            log_file = os.path.join(Paths.ucs_home_dir, consoleSettings['logFileName'])
+        fh = logging.FileHandler(log_file)
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    logger.info('---------------------------Logging Start------------------------------------------')
+    logger.info('Version: ' + version)
 
 
 """  Deprecated function for finding who called the current function (DO NOT USE IN PRODUCTION)

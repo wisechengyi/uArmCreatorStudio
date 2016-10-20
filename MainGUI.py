@@ -51,6 +51,26 @@ from ObjectManagerGUI  import MakeFunctionWindow
 from ObjectManagerGUI  import MakeObjectWindow
 __author__ = "Alexander Thiel"
 
+############ init a Global Logger to Catch all unchecked exception ###############
+error_logger = logging.getLogger('error')
+error_logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+log_file = os.path.join(Paths.ucs_home_dir, 'error.log')
+fh = logging.FileHandler(log_file)
+fh.setLevel(logging.INFO)
+fh.setFormatter(formatter)
+error_logger.addHandler(fh)
+error_logger.info('---------------------------Logging Start------------------------------------------')
+def handle_exception(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+        return
+
+    error_logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+sys.excepthook = handle_exception
+error_logger.info('---------------------------Logging End------------------------------------------')
+
 
 global app, trans
 
@@ -687,6 +707,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.env.close()
 
         printf("GUI| Done closing all objects and threads.")
+        printf('---------------------------Logging End------------------------------------------\n')
 
     def updateLanguageSetting(self, language):
         """
@@ -904,41 +925,21 @@ def switchingLanugage(country_code):
         trans.load(Paths.language_pack_zh_CN)
         app.installTranslator(trans)
 
-def initLogger(consoleSettings):
-    logger = logging.getLogger('application')
-    logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    if consoleSettings['saveToFile']:
-        if consoleSettings['logFileName'] is None:
-            log_file = os.path.join(Paths.ucs_home_dir, 'ucs.log')
-        else:
-            log_file = os.path.join(Paths.ucs_home_dir, consoleSettings['logFileName'])
-        fh = logging.FileHandler(log_file)
-        fh.setLevel(logging.INFO)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-    logger.info('---------------------------Logging Start------------------------------------------')
-    logger.info('Version: ' + Global.version)
-
 
 if __name__ == '__main__':
     # Install a global exception hook to catch pyQt errors that fall through (helps with debugging a ton) #TODO: Remove for builds
-    sys.__excepthook = sys.excepthook
-    sys._excepthook  = sys.excepthook
-    def exception_hook(exctype, value, traceback):
-        sys._excepthook(exctype, value, traceback)
-        sys.exit(1)
-    sys.excepthook   = exception_hook
+    # sys.__excepthook = sys.excepthook
+    # sys._excepthook  = sys.excepthook
+    # def exception_hook(exctype, value, traceback):
+    #     sys._excepthook(exctype, value, traceback)
+    #     sys.exit(1)
+    # sys.excepthook   = exception_hook
+    # logging.getLogger("application").error("System Exception - " + str(e))
     # Initialize global variables
     Global.init()
     # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
     env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
-    initLogger(env.getSetting('consoleSettings'))
+    Global.initLogger(env.getSetting('consoleSettings'))
     # exit code could help program to restart by itself
     currentExitCode = MainWindow.EXIT_CODE_REBOOT
     global app, trans
@@ -951,29 +952,23 @@ if __name__ == '__main__':
         font.setFamily("Verdana")
         font.setPixelSize(12)
         app.setFont(font)
+        # Create Language pack installer
+        trans = QtCore.QTranslator()
 
-        try:
-            # Create Language pack installer
-            trans = QtCore.QTranslator()
+        # Check if settings include language config
+        if env.getSetting("language") is None:
+            try:
+                if locale.getdefaultlocale()[0] == 'zh_CN':  # If no language config detect the locale
+                    switchingLanugage('zh_CN')
+                    env.updateSettings("language", 'zh_CN')
+            except ValueError:
+                printf("Can not detect system locale")
+        elif env.getSetting("language") == 'zh_CN':
+            switchingLanugage('zh_CN')
+            env.updateSettings("language", 'zh_CN')
 
-            # Check if settings include language config
-            if env.getSetting("language") is None:
-                try:
-                    if locale.getdefaultlocale()[0] == 'zh_CN':  # If no language config detect the locale
-                        switchingLanugage('zh_CN')
-                        env.updateSettings("language", 'zh_CN')
-                except ValueError:
-                    printf("Can not detect system locale")
-            elif env.getSetting("language") == 'zh_CN':
-                switchingLanugage('zh_CN')
-                env.updateSettings("language", 'zh_CN')
-
-            w = MainWindow(env)
-            w.show()
-            currentExitCode = app.exec_()
-            logging.getLogger("application").info("System Exit - Exit Code" + str(currentExitCode))
-            app = None  # Clear the App
-        except Exception as e:
-            logging.getLogger("application").error("System Exit - " + str(e))
-
-    logging.getLogger("application").info('---------------------------Logging End------------------------------------------\n')
+        w = MainWindow(env)
+        w.show()
+        currentExitCode = app.exec_()
+        logging.getLogger("application").info("System Exit - Exit Code" + str(currentExitCode))
+        app = None  # Clear the App
