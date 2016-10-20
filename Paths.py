@@ -43,11 +43,13 @@ elif __file__:
 ################        PROGRAM RESOUCES    ################
 
 ## Check OS type
-if platform.system() == 'Darwin' and getattr(sys, 'frozen', False):
+if platform.system() == 'Darwin' and getattr(sys, 'frozen', False): # Mac os x frozen app
     resourcesLoc = os.path.join(APPLICATION_PATH, "..", "Resources")
-elif platform.system() == 'Darwin' and __file__:
+elif platform.system() == 'Darwin' and __file__: # Mac os x run in scripts
     resourcesLoc = os.path.join(APPLICATION_PATH, "Resources")
 elif platform.system() == 'Windows':
+    resourcesLoc = os.path.join('.', "Resources")
+elif platform.system() == 'Linux':
     resourcesLoc = os.path.join('.', "Resources")
 
 

@@ -11,6 +11,7 @@
 - Fix RecognizeObjectEvent crash issue
 - Catch System Exception to logger
 - Add error.log to catch all unchecked exception
+- Fix Linux Resources Path issue
 
 ## V1.1.4
 - Update - Alex Tan
