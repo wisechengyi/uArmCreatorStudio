@@ -610,9 +610,10 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             printf("GUI| ERROR: Could not load task: ", e)
             self.newTask(promptSave=False)
-            QtWidgets.QMessageBox.information(self, self.tr('Warning'), self.tr("The program was unable to load the following script:\n") +
-                                    str(filename) + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": " + str(e)
-                                           )
+            QtWidgets.QMessageBox.information(self, self.tr('Warning'),
+                                self.tr("The program was unable to load the following script:\n") +
+                                str(filename) + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": "
+                                + str(e))
 
 
 
@@ -683,7 +684,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.env.close()
 
         printf("GUI| Done closing all objects and threads.")
-        printf('---------------------------Logging End------------------------------------------\n')
 
     def updateLanguageSetting(self, language):
         """
@@ -692,12 +692,12 @@ class MainWindow(QtWidgets.QMainWindow):
         :return:
         """
         reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
-                                               self.tr(
-                                                   "Language switching need restart to apply, Would you like to continue?"),
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel,
-                                               QtWidgets.QMessageBox.Yes)
+                                      self.tr("Language switching need restart to apply, Would you like to continue?"),
+                                      QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel,
+                                      QtWidgets.QMessageBox.Yes)
+
         if reply == QtWidgets.QMessageBox.Yes:
-            printf("GUI| Restart")
+            printf("GUI| Restarting")
             self.env.updateSettings("language", language)
             self.close()
             QtCore.QCoreApplication.exit(MainWindow.EXIT_CODE_REBOOT)
@@ -897,25 +897,25 @@ if __name__ == '__main__':
 
     # Set up a global logger for error logging
 
-    # errorLogger = logging.getLogger('error')
-    # errorLogger.setLevel(logging.INFO)
-    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    # logFile   = os.path.join(Paths.ucs_home_dir, 'error.log')
-    # fHandler  = logging.FileHandler(logFile)
-    # fHandler.setLevel(logging.INFO)
-    # fHandler.setFormatter(formatter)
-    # errorLogger.addHandler(fHandler)
-    # errorLogger.info('---------------------------Logging Start---------------------------')
-    #
-    # def handle_exception(exc_type, exc_value, exc_traceback):
-    #     if issubclass(exc_type, KeyboardInterrupt):
-    #         sys.__excepthook__(exc_type, exc_value, exc_traceback)
-    #
-    #         return
-    #
-    #     errorLogger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-    # sys.excepthook = handle_exception
-    # errorLogger.info('----------------------------Logging End----------------------------')
+    errorLogger = logging.getLogger('error')
+    errorLogger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logFile   = os.path.join(Paths.ucs_home_dir, 'error.log')
+    fHandler  = logging.FileHandler(logFile)
+    fHandler.setLevel(logging.INFO)
+    fHandler.setFormatter(formatter)
+    errorLogger.addHandler(fHandler)
+    errorLogger.info('---------------------------Logging Start---------------------------')
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+            return
+
+        errorLogger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+    sys.excepthook = handle_exception
+    errorLogger.info('----------------------------Logging End----------------------------')
 
     # Set up global variables
     Global.init()
