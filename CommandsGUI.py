@@ -1164,8 +1164,8 @@ class MoveRelativeToObjectCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Move Relative To " + objName
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI","Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI","Move Relative To ") + objName
 
         self.description = 'XYZ( ' + str(self.parameters['x']) + \
                            ', ' + str(self.parameters['y'])    + \
@@ -1212,7 +1212,7 @@ class MoveWristRelativeToObjectCommand(CommandGUI):
 
 
         # Create the "angle" textbox
-        wristLabel       = QtWidgets.QLabel('Angle ')
+        wristLabel       = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI", 'Angle '))
         prompt.wristEdit = QtWidgets.QLineEdit(self.parameters["angle"])
         self._addRow(prompt, wristLabel, prompt.wristEdit)
 
@@ -1245,8 +1245,8 @@ class MoveWristRelativeToObjectCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Set Wrist Relative To " + objName
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI", "Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Set Wrist Relative To ") + objName
 
         self.description = QtCore.QCoreApplication.translate("CommandsGUI","Set the wrist ") + self.parameters["angle"] + \
                            QtCore.QCoreApplication.translate("CommandsGUI"," degrees relative to ") + self.parameters["objectID"]
@@ -1300,7 +1300,7 @@ class PickupObjectCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI", "Object"))[len(self.parameters["objectID"]) == 0]
         self.title = QtCore.QCoreApplication.translate("CommandsGUI","Pick Up ") + objName
         self.description = QtCore.QCoreApplication.translate("CommandsGUI","Find ") + self.parameters["objectID"] + QtCore.QCoreApplication.translate("CommandsGUI"," and pick it up")
 
@@ -1320,7 +1320,7 @@ class TestObjectSeenCommand(CommandGUI):
         self.maxAge          = vision.historyLen - 1
         self.getObjectList   = lambda: objManager.getObjectNameList(typeFilter=objManager.TRACKABLE)
         self.ageChoices      = ["latest frame", "last 5 frames", "last 15 frames", "last 30 frames", "last 60 frames"]
-        self.accChoices      = ["low", "medium", "high"]
+        self.accChoices      = [QtCore.QCoreApplication.translate("CommandsGUI","low"), QtCore.QCoreApplication.translate("CommandsGUI","medium"), QtCore.QCoreApplication.translate("CommandsGUI","high")]
 
         # If parameters do not exist, then set up the default parameters
         if self.parameters is None:
@@ -1358,11 +1358,11 @@ class TestObjectSeenCommand(CommandGUI):
         # Set up the Age slider
         def updateAgeSliderLabel():
             # Create the text next to the "How Recently" label
-            newText = "When: "
+            newText = QtCore.QCoreApplication.translate("CommandsGUI", "When: ")
             if prompt.ageSlider.value() == 1:
-                newText += "Just now"
+                newText += QtCore.QCoreApplication.translate("CommandsGUI", "Just now")
             else:
-                newText += "< " + str(prompt.ageSlider.value()) + " frames"
+                newText += "< " + str(prompt.ageSlider.value()) + QtCore.QCoreApplication.translate("CommandsGUI"," frames")
             prompt.ageLbl.setText(newText)
         prompt.ageSlider.valueChanged.connect(updateAgeSliderLabel)
         prompt.ageSlider.setMinimum(1)
@@ -1394,10 +1394,10 @@ class TestObjectSeenCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI", "Object"))[len(self.parameters["objectID"]) == 0]
         self.title = QtCore.QCoreApplication.translate("CommandsGUI","Test If ") + objName + QtCore.QCoreApplication.translate("CommandsGUI"," Seen")
 
-        confidenceText = ["slightly", "fairly", "highly"]
+        confidenceText = [QtCore.QCoreApplication.translate("CommandsGUI","slightly"), QtCore.QCoreApplication.translate("CommandsGUI","fairly"), QtCore.QCoreApplication.translate("CommandsGUI", "highly")]
 
         self.description = QtCore.QCoreApplication.translate("CommandsGUI","If")
         if self.parameters["not"]: self.description += QtCore.QCoreApplication.translate("CommandsGUI"," NOT")
@@ -1499,7 +1499,7 @@ class TestObjectLocationCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI","Object"))[len(self.parameters["objectID"]) == 0]
         self.title = QtCore.QCoreApplication.translate("CommandsGUI","Test If ") + objName + QtCore.QCoreApplication.translate("CommandsGUI"," Inside Region")
 
 
@@ -1549,12 +1549,12 @@ class TestObjectAngleCommand(CommandGUI):
 
 
         # "Lower" Textbox
-        valLLbl = QtWidgets.QLabel('Start Angle ')
+        valLLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI", 'Start Angle '))
         prompt.valLEdit.setText(str(self.parameters['start']))
         self._addRow(prompt, valLLbl, prompt.valLEdit)
 
         # "Upper" Textbox
-        valULbl = QtWidgets.QLabel('End Angle ')
+        valULbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'End Angle '))
         prompt.valUEdit.setText(str(self.parameters['end']))
         self._addRow(prompt, valULbl, prompt.valUEdit)
 
@@ -1579,7 +1579,7 @@ class TestObjectAngleCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI","Object"))[len(self.parameters["objectID"]) == 0]
         self.title = QtCore.QCoreApplication.translate("CommandsGUI","Test Angle of ") + objName
 
 
@@ -1762,7 +1762,7 @@ class LoopCommand(CommandGUI):
             # Anything done with env should be done here. Try not to save env as a class variable whenever possible
             self.parameters = {"testType": "",
                                "testParameters": None,
-                               "description": "Loops commands while a chosen test is true"}
+                               "description": QtCore.QCoreApplication.translate("CommandsGUI","Loops commands while a chosen test is true")}
 
     def dressWindow(self, prompt):
         def updateTestParameters():

@@ -60,16 +60,16 @@ fh = logging.FileHandler(log_file)
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 error_logger.addHandler(fh)
-error_logger.info('---------------------------Logging Start------------------------------------------')
+
 def handle_exception(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
-
-        return
-
+        sys.exit(1)
+    error_logger.info('---------------------------Logging Start------------------------------------------')
     error_logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+    error_logger.info('---------------------------Logging End------------------------------------------')
 sys.excepthook = handle_exception
-error_logger.info('---------------------------Logging End------------------------------------------')
+fh.close()
 
 
 global app, trans
@@ -654,7 +654,6 @@ class MainWindow(QtWidgets.QMainWindow):
             if reply == QtWidgets.QMessageBox.Yes:
                 printf("GUI| Saving changes")
                 self.saveTask(None)
-                app.exit(0)
 
             if reply == QtWidgets.QMessageBox.No:
                 printf("GUI| Not saving changes")
@@ -708,6 +707,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         printf("GUI| Done closing all objects and threads.")
         printf('---------------------------Logging End------------------------------------------\n')
+        app.exit(0)
 
     def updateLanguageSetting(self, language):
         """
