@@ -192,8 +192,8 @@ class VideoStream:
             else:
                 self.filterFrame = self.frame
 
-        if self.cap is not None:
-            self.cap.release()
+        # if self.cap is not None:
+        #     self.cap.release()
         self.mainThread = None
 
 
