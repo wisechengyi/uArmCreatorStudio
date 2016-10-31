@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## V1.1.6
+- Update - Alex Tan
+- Date - 2016-10-31
+
+## Changes
+
+- Fix Home Folder not exists cause issue
+- Compatible with firmware V2.1.4
+
 ## V1.1.5
 - Update - Alex Tan
 - Date   - 2016-10-19

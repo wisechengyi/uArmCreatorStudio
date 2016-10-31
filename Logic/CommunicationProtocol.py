@@ -343,9 +343,9 @@ class Device:
                                           stopbits = serial.STOPBITS_ONE,
                                           bytesize = serial.EIGHTBITS,
                                           timeout  = .1)
-
-
-            sleep(3)
+            while True:
+                if self.is_ready():
+                    break
             self.__isConnected = True
             self.__sendAndRecieve("gVer", timeout=1)  # Send a handshake to verify that the robot is indeed connected
 
@@ -356,6 +356,13 @@ class Device:
             self.__serial = None
             self.__isConnected = False
             self.errors.append(type(e).__name__ + " " + str(e))
+
+    def is_ready(self):
+        if self.__serial.readline().startswith(b"[READY]"):
+            printf("connected...")
+            return True
+        else:
+            return False
 
     def __sendAndRecieve(self, cmnd, timeout=None):
         """

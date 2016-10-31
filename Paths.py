@@ -170,6 +170,8 @@ help_rob_connect    = os.path.join(imageLoc, "help_rob_connect.gif")
 
 ################        USERS RESOUCES    ################
 ucs_home_dir = os.path.join(expanduser("~"), "uArmCreatorStudio") # uArmCreatorStudio home dir
+if not os.path.exists(ucs_home_dir):
+    os.makedirs(ucs_home_dir)
 
 settings_txt = os.path.join(ucs_home_dir, "Settings.txt")
 objects_dir  = os.path.join(ucs_home_dir, "Objects", "")
