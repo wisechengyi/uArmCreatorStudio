@@ -8,6 +8,8 @@
 
 - Fix Home Folder not exists cause issue
 - Compatible with firmware V2.1.4
+- Fix Mac force quit if open Camera window
+- Fix Prompt save issue
 
 ## V1.1.5
 - Update - Alex Tan

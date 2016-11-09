@@ -575,22 +575,23 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="504"/>
         <source>You have not created any trackable objects yet.</source>
-        <translation>你还没有创建任何视觉识别对象。</translation>
+        <translation>你还没有创建任何可识别物体。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="505"/>
         <source> Try adding new objects in the Resource Manager!</source>
-        <translation>试着新建一个视觉识别对象吧！</translation>
+        <translation>试着新建一个可识别物体吧！</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="508"/>
         <source>It looks like you&apos;ve only created one object.</source>
-        <translation>你只添加过一个视觉识别对象。</translation>
+        <translation type="unfinished">你只添加过一个可识别物体。</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="509"/>
         <source> Feel free to add new objects in the Resource Manager!</source>
-        <translation> 欢迎添加新的视觉识别对象！</translation>
+        <translation type="unfinished">
+欢迎添加新的可识别物体！</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="519"/>
@@ -643,7 +644,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="711"/>
         <source>Relative </source>
-        <translation>相对</translation>
+        <translation type="unfinished">相对位置/角度（以现有位置/角度为起点）</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="733"/>
@@ -733,7 +734,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="937"/>
         <source>Stretch Servo </source>
-        <translation>前后方向电机（控制y轴） </translation>
+        <translation>前后方向电机（控制x和y轴） </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="938"/>
@@ -783,7 +784,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="980"/>
         <source>Activate Gripper</source>
-        <translation>吸取/夹取</translation>
+        <translation>吸取</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="981"/>
@@ -813,7 +814,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1028"/>
         <source>Deactivate Gripper</source>
-        <translation>停止吸/夹</translation>
+        <translation>停止吸取</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1029"/>
@@ -853,17 +854,17 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1099"/>
         <source>Move Relative To Object</source>
-        <translation>移动到某物体的相对位置</translation>
+        <translation>移动到物体</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1546"/>
         <source>Choose an object </source>
-        <translation>选择一个需要识别的物体 </translation>
+        <translation>选择一个物体 </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1189"/>
         <source>Set Wrist Relative To Object</source>
-        <translation>将吸盘旋转到某物体的相对角度</translation>
+        <translation type="unfinished">随物体旋转吸盘</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1212"/>
@@ -893,7 +894,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1268"/>
         <source>Pick Up Object</source>
-        <translation>捡起一个物体</translation>
+        <translation>捡起物体</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1311"/>
@@ -2000,12 +2001,12 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     <message>
         <location filename="../../EventsGUI.py" line="420"/>
         <source>Object &apos;</source>
-        <translation>物体 &apos;</translation>
+        <translation>识别&apos;</translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="422"/>
         <source>&apos; Recognized</source>
-        <translation>&apos;已识别 </translation>
+        <translation>&apos; </translation>
     </message>
     <message>
         <location filename="../../EventsGUI.py" line="431"/>
@@ -2728,8 +2729,8 @@ reselect the object.
 
 
             Your selected object has </source>
-        <translation>你已选取想要识别的物体。
-现在，试着移动该物体，看看摄像头是否能实时追踪它的位置。如果追踪效果不太好，你可以点击“重试”，重新选取物体。</translation>
+        <translation type="unfinished">你已选取想要识别的物体。
+现在，试着移动该物体，看看摄像头是否能实时追踪它的位置。如果追踪效果不太好，请重新选取物体。你所选取的物体共有</translation>
     </message>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1485"/>
@@ -2741,7 +2742,7 @@ will be found, and the better the tracking will be. If you are having trouble tr
 detail to the object by drawing on it or putting a sticker on it. 
 
             </source>
-        <translation>你所选取的物体共有 个可识别特征。
+        <translation type="unfinished"> 个可识别特征。
 
 小提示：
 细节特征越多，识别效果越好。
