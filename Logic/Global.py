@@ -139,7 +139,6 @@ printRedirectFunc = lambda classString, string: None
 def init():
     global keysPressed
     global printRedirectFunc
-    global exitScriptFlag
 
     """
       Used in keyboardEvent. Updated through Main.Application.notify() Format: ['a', 'b', '5', 'z']

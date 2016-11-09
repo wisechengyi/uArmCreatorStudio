@@ -332,7 +332,7 @@ class CommandGUI:
         prompt.content    = QtWidgets.QVBoxLayout()
         prompt.content.setContentsMargins(20, 10, 20, 10)
         prompt.content.setAlignment(QtCore.Qt.AlignTop)
-        contentGroupBox = QtWidgets.QGroupBox(QtCore.QCoreApplication.translate("CommandsGUI","Parameters"))
+        contentGroupBox = QtWidgets.QGroupBox(QtCore.QCoreApplication.translate("CommandsGUI", "Parameters"))
         contentGroupBox.setLayout(prompt.content)
 
 

@@ -30,9 +30,6 @@ import sys             # For GUI, and overl`oading the default error handling
 import webbrowser      # For opening the uFactory forums under the "file" menu
 import ControlPanelGUI
 import Paths
-import locale
-import logging
-import os
 from CommonGUI         import Console
 from copy              import deepcopy                  # For copying saves and comparing later
 from PyQt5             import QtCore, QtWidgets, QtGui  # All GUI things
@@ -51,29 +48,11 @@ from ObjectManagerGUI  import MakeFunctionWindow
 from ObjectManagerGUI  import MakeObjectWindow
 __author__ = "Alexander Thiel"
 
-############ init a Global Logger to Catch all unchecked exception ###############
-error_logger = logging.getLogger('error')
-error_logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-log_file = os.path.join(Paths.ucs_home_dir, 'error.log')
-fh = logging.FileHandler(log_file)
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-error_logger.addHandler(fh)
 
-def handle_exception(exc_type, exc_value, exc_traceback):
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
         sys.exit(1)
     error_logger.info('---------------------------Logging Start------------------------------------------')
-    error_logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
     error_logger.info('---------------------------Logging End------------------------------------------')
-sys.excepthook = handle_exception
-fh.close()
-
-
-global app, trans
-
+error_logger.info('---------------------------Logging End------------------------------------------')
 ########## MAIN WINDOW ##########
 class MainWindow(QtWidgets.QMainWindow):
     EXIT_CODE_REBOOT = -983242194
@@ -87,7 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # Set the ConsoleWidget parameters immediately, so even early prints are captured
-        self.consoleWidget       = Console(self.env.getSetting("consoleSettings"), parent=self)
+        self.consoleWidget       = Console(self.env.getSetting('consoleSettings'), parent=self)
         Global.printRedirectFunc = self.consoleWidget.write
         self.consoleWidget.setExecFunction(self.interpreter.evaluateExpression)
 
@@ -96,7 +75,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fileName        = None
         self.loadData        = []  #Set when file is loaded. Used to check if the user has changed anything when closing
         self.programTitle    = self.tr('uArm Creator Studio')
-        self.scriptToggleBtn = QtWidgets.QAction(QtGui.QIcon(Paths.run_script), self.tr('Run'), self)
+        self.scriptToggleBtn = QtWidgets.QAction(     QtGui.QIcon(Paths.run_script),     self.tr('Run'), self)
         self.devicesBtn      = QtWidgets.QAction(QtGui.QIcon(Paths.devices_neither), self.tr('Devices'), self)
         self.centralWidget   = QtWidgets.QStackedWidget()
         self.controlPanel    = ControlPanelGUI.ControlPanel(self.env, parent=self)
@@ -149,39 +128,42 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create File Menu and actions
         fileMenu      = menuBar.addMenu(self.tr('File'))
-        aboutAction   = QtWidgets.QAction(QtGui.QIcon(Paths.file_about), self.tr('About'       ) , self)
-        helpAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_help), self.tr('Help'), self)
+        newAction     = QtWidgets.QAction( QtGui.QIcon(Paths.file_new),     self.tr('New Task'), self)
+        saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save),    self.tr('Save Task'), self)
+        saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As'), self)
+        loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load),    self.tr('Load Task'), self)
+        aboutAction = QtWidgets.QAction( QtGui.QIcon(Paths.file_about),        self.tr('About'), self)
+        helpAction = QtWidgets.QAction(   QtGui.QIcon(Paths.file_help),         self.tr('Help'), self)
         homeDirAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_homedir), self.tr('Open Home Folder'), self)
-        newAction     = QtWidgets.QAction(QtGui.QIcon(Paths.file_new),  self.tr('New Task'    )  , self)
-        saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task'   )  , self)
-        saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As')  , self)
-        loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load), self.tr('Load Task'   )  , self)
 
+
+        aboutMessage = lambda: QtWidgets.QMessageBox.information(self, self.tr("About"),
+                                                                 self.tr("Version: ") +
+                                                                 Global.version)
         saveAction.setShortcut("Ctrl+S")
-        aboutAction.triggered.connect(  lambda : QtWidgets.QMessageBox.information(self, self.tr("About"), self.tr("Version: ")+ Global.version))
-        helpAction.triggered.connect(lambda : Global.openFile(Paths.user_manual))
-        homeDirAction.triggered.connect(lambda : Global.openFile(Paths.ucs_home_dir))
         newAction.triggered.connect(    lambda: self.newTask(promptSave=True))
         saveAction.triggered.connect(   self.saveTask)
         saveAsAction.triggered.connect( lambda: self.saveTask(True))
         loadAction.triggered.connect(   self.loadTask)
+        aboutAction.triggered.connect(  aboutMessage)
+        helpAction.triggered.connect(   lambda: Global.openFile(Paths.user_manual))
+        homeDirAction.triggered.connect(lambda: Global.openFile(Paths.ucs_home_dir))
 
-        fileMenu.addAction(aboutAction)
-        fileMenu.addAction(helpAction)
-        fileMenu.addAction(homeDirAction)
         fileMenu.addAction(newAction)
         fileMenu.addAction(saveAction)
         fileMenu.addAction(saveAsAction)
         fileMenu.addAction(loadAction)
-
+        fileMenu.addAction(aboutAction)
+        fileMenu.addAction(helpAction)
+        fileMenu.addAction(homeDirAction)
 
 
         # Create Community Menu
         communityMenu = menuBar.addMenu(self.tr('Community'))
-        forumAction   = QtWidgets.QAction(QtGui.QIcon(Paths.taskbar), self.tr('Visit the forum!'), self)
+        forumAction   = QtWidgets.QAction(    QtGui.QIcon(Paths.taskbar),     self.tr('Visit the forum!'), self)
         redditAction  = QtWidgets.QAction(QtGui.QIcon(Paths.reddit_link), self.tr('Visit our subreddit!'), self)
 
-        forumAction.triggered.connect(  lambda: webbrowser.open("https://forum.ufactory.cc/", new=0, autoraise=True))
+        forumAction.triggered.connect(     lambda: webbrowser.open("https://forum.ufactory.cc/", new=0, autoraise=True))
         redditAction.triggered.connect(lambda: webbrowser.open("https://www.reddit.com/r/uArm/", new=0, autoraise=True))
 
         communityMenu.addAction(forumAction)
@@ -190,10 +172,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create Resources Menu
         resourceMenu = menuBar.addMenu(self.tr('New Resource'))
-        visAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize),  self.tr('Vision Object'     )    , self)
-        grpAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize),  self.tr('Vision Group'      )    , self)
-        recAction  = QtWidgets.QAction(QtGui.QIcon(Paths.record_start),     self.tr('Movement Recording')    , self)
-        fncAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), self.tr('Function'          )    , self)
+        visAction  = QtWidgets.QAction( QtGui.QIcon(Paths.event_recognize),          self.tr('Vision Object'), self)
+        grpAction  = QtWidgets.QAction( QtGui.QIcon(Paths.event_recognize),           self.tr('Vision Group'), self)
+        recAction  = QtWidgets.QAction(    QtGui.QIcon(Paths.record_start),     self.tr('Movement Recording'), self)
+        fncAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func),               self.tr('Function'), self)
 
 
         visAction.triggered.connect(lambda: MakeObjectWindow(   None, self.env, parent=self))
@@ -208,8 +190,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create Languages Menu
         languageMenu = menuBar.addMenu(self.tr('Languages'))
-        enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english),  self.tr('English'     )    , self)
-        cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'          )    , self)
+        enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english), self.tr('English'), self)
+        cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'), self)
         cnLanAction.triggered.connect(lambda: self.updateLanguageSetting('zh_CN'))
         enLanAction.triggered.connect(lambda: self.updateLanguageSetting('en_US'))
 
@@ -228,13 +210,13 @@ class MainWindow(QtWidgets.QMainWindow):
         toolbar = self.addToolBar(self.tr("MainToolbar"))
         toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 
-        calibrateBtn = QtWidgets.QAction(QtGui.QIcon(Paths.calibrate),          self.tr('Calibrate'), self)
-        objMngrBtn   = QtWidgets.QAction(QtGui.QIcon(Paths.objectManager),      self.tr('Resources'), self)
+        calibrateBtn = QtWidgets.QAction(QtGui.QIcon(Paths.calibrate),     self.tr('Calibrate'), self)
+        objMngrBtn   = QtWidgets.QAction(QtGui.QIcon(Paths.objectManager), self.tr('Resources'), self)
 
         self.scriptToggleBtn.setToolTip(self.tr('Run/Pause the command script (Ctrl+R)'))
-        self.devicesBtn.setToolTip(self.tr('Open Camera and Robot settings'),)
-        calibrateBtn.setToolTip(self.tr('Open Robot and Camera Calibration Center'))
-        objMngrBtn.setToolTip(self.tr('Open Resource Manager'))
+        self.devicesBtn.setToolTip(     self.tr('Open Camera and Robot settings'))
+        calibrateBtn.setToolTip(        self.tr('Open Robot and Camera Calibration Center'))
+        objMngrBtn.setToolTip(          self.tr('Open Resource Manager'))
 
         self.scriptToggleBtn.setShortcut(self.tr('Ctrl+R'))
 
@@ -271,7 +253,7 @@ class MainWindow(QtWidgets.QMainWindow):
             # dockWidget.setTitleBarWidget(titleBarWidget)
             return dockWidget
 
-        cameraDock = createDockWidget(self.cameraWidget, self.tr('Camera'))
+        cameraDock = createDockWidget(  self.cameraWidget,  self.tr('Camera'))
         consoleDock = createDockWidget(self.consoleWidget, self.tr('Console'))
 
 
@@ -361,13 +343,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
             # Generate a message for the user to explain what parameters are missing
-            errorStr = self.tr('Certain Events and Commands are missing the following requirements to work properly: \n\n') + \
-                       ''.join(errorText) + \
-                       self.tr('\nWould you like to continue anyways? Events and commands with errors will not activate.')
+            errorStr = self.tr('Certain Events and Commands are missing the following requirements to work properly: '
+                       '\n\n') + ''.join(errorText) + self.tr('\nWould you like to continue anyways? '
+                       'Events and commands with errors will not activate.')
 
 
             # Warn the user
-            reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'), errorStr,
+            reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'), self.tr(errorStr),
                                 QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.Cancel)
 
 
@@ -615,11 +597,10 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             self.loadData = json.load( open(filename))
         except IOError:
-            printf("GUI| ERROR: Task file "), filename, self.tr("not found!")
+            printf("GUI| ERROR: Task file ", filename, "not found!")
             self.fileName = None
             self.env.updateSettings("lastOpenedFile", None)
             return
-
 
 
         # Load the data- BUT MAKE SURE TO DEEPCOPY otherwise any change in the program will change in self.loadData
@@ -633,9 +614,10 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             printf("GUI| ERROR: Could not load task: ", e)
             self.newTask(promptSave=False)
-            QtWidgets.QMessageBox.information(self, self.tr('Warning'), self.tr("The program was unable to load the following script:\n") +
-                                    str(filename) + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": " + str(e)
-                                           )
+            QtWidgets.QMessageBox.information(self, self.tr('Warning'),
+                                self.tr("The program was unable to load the following script:\n") +
+                                str(filename) + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": "
+                                + str(e))
 
 
 
@@ -706,7 +688,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.env.close()
 
         printf("GUI| Done closing all objects and threads.")
-        printf('---------------------------Logging End------------------------------------------\n')
         app.exit(0)
 
     def updateLanguageSetting(self, language):
@@ -716,23 +697,18 @@ class MainWindow(QtWidgets.QMainWindow):
         :return:
         """
         reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
-                                               self.tr(
-                                                   "Language switching need restart to apply, Would you like to continue?"),
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel,
-                                               QtWidgets.QMessageBox.Yes)
+                                      self.tr("Language switching need restart to apply, Would you like to continue?"),
+                                      QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel,
+                                      QtWidgets.QMessageBox.Yes)
+
         if reply == QtWidgets.QMessageBox.Yes:
-            printf("GUI| Restart")
+            printf("GUI| Restarting")
             self.env.updateSettings("language", language)
             self.close()
-            app.exit(MainWindow.EXIT_CODE_REBOOT)
-
-        if reply == QtWidgets.QMessageBox.No:
-            self.env.updateSettings("language", language)
-            printf("GUI| Not Restart")
+            QtCore.QCoreApplication.exit(MainWindow.EXIT_CODE_REBOOT)
 
         if reply == QtWidgets.QMessageBox.Cancel:
-            printf("GUI| User canceled- aborting close!")
-            return True
+            self.env.updateSettings("language", language)
 
 
 
@@ -920,29 +896,42 @@ class Application(QtWidgets.QApplication):
 
 
 
-def switchingLanugage(country_code):
-    if country_code != 'en_US':
-        trans.load(Paths.language_pack_zh_CN)
-        app.installTranslator(trans)
-
-
 if __name__ == '__main__':
-    # Install a global exception hook to catch pyQt errors that fall through (helps with debugging a ton) #TODO: Remove for builds
-    # sys.__excepthook = sys.excepthook
-    # sys._excepthook  = sys.excepthook
-    # def exception_hook(exctype, value, traceback):
-    #     sys._excepthook(exctype, value, traceback)
-    #     sys.exit(1)
-    # sys.excepthook   = exception_hook
-    # logging.getLogger("application").error("System Exception - " + str(e))
-    # Initialize global variables
+    import os
+    import logging
+
+    # Set up a global logger for error logging
+
+    errorLogger = logging.getLogger('error')
+    errorLogger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logFile   = os.path.join(Paths.ucs_home_dir, 'error.log')
+    fHandler  = logging.FileHandler(logFile)
+    fHandler.setLevel(logging.INFO)
+    fHandler.setFormatter(formatter)
+    errorLogger.addHandler(fHandler)
+    errorLogger.info('---------------------------Logging Start---------------------------')
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+            return
+
+        errorLogger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+    sys.excepthook = handle_exception
+    errorLogger.info('----------------------------Logging End----------------------------')
+
+    # Set up global variables
     Global.init()
+
     # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
     env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
     Global.initLogger(env.getSetting('consoleSettings'))
-    # exit code could help program to restart by itself
+
+
+    # Create an exit code to track whether or not to reboot the GUI, or close it for good (for language changes)
     currentExitCode = MainWindow.EXIT_CODE_REBOOT
-    global app, trans
     while currentExitCode == MainWindow.EXIT_CODE_REBOOT:
         # Create the Application base
         app = Application(sys.argv)
@@ -952,20 +941,25 @@ if __name__ == '__main__':
         font.setFamily("Verdana")
         font.setPixelSize(12)
         app.setFont(font)
+
         # Create Language pack installer
         trans = QtCore.QTranslator()
 
-        # Check if settings include language config
-        if env.getSetting("language") is None:
+        # Get the language settings from settings.txt, or the local area
+        language = env.getSetting("language")
+        if language is None:
             try:
-                if locale.getdefaultlocale()[0] == 'zh_CN':  # If no language config detect the locale
-                    switchingLanugage('zh_CN')
-                    env.updateSettings("language", 'zh_CN')
+                import locale
+                if locale.getdefaultlocale()[0] == 'zh_CN':
+                    language = 'zh_CN'
             except ValueError:
-                printf("Can not detect system locale")
-        elif env.getSetting("language") == 'zh_CN':
-            switchingLanugage('zh_CN')
-            env.updateSettings("language", 'zh_CN')
+                printf("GUI| Can not detect system locale")
+        env.updateSettings("language", language)
+
+        # Load the appropriate language pack, if there is need for one
+        if language == 'zh_CN':
+            trans.load(Paths.language_pack_zh_CN)
+            app.installTranslator(trans)
 
         w = MainWindow(env)
         w.show()
