@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN" sourcelanguage="en_US">
+<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="en_US">
 <context>
     <name>CWPage1</name>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="378"/>
+        <location filename="../../CalibrationsGUI.py" line="380"/>
         <source>The algorithms in this software will only work if the
 </source>
         <translation>若想使用视觉功能，</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="379"/>
+        <location filename="../../CalibrationsGUI.py" line="381"/>
         <source>camera is placed above the robot, and doesn&apos;t move. 
 
 </source>
@@ -19,27 +18,27 @@
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="380"/>
+        <location filename="../../CalibrationsGUI.py" line="382"/>
         <source>Please find a way to mount your webcam above the robot,
 </source>
         <translation>请想办法将摄像头固定在机械臂正上方，
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="381"/>
+        <location filename="../../CalibrationsGUI.py" line="383"/>
         <source>in such a way that it has a wide field of view of the
 </source>
         <translation>并保证摄像头的视野</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="382"/>
+        <location filename="../../CalibrationsGUI.py" line="384"/>
         <source>robots workspace.
 </source>
         <translation>足以涵盖机械臂工作区域。
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="385"/>
+        <location filename="../../CalibrationsGUI.py" line="387"/>
         <source>Welcome Coordinate Calibration Wizard!
 </source>
         <translation>欢迎使用视觉校正向导！
@@ -48,10 +47,10 @@
     <message>
         <location filename="../../CalibrationsGUI.py" line="386"/>
         <source>This will walk you through teaching the camera the position of the robot.</source>
-        <translation>请根据引导完成以下步骤，以使摄像头和机械臂记住对方的位置。</translation>
+        <translation type="obsolete">请根据引导完成以下步骤，以使摄像头和机械臂记住对方的位置。</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="387"/>
+        <location filename="../../CalibrationsGUI.py" line="389"/>
         <source>
 
 Step 1: Setup</source>
@@ -59,11 +58,16 @@ Step 1: Setup</source>
 
 第1步：安装</translation>
     </message>
+    <message>
+        <location filename="../../CalibrationsGUI.py" line="388"/>
+        <source>This will walk you through teaching UCS the position of the robot.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CWPage2</name>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="451"/>
+        <location filename="../../CalibrationsGUI.py" line="453"/>
         <source>
 
 Step 2: Robot Placement</source>
@@ -72,17 +76,17 @@ Step 2: Robot Placement</source>
 第2步：调整uArm姿势</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="453"/>
+        <location filename="../../CalibrationsGUI.py" line="455"/>
         <source>Could not find example gif</source>
         <translation>找不到示例 gif</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="491"/>
+        <location filename="../../CalibrationsGUI.py" line="493"/>
         <source>Getting Height of Ground</source>
         <translation>正在获取离地面的高度</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="492"/>
+        <location filename="../../CalibrationsGUI.py" line="494"/>
         <source>Yes, the end effector is touching the ground</source>
         <translation>是的，末端吸盘已经触碰到桌面/地面</translation>
     </message>
@@ -90,7 +94,7 @@ Step 2: Robot Placement</source>
         <location filename="../../CalibrationsGUI.py" line="494"/>
         <source>Important!
 Before continuing, make sure the robots end effector is touching the ground, </source>
-        <translation>重要提示：
+        <translation type="obsolete">重要提示：
 在继续下一步之前，请确保uArm末端已经触碰到桌面/地面， </translation>
     </message>
     <message>
@@ -98,7 +102,7 @@ Before continuing, make sure the robots end effector is touching the ground, </s
         <source>and that it is centered below the camera. The program will read the robots coordinates.
 
 </source>
-        <translation>并且uArm位于摄像头正下方。程序会读取uArm坐标。
+        <translation type="obsolete">并且uArm位于摄像头正下方。程序会读取uArm坐标。
 </translation>
     </message>
     <message>
@@ -122,18 +126,49 @@ Before continuing, make sure the robots end effector is touching the ground, </s
                  center of the cameras view, and the sucker is touching the
 
                  ground.</source>
-        <translation>校正前请固定uArm。
+        <translation type="obsolete">校正前请固定uArm。
 若在校正过程中，以及校正后移动了uArm，你需要重新做一次校正。
 
 请按照右边的GIF指引，在保证uArm底座固定的情况下，让uArm末端吸盘触碰到桌面/地面（uArm底部所在的平面）。
 
 请确保uArm吸盘在摄像头视野的中心，且吸盘已经触碰到地面。</translation>
     </message>
+    <message>
+        <location filename="../../CalibrationsGUI.py" line="442"/>
+        <source>Mount the robot to the ground so that it doesn&apos;t move
+
+                            around, to avoid doing this calibration every time the 
+
+                            robot is moved.
+
+
+                            Without moving the robots base, lower the head of the robot 
+
+                            until the suction cup is barely touching the ground, as shown
+
+                            on the video to the right.
+
+
+                            Make sure the top of the robots head is still near the 
+
+                            center of the cameras view, and the sucker is touching the
+
+                            ground.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../CalibrationsGUI.py" line="496"/>
+        <source>Important!
+Before continuing, make sure the robots end effector is touching the ground, and that it is centered below the camera. The program will read the robots coordinates.
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CWPage3</name>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="529"/>
+        <location filename="../../CalibrationsGUI.py" line="532"/>
         <source>
 
 Step 3: Make a Robot Marker</source>
@@ -143,7 +178,7 @@ Step 3: Make a Robot Marker</source>
 （使摄像头识别uArm位置）</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="518"/>
+        <location filename="../../CalibrationsGUI.py" line="521"/>
         <source>In order to track the robot, there must be a marker of some
 
                  sort on the robot. If you have a QR code or detailed 
@@ -181,51 +216,51 @@ Step 3: Make a Robot Marker</source>
 <context>
     <name>CWPage4</name>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="596"/>
+        <location filename="../../CalibrationsGUI.py" line="599"/>
         <source>Step 4: Selecting the Marker</source>
         <translation>第4步：选取Robot Marker</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="669"/>
+        <location filename="../../CalibrationsGUI.py" line="672"/>
         <source>You must select an object with more detail.</source>
         <translation>请选取一个细节特征更丰富的识别对象。</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="674"/>
+        <location filename="../../CalibrationsGUI.py" line="677"/>
         <source>Your selected marker does not have enough detail. Only </source>
         <translation>你选取的Robot Marker没有足够多的细节特征。只检测到 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="674"/>
+        <location filename="../../CalibrationsGUI.py" line="677"/>
         <source> points were found.
 Add detail to your marker and try again.</source>
         <translation> 特征点。
 请在你的Robot Marker上添加更多细节后再试一次。</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="688"/>
+        <location filename="../../CalibrationsGUI.py" line="692"/>
         <source>Your selected marker is not very detailed, or is too small, only </source>
         <translation>你选取的Robot Marker比较小，或细节特征不是非常丰富， 
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="688"/>
+        <location filename="../../CalibrationsGUI.py" line="692"/>
         <source> points were found.
 </source>
         <translation> 只检测到 个特征点。</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="688"/>
+        <location filename="../../CalibrationsGUI.py" line="692"/>
         <source>Tracking may not be very accurate.</source>
         <translation>追踪效果可能不会非常准确。</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="692"/>
+        <location filename="../../CalibrationsGUI.py" line="696"/>
         <source>Found </source>
         <translation>发现 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="692"/>
+        <location filename="../../CalibrationsGUI.py" line="696"/>
         <source> Points</source>
         <translation> 特征点</translation>
     </message>
@@ -242,20 +277,35 @@ right corner of the marker, and drag it to the bottom right corner of the marker
 
                  view.
 </source>
-        <translation>请确保uArm末端处于摄像头视野的中心，然后用鼠标拖拽选取Robot Marker，摄像头即开始识别Robot Marker。
+        <translation type="obsolete">请确保uArm末端处于摄像头视野的中心，然后用鼠标拖拽选取Robot Marker，摄像头即开始识别Robot Marker。
 尽量保证摄像头能检测到至少500个特征点。
 移动uArm末端以确保摄像头能持续跟踪Robot Marker的位置。</translation>
+    </message>
+    <message>
+        <location filename="../../CalibrationsGUI.py" line="593"/>
+        <source>Make sure the robot&apos;s head is in the center of the camera view. Then, click the mouse on
+                 the top 
+right corner of the marker, and drag it to the bottom right corner of the marker.
+
+
+                 The camera will begin tracking the marker. Try to have more than 500 points on the marker. Move
+
+                 the robot around and make sure that the object can be recognized for the majority of the cameras
+
+                 view.
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>CWPage5</name>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="719"/>
+        <location filename="../../CalibrationsGUI.py" line="723"/>
         <source>Start Calibration</source>
         <translation>开始校正</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="743"/>
+        <location filename="../../CalibrationsGUI.py" line="747"/>
         <source>
 
 Final Step:</source>
@@ -264,58 +314,58 @@ Final Step:</source>
 最后一步：</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="861"/>
+        <location filename="../../CalibrationsGUI.py" line="865"/>
         <source>The marker was not recognized in enough points- it was only seen </source>
         <translation>无法有效识别Robot Marker。 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="861"/>
+        <location filename="../../CalibrationsGUI.py" line="865"/>
         <source>
-	  It must be seen at least </source>
+<byte value="x9"/>  It must be seen at least </source>
         <translation>
   至少要检测到500个特征点</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="881"/>
+        <location filename="../../CalibrationsGUI.py" line="885"/>
         <source>Calibration did not complete successfully. The following errors occured:
 </source>
         <translation>校正失败，错误信息如下：
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="885"/>
+        <location filename="../../CalibrationsGUI.py" line="889"/>
         <source>Try Again</source>
         <translation>重试</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="887"/>
+        <location filename="../../CalibrationsGUI.py" line="891"/>
         <source>Calibration was successful, </source>
         <translation>校正成功，</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="917"/>
+        <location filename="../../CalibrationsGUI.py" line="920"/>
         <source>    Progress Report: The robot marker has failed to be recognized </source>
         <translation>   进度报告： 摄像头没有识别到Robot Marker。</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="920"/>
+        <location filename="../../CalibrationsGUI.py" line="923"/>
         <source>    Progress Report: The calibration is going well.
 </source>
         <translation>   进度报告：校正进度正常。
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="923"/>
-        <source>    Testing Point:	</source>
+        <location filename="../../CalibrationsGUI.py" line="926"/>
+        <source>    Testing Point:<byte value="x9"/></source>
         <translation>    检测点： </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="924"/>
-        <source>    Valid Points: 	</source>
+        <location filename="../../CalibrationsGUI.py" line="927"/>
+        <source>    Valid Points: <byte value="x9"/></source>
         <translation>   有效点： </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="958"/>
+        <location filename="../../CalibrationsGUI.py" line="961"/>
         <source>Robot was disconnected during calibration</source>
         <translation>uArm在校正过程中被断开连接</translation>
     </message>
@@ -338,7 +388,7 @@ Final Step:</source>
 
                             you will have to re-run this calibration.
 </source>
-        <translation>当你点击“开始校正”按钮后，uArm会自动完成一套校正动作。
+        <translation type="obsolete">当你点击“开始校正”按钮后，uArm会自动完成一套校正动作。
 
 校正前，请确保：
 1）uArm末端在摄像头视野的中心，且摄像头能持续追踪Robot Marker的位置。
@@ -346,15 +396,15 @@ Final Step:</source>
 3）uArm底座被固定在平面上。若移动uArm位置，则须重新校正一次才能正常使用视觉功能。</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="855"/>
+        <location filename="../../CalibrationsGUI.py" line="859"/>
         <source>The robot marker was never seen! Try restarting the calibration and creating the
                         
-	  marker again, making sure that the robot&apos;s head is in view of the camera.
+<byte value="x9"/>  marker again, making sure that the robot&apos;s head is in view of the camera.
                         
 
-	  Also make sure that the area in the camera view is clear, blank, without too much
+<byte value="x9"/>  Also make sure that the area in the camera view is clear, blank, without too much
                         
-	  detail around it- try having a clear workspace with white paper as a background.</source>
+<byte value="x9"/>  detail around it- try having a clear workspace with white paper as a background.</source>
         <translation>很抱歉，摄像头没有检测到Robot Marker。
 请试着重来一次校正，或更换/加工你的Robot Marker使其细节特征更丰富。
 
@@ -366,15 +416,15 @@ Final Step:</source>
         <location filename="../../CalibrationsGUI.py" line="861"/>
         <source>
 
-	  Try making sure that the robot&apos;s head is centered in the middle of the cameras
+<byte value="x9"/>  Try making sure that the robot&apos;s head is centered in the middle of the cameras
                           
-	  view in the previous step, and try placing the camera in a higher location.
+<byte value="x9"/>  view in the previous step, and try placing the camera in a higher location.
                           
 
-	  Also make sure that the area around the camera view is clear, blank, without too
+<byte value="x9"/>  Also make sure that the area around the camera view is clear, blank, without too
                           
-	  much detail around it- try having a clear workspace with white paper as a background.</source>
-        <translation>小提示：
+<byte value="x9"/>  much detail around it- try having a clear workspace with white paper as a background.</source>
+        <translation type="obsolete">小提示：
 1）请确保uArm末端在摄像头视野的中心；
 2）可试着将摄像头架在更高的位置，以获得更广的视野。
 2）请确保背景干净，无过多杂物。可选择用不反光的白纸/白板作为背景。</translation>
@@ -386,10 +436,54 @@ Results will be saved when you click Apply
                         on the calibrations page. Feel free to try this again.
 
                         Make sure to repeat this calibration whenever you move your camera or move your robot.</source>
-        <translation>检测到 个特征点。
+        <translation type="obsolete">检测到 个特征点。
 若摄像头能持续追踪Robot Marker，请点击“应用”保存检测结果！
 
 如果你在完成校正后移动了摄像头或uArm的位置，请重新校正一次，以正常使用相应的视觉功能。</translation>
+    </message>
+    <message>
+        <location filename="../../CalibrationsGUI.py" line="738"/>
+        <source>When you press the Start Calibration button, the robot will go through a set of predefined
+                        moves
+ and record the information that it needs.
+                        Before beginning:
+
+
+
+                        1) Make sure that the robot&apos;s head is more or less centered under the cameras view, and the
+
+                            Robot Marker is being tracked.
+
+                        2) Make sure there is ample space for the robot to move around.
+
+                        3) Make sure the robot is immobile, and mounted to the ground. If you move the robot,
+
+                            you will have to re-run this calibration.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../CalibrationsGUI.py" line="865"/>
+        <source>
+
+<byte value="x9"/>  Try making sure that the robot&apos;s head is centered in the middle of the cameras
+                       
+<byte value="x9"/>  view in the previous step, and try placing the camera in a higher location.
+                       
+
+<byte value="x9"/>  Also make sure that the area around the camera view is clear, blank, without too
+                       
+<byte value="x9"/>  much detail around it- try having a clear workspace with white paper as a background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../CalibrationsGUI.py" line="892"/>
+        <source> points were found.
+Results will be saved when you click Apply
+                       on the calibrations page. Feel free to try this again.
+
+                       Make sure to repeat this calibration whenever you move your camera or move your robot.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -480,12 +574,12 @@ Results will be saved when you click Apply
         <translation>我想新建一个Robot Marker</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="272"/>
+        <location filename="../../CalibrationsGUI.py" line="273"/>
         <source>Skip to Automatic Calibration</source>
         <translation>直接跳到“自动校正”</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="273"/>
+        <location filename="../../CalibrationsGUI.py" line="275"/>
         <source>It appears this is not the first time you have run this tutorial.
 
 </source>
@@ -494,7 +588,7 @@ Results will be saved when you click Apply
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="273"/>
+        <location filename="../../CalibrationsGUI.py" line="275"/>
         <source>Would you like to start from scratch, or skip to the automated calibration?
 
 </source>
@@ -503,12 +597,12 @@ Results will be saved when you click Apply
 </translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="273"/>
+        <location filename="../../CalibrationsGUI.py" line="275"/>
         <source>(Automated calibration only works if the robot has the same marker on the top</source>
         <translation>（若你在上次校正后更换了机械臂标记，则无法使用自动校正，</translation>
     </message>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="273"/>
+        <location filename="../../CalibrationsGUI.py" line="275"/>
         <source> of its head as it did when you first ran this calibration.)
 </source>
         <translation>请重新校正一次）</translation>
@@ -1717,7 +1811,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 <context>
     <name>CoordWizard</name>
     <message>
-        <location filename="../../CalibrationsGUI.py" line="346"/>
+        <location filename="../../CalibrationsGUI.py" line="348"/>
         <source>Coordinate Calibration Wizard</source>
         <translation>坐标校正向导</translation>
     </message>
@@ -1725,52 +1819,52 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 <context>
     <name>DeviceWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="766"/>
+        <location filename="../../MainGUI.py" line="742"/>
         <source>Please select the robot you will be using:</source>
         <translation>请选择你正在使用的uArm端口：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="767"/>
+        <location filename="../../MainGUI.py" line="743"/>
         <source>Please select the camera you will be using:</source>
         <translation>请选择你正在使用的摄像头：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="771"/>
+        <location filename="../../MainGUI.py" line="747"/>
         <source>Scan for Robots</source>
         <translation>查找uArm</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="772"/>
+        <location filename="../../MainGUI.py" line="748"/>
         <source>Scan for Cameras</source>
         <translation>查找摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="773"/>
+        <location filename="../../MainGUI.py" line="749"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="774"/>
+        <location filename="../../MainGUI.py" line="750"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="835"/>
+        <location filename="../../MainGUI.py" line="811"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="854"/>
+        <location filename="../../MainGUI.py" line="830"/>
         <source>No devices were found.</source>
         <translation>没有找到设备。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="867"/>
+        <location filename="../../MainGUI.py" line="843"/>
         <source>Camera </source>
         <translation>摄像头 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="874"/>
+        <location filename="../../MainGUI.py" line="850"/>
         <source>No cameras were found.</source>
         <translation>没有找到摄像头。</translation>
     </message>
@@ -2022,136 +2116,136 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="98"/>
+        <location filename="../../MainGUI.py" line="77"/>
         <source>uArm Creator Studio</source>
         <translation>uArm创意百宝箱</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="99"/>
+        <location filename="../../MainGUI.py" line="78"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="100"/>
+        <location filename="../../MainGUI.py" line="79"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="155"/>
+        <location filename="../../MainGUI.py" line="131"/>
         <source>New Task</source>
         <translation>新建任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="156"/>
+        <location filename="../../MainGUI.py" line="132"/>
         <source>Save Task</source>
         <translation>保存任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="157"/>
+        <location filename="../../MainGUI.py" line="133"/>
         <source>Save Task As</source>
         <translation>另存为任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="158"/>
+        <location filename="../../MainGUI.py" line="134"/>
         <source>Load Task</source>
         <translation>导入任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="181"/>
+        <location filename="../../MainGUI.py" line="163"/>
         <source>Visit the forum!</source>
         <translation>欢迎访问论坛！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="182"/>
+        <location filename="../../MainGUI.py" line="164"/>
         <source>Visit our subreddit!</source>
         <translation>欢迎参与 subreddit讨论!</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="193"/>
+        <location filename="../../MainGUI.py" line="175"/>
         <source>Vision Object</source>
         <translation>可识别物体</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="194"/>
+        <location filename="../../MainGUI.py" line="176"/>
         <source>Vision Group</source>
         <translation>可识别物体分组</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="195"/>
+        <location filename="../../MainGUI.py" line="177"/>
         <source>Movement Recording</source>
         <translation>录制新动作</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="196"/>
+        <location filename="../../MainGUI.py" line="178"/>
         <source>Function</source>
         <translation>函数/自定义功能</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="231"/>
+        <location filename="../../MainGUI.py" line="213"/>
         <source>Calibrate</source>
         <translation>校正</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="232"/>
+        <location filename="../../MainGUI.py" line="214"/>
         <source>Resources</source>
         <translation>素材库</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="234"/>
+        <location filename="../../MainGUI.py" line="216"/>
         <source>Run/Pause the command script (Ctrl+R)</source>
         <translation>运行/暂停任务 (Ctrl+R)</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="235"/>
+        <location filename="../../MainGUI.py" line="217"/>
         <source>Open Camera and Robot settings</source>
         <translation>连接摄像头和uArm</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="236"/>
+        <location filename="../../MainGUI.py" line="218"/>
         <source>Open Robot and Camera Calibration Center</source>
         <translation>校正中心（视觉功能 &amp; 运动检测功能）</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="237"/>
+        <location filename="../../MainGUI.py" line="219"/>
         <source>Open Resource Manager</source>
         <translation>进入素材库</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="239"/>
+        <location filename="../../MainGUI.py" line="221"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="274"/>
+        <location filename="../../MainGUI.py" line="256"/>
         <source>Camera</source>
         <translation>摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="275"/>
+        <location filename="../../MainGUI.py" line="257"/>
         <source>Console</source>
         <translation>控制台</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="366"/>
+        <location filename="../../MainGUI.py" line="348"/>
         <source>Certain Events and Commands are missing the following requirements to work properly: 
 
 </source>
         <translation>某些事件和命令无法正常运行，请先满足以下条件：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="368"/>
+        <location filename="../../MainGUI.py" line="349"/>
         <source>
 Would you like to continue anyways? Events and commands with errors will not activate.</source>
         <translation>
 事件和命令出错，无法运行，你还要继续运行任务吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="722"/>
+        <location filename="../../MainGUI.py" line="703"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="407"/>
+        <location filename="../../MainGUI.py" line="389"/>
         <source>The script was unable to end.
 This may mean the script crashed, or it is taking time finishing.
 
@@ -2162,17 +2256,17 @@ If you are running Python code inside of this script, make sure you check isExit
 如果你在命令中运行了 python 代码，请确保 isExiting() 在循环命令中。这可以确保当你按下“停止”后，命令能快速终止。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="434"/>
+        <location filename="../../MainGUI.py" line="416"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="451"/>
+        <location filename="../../MainGUI.py" line="433"/>
         <source>Communication Errors</source>
         <translation>通信协议错误</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="451"/>
+        <location filename="../../MainGUI.py" line="433"/>
         <source>The following errors have occured communicating with your robot.
 Try reconnecting under the Devices menu.
 
@@ -2186,10 +2280,10 @@ ERROR:
     <message>
         <location filename="../../MainGUI.py" line="622"/>
         <source>not found!</source>
-        <translation>未找到！</translation>
+        <translation type="obsolete">未找到！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="640"/>
+        <location filename="../../MainGUI.py" line="621"/>
         <source>
 
  The following error occured: </source>
@@ -2198,72 +2292,72 @@ ERROR:
 出现以下错误：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="151"/>
+        <location filename="../../MainGUI.py" line="130"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="180"/>
+        <location filename="../../MainGUI.py" line="162"/>
         <source>Community</source>
         <translation>社区</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="192"/>
+        <location filename="../../MainGUI.py" line="174"/>
         <source>New Resource</source>
         <translation>新建素材</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="210"/>
+        <location filename="../../MainGUI.py" line="192"/>
         <source>Languages</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="211"/>
+        <location filename="../../MainGUI.py" line="193"/>
         <source>English</source>
         <translation>英语</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="212"/>
+        <location filename="../../MainGUI.py" line="194"/>
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="228"/>
+        <location filename="../../MainGUI.py" line="210"/>
         <source>MainToolbar</source>
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="653"/>
+        <location filename="../../MainGUI.py" line="635"/>
         <source>You have unsaved changes. Would you like to save before continuing?</source>
         <translation>你是否要保存刚刚的修改？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="161"/>
+        <location filename="../../MainGUI.py" line="140"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="161"/>
+        <location filename="../../MainGUI.py" line="140"/>
         <source>Version: </source>
         <translation>版本：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="722"/>
+        <location filename="../../MainGUI.py" line="703"/>
         <source>Language switching need restart to apply, Would you like to continue?</source>
         <translation>切换语言后需要重启软件。你要继续切换吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="153"/>
+        <location filename="../../MainGUI.py" line="136"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="154"/>
+        <location filename="../../MainGUI.py" line="137"/>
         <source>Open Home Folder</source>
         <translation>打开主目录</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="640"/>
+        <location filename="../../MainGUI.py" line="621"/>
         <source>The program was unable to load the following script:
 </source>
         <translation>程序无法加载以下脚本：

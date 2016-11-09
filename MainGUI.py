@@ -49,10 +49,6 @@ from ObjectManagerGUI  import MakeObjectWindow
 __author__ = "Alexander Thiel"
 
 
-        sys.exit(1)
-    error_logger.info('---------------------------Logging Start------------------------------------------')
-    error_logger.info('---------------------------Logging End------------------------------------------')
-error_logger.info('---------------------------Logging End------------------------------------------')
 ########## MAIN WINDOW ##########
 class MainWindow(QtWidgets.QMainWindow):
     EXIT_CODE_REBOOT = -983242194
