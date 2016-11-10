@@ -1201,6 +1201,7 @@ class MakeObjectWindow(QtWidgets.QWizard):
     def __init__(self, currentObj, env, parent):
         print("GOT CURRENT OBJECT ", currentObj)
         super(MakeObjectWindow, self).__init__(parent)
+        self.setWizardStyle(QtWidgets.QWizard.ModernStyle)
         # If objToModifyName is None, then this will not ask the user for the name of the object
         self.newObject = currentObj
 
@@ -1215,16 +1216,18 @@ class MakeObjectWindow(QtWidgets.QWizard):
             self.page1 = OWPage1(self.objManager.getForbiddenNames(), parent=self)
             self.addPage(self.page1)
 
-        self.page2 = OWPage2(env, parent=self)
-        self.page3 = OWPage3(parent=self)
-        self.page4 = OWPage4(env, parent=self)
+        self.page2 = OWPage2(parent=self)
+        self.page3 = OWPage3(env, parent=self)
+        self.page4 = OWPage4(parent=self)
+        self.page5 = OWPage5(env, parent=self)
 
         self.addPage(self.page2)
         self.addPage(self.page3)
         self.addPage(self.page4)
+        self.addPage(self.page5)
 
 
-        self.page2.newObject.connect(lambda: self.page4.setObject(self.page2.object))  # Link page3 to page2's object
+        self.page3.newObject.connect(lambda: self.page4.setObject(self.page3.object))  # Link page3 to page2's object
         self.setWindowTitle(QtCore.QCoreApplication.translate("ObjectManagerGUI","Object Wizard"))
         self.setWindowIcon(QtGui.QIcon(Paths.objectWizard))
 
@@ -1247,10 +1250,10 @@ class MakeObjectWindow(QtWidgets.QWizard):
             self.createNewObject()
 
     def createNewObject(self):
-        image       = self.page2.object.view.image.copy()
-        rect        = self.page2.object.view.rect
-        pickupRect  = self.page4.pickupRect
-        height      = float(self.page3.heightTxt.text())
+        image       = self.page3.object.view.image.copy()
+        rect        = self.page3.object.view.rect
+        pickupRect  = self.page5.pickupRect
+        height      = float(self.page4.heightTxt.text())
 
         # Create an actual TrackableObject with this information
         if self.newObject is not None:
@@ -1278,6 +1281,7 @@ class MakeObjectWindow(QtWidgets.QWizard):
         self.page2.close()
         self.page3.close()
         self.page4.close()
+        self.page5.close()
 
 class OWPage1(QtWidgets.QWizardPage):
     """
@@ -1329,8 +1333,8 @@ class OWPage1(QtWidgets.QWizardPage):
         mainHLayout = QtWidgets.QHBoxLayout()
         mainHLayout.addLayout(col1)
 
-        self.setMinimumHeight(750)
-        self.setMinimumWidth(900)
+        self.setMinimumHeight(450)
+        self.setMinimumWidth(600)
         self.setLayout(mainHLayout)
 
     def isComplete(self):
@@ -1342,37 +1346,20 @@ class OWPage1(QtWidgets.QWizardPage):
 
 class OWPage2(QtWidgets.QWizardPage):
     """
-    Have the user select the object
+    Get the name of the object
     """
 
-    newObject = QtCore.pyqtSignal()  # This emits when a valid object is selected, so that OWPage3 can update
-
-    def __init__(self, environment, parent):
+    def __init__(self, parent):
         super(OWPage2, self).__init__(parent)
 
-        # Detach the robots servos so that the user can move the robot out of the way
-        robot = environment.getRobot()
-        robot.setActiveServos(all=False)
-
-        # The final object is stored here:
-        self.object       = None
-
+        # Create GUI objects
         # The instructions are set in self.setStep(step) function, and are changed as needed
         self.stepLbl      = QtWidgets.QLabel("")
         self.howToLbl     = QtWidgets.QLabel("")
         self.hintLbl      = QtWidgets.QLabel("")  # This will tell the user if the object is good or bad
 
-        # Create the camera widget and set it up
-        self.vision       = environment.getVision()
-        self.cameraWidget = CameraSelector(environment.getVStream(), parent=self)
-        self.cameraWidget.play()
-        # self.cameraWidget.declinePicBtn.clicked.connect(self.tryAgain)
-        self.cameraWidget.objSelected.connect(self.objectSelected)
-
-
         self.initUI()
         self.setStep(1)
-
 
     def initUI(self):
         # Set titles bold
@@ -1387,40 +1374,134 @@ class OWPage2(QtWidgets.QWizardPage):
         movie = QtGui.QMovie(Paths.help_sel_obj)
         movieLbl.setMovie(movie)
         movie.start()
-
+        movie.setScaledSize(QtCore.QSize(480,320))
         # Create a special row for the camera that will force it to remain in the center, regardless of size changes
 
-        camRow = QtWidgets.QHBoxLayout()
-        camRow.addWidget(self.cameraWidget)
-        camRow.addWidget(movieLbl)
-        camRow.addStretch(1)
+        # camRow = QtWidgets.QHBoxLayout()
+        # camRow.addWidget(movieLbl)
+        # camRow.addStretch(1)
 
         # Place the GUI objects vertically
         col1 = QtWidgets.QVBoxLayout()
-        col1.addWidget(self.stepLbl)
+
         col1.addWidget(self.howToLbl)
         col1.addWidget(self.hintLbl)
-        col1.addLayout(camRow)
+        col1.addWidget(movieLbl)
 
-        mainHLayout = QtWidgets.QHBoxLayout()
+        mainHLayout = QtWidgets.QVBoxLayout()
+        mainHLayout.addWidget(self.stepLbl)
         mainHLayout.addLayout(col1)
 
 
         self.setLayout(mainHLayout)
 
+
     def setStep(self, step):
         if step == 1:
-            s = QtCore.QCoreApplication.translate("ObjectManagerGUI","\n\nStep 2: Select the Object")
-            h = QtCore.QCoreApplication.translate("ObjectManagerGUI","""Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.\n\n
-                Make sure the background is consistent and there is nothing on the screen except the object. The
-                \nwork area should be well lit, but not cause too much glare on the object if it's shiny. The video
-                \nshould be focused, and the object in the orientation that it will be recognized in. \n\n
-                When ready, Click the mouse on the corner of the object, drag it tightly over the object, then
-            \nrelease the mouse button.""")
-
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI", "\nStep 2: Select the Object")
+            h = QtCore.QCoreApplication.translate("ObjectManagerGUI",
+                                                  """Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.
+Make sure the background is consistent and there is nothing on the screen except the object. The
+work area should be well lit, but not cause too much glare on the object if it's shiny. The video
+should be focused, and the object in the orientation that it will be recognized in.
+When ready, Click the mouse on the corner of the object, drag it tightly over the object, then release the mouse button.""")
 
         if step == 2:
-            s = QtCore.QCoreApplication.translate("ObjectManagerGUI","\n\nStep 3: Verify")
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI", "\n\nStep 3: Verify")
+            h = QtCore.QCoreApplication.translate("ObjectManagerGUI", "-test text-")
+        self.stepLbl.setText(s)
+        self.howToLbl.setText(h)
+
+
+
+class OWPage3(QtWidgets.QWizardPage):
+    """
+    Have the user select the object
+    """
+
+    newObject = QtCore.pyqtSignal()  # This emits when a valid object is selected, so that OWPage3 can update
+
+    def __init__(self, environment, parent):
+        super(OWPage3, self).__init__(parent)
+
+        # Detach the robots servos so that the user can move the robot out of the way
+        robot = environment.getRobot()
+        robot.setActiveServos(all=False)
+
+        # The final object is stored here:
+        self.object       = None
+
+        # The instructions are set in self.setStep(step) function, and are changed as needed
+        self.stepLbl      = QtWidgets.QLabel("")
+        self.howToLbl     = QtWidgets.QTextEdit("")
+        self.hintLbl      = QtWidgets.QLabel("")  # This will tell the user if the object is good or bad
+
+        # Create the camera widget and set it up
+        self.vision       = environment.getVision()
+        self.cameraWidget = CameraSelector(environment.getVStream(), parent=self)
+        self.cameraWidget.play()
+        # self.cameraWidget.declinePicBtn.clicked.connect(self.tryAgain)
+        self.cameraWidget.objSelected.connect(self.objectSelected)
+
+        self.initUI()
+        self.setStep(1)
+
+
+    def initUI(self):
+        # Set titles bold
+        bold = QtGui.QFont()
+        bold.setBold(True)
+        self.stepLbl.setFont(bold)
+        self.hintLbl.setFont(bold)
+        self.hintLbl.setWordWrap(True)
+        self.howToLbl.setReadOnly(True)
+        self.howToLbl.setLineWrapMode(QtWidgets.QTextEdit.WidgetWidth)
+        self.howToLbl.setFrameStyle(QtWidgets.QFrame.NoFrame)
+
+        # Create a tutorial gif that will be next to the video
+        # movieLbl   = QtWidgets.QLabel("")
+        # movie = QtGui.QMovie(Paths.help_sel_obj)
+        # movieLbl.setMovie(movie)
+        # movie.start()
+
+        # Create a special row for the camera that will force it to remain in the center, regardless of size changes
+
+        # camRow = QtWidgets.QHBoxLayout()
+        # camRow.addWidget()
+        # camRow.addWidget(movieLbl)
+        # camRow.addStretch(1)
+
+        # Place the GUI objects vertically
+        col1 = QtWidgets.QVBoxLayout()
+
+        col1.addWidget(self.howToLbl)
+        col1.addWidget(self.hintLbl)
+        # col1.addLayout(camRow)
+
+        row = QtWidgets.QHBoxLayout()
+        row.addLayout(col1)
+        row.addWidget(self.cameraWidget)
+        mainVLayout = QtWidgets.QVBoxLayout()
+
+        mainVLayout.addWidget(self.stepLbl)
+        mainVLayout.addLayout(row)
+
+        self.setLayout(mainVLayout)
+
+    def setStep(self, step):
+        if step == 1:
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI","Step 2: Select the Object")
+            h = QtCore.QCoreApplication.translate("ObjectManagerGUI","")
+    #         h = QtCore.QCoreApplication.translate("ObjectManagerGUI","""Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.\n\n
+    #             Make sure the background is consistent and there is nothing on the screen except the object. The
+    #             \nwork area should be well lit, but not cause too much glare on the object if it's shiny. The video
+    #             \nshould be focused, and the object in the orientation that it will be recognized in. \n\n
+    #             When ready, Click the mouse on the corner of the object, drag it tightly over the object, then
+    #         \nrelease the mouse button.""")
+    #
+    #
+        if step == 2:
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI","Step 3: Verify")
             h = QtCore.QCoreApplication.translate("ObjectManagerGUI","-test text-")
         self.stepLbl.setText(s)
         self.howToLbl.setText(h)
@@ -1442,8 +1523,8 @@ class OWPage2(QtWidgets.QWizardPage):
         # Reset all variables before setting a new object
         self.object = None
         self.completeChanged.emit()
-        self.hintLbl.setText("")
-        self.setStep(1)
+        # self.hintLbl.setText("")
+        # self.setStep(1)
         self.vision.endAllTrackers()
 
 
@@ -1502,13 +1583,13 @@ class OWPage2(QtWidgets.QWizardPage):
         self.cameraWidget.close()
         self.vision.endAllTrackers()
 
-class OWPage3(QtWidgets.QWizardPage):
+class OWPage4(QtWidgets.QWizardPage):
     """
     Get the height of the object, in centimeters
     """
 
     def __init__(self, parent):
-        super(OWPage3, self).__init__(parent)
+        super(OWPage4, self).__init__(parent)
 
         # Create GUI objects
         self.errorLbl  = QtWidgets.QLabel("")  # Tells the user why the height is invalid
@@ -1550,8 +1631,8 @@ class OWPage3(QtWidgets.QWizardPage):
         mainHLayout = QtWidgets.QHBoxLayout()
         mainHLayout.addLayout(col1)
 
-        self.setMinimumHeight(750)
-        self.setMinimumWidth(700)
+        self.setMinimumHeight(450)
+        self.setMinimumWidth(400)
         self.setLayout(mainHLayout)
 
     def isComplete(self):
@@ -1575,7 +1656,7 @@ class OWPage3(QtWidgets.QWizardPage):
         self.errorLbl.setText('')
         return True
 
-class OWPage4(QtWidgets.QWizardPage):
+class OWPage5(QtWidgets.QWizardPage):
     """
     If anything is changed here, check the CoordWizard in CalibrationsGUI.py to make sure that it still works, since
     this class is used there.
@@ -1592,7 +1673,7 @@ class OWPage4(QtWidgets.QWizardPage):
     """
 
     def __init__(self, environment, parent):
-        super(OWPage4, self).__init__(parent)
+        super(OWPage5, self).__init__(parent)
 
 
         # The final "rect" of the pickup area of the object is stored here: (x1,y1,x2,y2)
