@@ -1227,7 +1227,7 @@ class MakeObjectWindow(QtWidgets.QWizard):
         self.addPage(self.page5)
 
 
-        self.page3.newObject.connect(lambda: self.page4.setObject(self.page3.object))  # Link page3 to page2's object
+        self.page3.newObject.connect(lambda: self.page5.setObject(self.page3.object))  # Link page3 to page2's object
         self.setWindowTitle(QtCore.QCoreApplication.translate("ObjectManagerGUI","Object Wizard"))
         self.setWindowIcon(QtGui.QIcon(Paths.objectWizard))
 
