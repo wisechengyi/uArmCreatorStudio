@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## V1.1.7
+- Update - Alex Tan
+- Date - 2016-11-10
+
+## Changes
+
+- Add Camera and Robot Disconnect
+- Add OSType (MAC, LINUX, WINDOWS) detect
+- Add Language Detect for User manual pdf
+- Fix Tooltip not display
+- Fix Mac What is This Help Button(use Tooltip instead)
+- Fix Object Wizard screen size on low resolution
+
+
 ## V1.1.6
 - Update - Alex Tan
 - Date - 2016-10-31

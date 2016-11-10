@@ -33,7 +33,7 @@ import Paths
 
 import logging
 
-__version__ = '1.1.6'
+__version__ = '1.1.7'
 
 version = __version__
 
@@ -44,6 +44,15 @@ Global is a set of functions that are used in many places around the project and
 
 It also holds the actual global variable "keysPressed", and "printRedirectFunc". More documentation below.
 """
+
+# OS TYPE
+WINDOWS = 0
+MACOSX  = 1
+LINUX   = 2
+
+# Language Country code
+ZH_CN = 'zh_cn'
+EN_US = 'en_us'
 
 # Special 'sleep' commands that can exit immediately if 'exitFunc()' returns false
 def wait(waitTime, exitFunc):
@@ -222,6 +231,14 @@ def getModuleClasses(module):
     """
     return dict([(name, cls) for name, cls in module.__dict__.items() if isinstance(cls, type)])
 
+def getOSType():
+    if platform.system() == 'Darwin':
+        return MACOSX
+    elif platform.system() == 'Windows':
+        return WINDOWS
+    elif platform.system() == 'Linux':
+        return LINUX
+
 
 def openFile(path):
     """
@@ -229,11 +246,11 @@ def openFile(path):
     :param path: PDF File Path
     :return:
     """
-    if platform.system() == 'Darwin':
+    if getOSType() == MACOSX:
         os.system("open "+path)
-    elif platform.system() == 'Windows':
+    elif getOSType() == WINDOWS:
         os.startfile(path)
-    elif platform.system() == 'Linux':
+    elif getOSType() == LINUX:
         os.system('xdg-open '+path)
 
 

@@ -68,7 +68,7 @@ class ControlPanel(QtWidgets.QWidget):
         self.commandListStack  = QtWidgets.QStackedWidget()
 
         # For Command Menu
-        self.commandMenuWidget = CommandsGUI.CommandMenuWidget(parent=self)
+        self.commandMenuWidget = CommandsGUI.CommandMenuWidget(parent=self,env=self.env)
 
         self.highlightColor = QtGui.QColor(150, 255, 150)
         self.errorColor     = QtGui.QColor(255, 150, 150)

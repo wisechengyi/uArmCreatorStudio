@@ -188,8 +188,8 @@ class MainWindow(QtWidgets.QMainWindow):
         languageMenu = menuBar.addMenu(self.tr('Languages'))
         enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english), self.tr('English'), self)
         cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'), self)
-        cnLanAction.triggered.connect(lambda: self.updateLanguageSetting('zh_CN'))
-        enLanAction.triggered.connect(lambda: self.updateLanguageSetting('en_US'))
+        cnLanAction.triggered.connect(lambda: self.updateLanguageSetting(Global.ZH_CN))
+        enLanAction.triggered.connect(lambda: self.updateLanguageSetting(Global.EN_US))
 
 
         languageMenu.addAction(enLanAction)
@@ -449,8 +449,15 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.interpreter.threadRunning(): self.endScript()
 
         self.cameraWidget.pause()
-
-        deviceWindow = DeviceWindow(parent=self)
+        # Detect If CameraID or RobotID exisit
+        cameraID = None
+        robotID = None
+        if self.env.getSetting('cameraID') is not None:
+            cameraID = self.env.getSetting('cameraID')
+        if self.env.getSetting('robotID') is not None:
+            robotID = self.env.getSetting('robotID')
+            # printf("GUI| cameraID: "+ str(cameraID))
+        deviceWindow = DeviceWindow(parent=self, cameraID=cameraID, robotID=robotID)
         accepted     = deviceWindow.exec_()
 
         self.cameraWidget.play()
@@ -461,22 +468,25 @@ class MainWindow(QtWidgets.QMainWindow):
         printf("GUI| Apply clicked, applying settings...")
         if deviceWindow.getRobotSetting() is not None:
             self.env.updateSettings("robotID", deviceWindow.getRobotSetting())
+            # If the robots not connected, attempt to reestablish connection
+            robot   = self.env.getRobot()
+            if not robot.connected():
+                robot.setUArm(self.env.getSetting('robotID'))
+        else:
+            self.env.updateSettings("robotID", None) # Disconnect Robot
+            self.env.closeRobot()
 
         if deviceWindow.getCameraSetting() is not None:
             self.env.updateSettings("cameraID", deviceWindow.getCameraSetting())
+            vStream = self.env.getVStream()
+            vStream.setNewCamera(self.env.getSetting('cameraID'))
+            self.cameraWidget.play()
+        else:
+            self.env.updateSettings("cameraID", None) # Disconnect Camera
+            self.env.closeVideo()
+            self.cameraWidget.pause()
+            self.cameraWidget.initUI()
 
-        vStream = self.env.getVStream()
-        vStream.setNewCamera(self.env.getSetting('cameraID'))
-
-
-        # If the robots not connected, attempt to reestablish connection
-        robot   = self.env.getRobot()
-        if not robot.connected():
-            robot.setUArm(self.env.getSetting('robotID'))
-
-
-
-        self.cameraWidget.play()
 
     def openCalibrations(self):
         # This handles the opening and closing of the Calibrations window
@@ -716,10 +726,13 @@ class DeviceWindow(QtWidgets.QDialog):
     The Apply/Cancel buttons are connected in the MainWindow class, which is why they are 'self' variables
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent, cameraID, robotID):
         super(DeviceWindow, self).__init__(parent)
         self.robSetting = None  # New robotID
         self.camSetting = None  # New cameraID
+        self.cameraID = cameraID
+        self.robotID = robotID
+        self.env = env
         # Init UI Globals
         self.cameraButtonGroup = None  # Radio buttons require a "group"
         self.robotButtonGroup  = None
@@ -730,43 +743,51 @@ class DeviceWindow(QtWidgets.QDialog):
 
     def initUI(self):
 
-        # Create Text
-        selectRobotTxt  = QtWidgets.QLabel(self.tr('Please select the robot you will be using:'))
-        selectCameraTxt = QtWidgets.QLabel(self.tr('Please select the camera you will be using:'))
-
-
         # CREATE BUTTONS
-        robotScanBtn  = QtWidgets.QPushButton(self.tr("Scan for Robots"))
-        cameraScanBtn = QtWidgets.QPushButton(self.tr("Scan for Cameras"))
+        if self.robotID is None: # If Robot ID Exist Show Scan
+            self.robotScanBtn  = QtWidgets.QPushButton(self.tr("Scan for Robots"))
+            self.selectRobotTxt = QtWidgets.QLabel(self.tr('Please select the robot you will be using:'))
+            self.robotScanBtn.clicked.connect(self.scanForRobotsClicked)
+        else:
+            self.robotScanBtn = QtWidgets.QPushButton(self.tr("Disconnect"))
+            self.selectRobotTxt = QtWidgets.QLabel(self.tr('Connected to Robot {}:'.format(self.robotID)))
+            self.robotScanBtn.clicked.connect(self.disconnectForRobotClicked)
+        if self.cameraID is None: # IF Camera ID Exist Show Disconnect
+            self.cameraScanBtn = QtWidgets.QPushButton(self.tr("Scan for Cameras"))
+            self.selectCameraTxt = QtWidgets.QLabel(self.tr('Please select the camera you will be using:'))
+            self.cameraScanBtn.clicked.connect(self.scanForCamerasClicked)
+        else:
+            self.cameraScanBtn = QtWidgets.QPushButton(self.tr("Disconnect"))
+            self.selectCameraTxt = QtWidgets.QLabel(self.tr('Connected to Camera {}'.format(self.cameraID)))
+            self.cameraScanBtn.clicked.connect(self.disconnectForCameraClicked)
+
         applyBtn      = QtWidgets.QPushButton(self.tr("Apply"))
         cancelBtn     = QtWidgets.QPushButton(self.tr("Cancel"))
 
         # Connect Buttons
-        robotScanBtn.clicked.connect(self.scanForRobotsClicked)
-        cameraScanBtn.clicked.connect(self.scanForCamerasClicked)
         applyBtn.clicked.connect(self.accept)
         cancelBtn.clicked.connect(self.reject)
 
 
         # Set max widths of buttons
         maxWidth = 130
-        robotScanBtn.setFixedWidth(maxWidth)
-        cameraScanBtn.setFixedWidth(maxWidth)
+        self.robotScanBtn.setFixedWidth(maxWidth)
+        self.cameraScanBtn.setFixedWidth(maxWidth)
         applyBtn.setFixedWidth(maxWidth)
         cancelBtn.setFixedWidth(maxWidth)
 
 
         # Create the rows and fill them up
         row1 = QtWidgets.QHBoxLayout()
-        row1.addWidget(selectRobotTxt, QtCore.Qt.AlignLeft)
-        row1.addWidget(robotScanBtn, QtCore.Qt.AlignRight)
+        row1.addWidget(self.selectRobotTxt, QtCore.Qt.AlignLeft)
+        row1.addWidget(self.robotScanBtn, QtCore.Qt.AlignRight)
 
         row2 = QtWidgets.QHBoxLayout()
         row2.addLayout(self.robVBox, QtCore.Qt.AlignLeft)
 
         row3 = QtWidgets.QHBoxLayout()
-        row3.addWidget(selectCameraTxt, QtCore.Qt.AlignLeft)
-        row3.addWidget(cameraScanBtn, QtCore.Qt.AlignRight)
+        row3.addWidget(self.selectCameraTxt, QtCore.Qt.AlignLeft)
+        row3.addWidget(self.cameraScanBtn, QtCore.Qt.AlignRight)
 
         row4 = QtWidgets.QHBoxLayout()
         row4.addLayout(self.camVBox)
@@ -842,6 +863,15 @@ class DeviceWindow(QtWidgets.QDialog):
             notFoundTxt = QtWidgets.QLabel(self.tr('No cameras were found.'))
             self.camVBox.addWidget(notFoundTxt)
 
+    def disconnectForCameraClicked(self):
+        # Disconnect Camera
+        self.camSetting = None
+        self.cameraScanBtn.setEnabled(False)
+
+    def disconnectForRobotClicked(self):
+        self.robSetting = None
+        self.robotScanBtn.setEnabled(False)
+
 
     def camButtonClicked(self):
         self.camSetting = self.cameraButtonGroup.checkedId()
@@ -889,7 +919,6 @@ class Application(QtWidgets.QApplication):
 
         # Call Base Class Method to Continue Normal Event Processing
         return super(Application, self).notify(receiver, event)
-
 
 
 if __name__ == '__main__':
@@ -942,19 +971,21 @@ if __name__ == '__main__':
         trans = QtCore.QTranslator()
 
         # Get the language settings from settings.txt, or the local area
-        language = env.getSetting("language")
-        if language is None:
+        language_code = env.getSetting("language")
+        if language_code is None:
             try:
                 import locale
-                if locale.getdefaultlocale()[0] == 'zh_CN':
-                    language = 'zh_CN'
+                if locale.getdefaultlocale()[0] == Global.ZH_CN:
+                    language_code = Global.ZH_CN
             except ValueError:
-                printf("GUI| Can not detect system locale")
-        env.updateSettings("language", language)
-
+                printf("GUI| Error - Can not detect system locale")
+        env.updateSettings("language", language_code)
         # Load the appropriate language pack, if there is need for one
-        if language == 'zh_CN':
-            trans.load(Paths.language_pack_zh_CN)
+        if language_code == Global.EN_US:
+            pass
+        else:
+            Paths.loadLanguagePath(language_code)
+            trans.load(Paths.language_pack)
             app.installTranslator(trans)
 
         w = MainWindow(env)

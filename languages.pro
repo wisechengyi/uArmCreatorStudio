@@ -6,4 +6,4 @@ SOURCES += ControlPanelGUI.py
 SOURCES += CommonGUI.py
 SOURCES += CommandsGUI.py
 SOURCES += CalibrationsGUI.py
-TRANSLATIONS += Resources/Languages/zh_CN.ts
+TRANSLATIONS += Resources/Languages/zh_cn.ts

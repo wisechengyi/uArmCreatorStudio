@@ -76,7 +76,10 @@ class CameraWidget(QtWidgets.QWidget):
         self.mainVLayout = QtWidgets.QVBoxLayout(self)  # Global because subclasses need it
         self.mainHLayout = QtWidgets.QHBoxLayout()
 
+        self.initUI()
 
+
+    def initUI(self):
         # Initialize UI
         movie = QtGui.QMovie(Paths.help_connect_camera)
         self.frameLbl.setMovie(movie)

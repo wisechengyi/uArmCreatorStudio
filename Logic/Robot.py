@@ -399,6 +399,14 @@ class Robot:
         if self.__threadRunning:        return False  # If the setupThread is running
         return True
 
+    def disconnect(self):
+        """
+        disconnect Robot release port resource
+        :return:
+        """
+        if self.__uArm is not None:
+            self.__uArm.disconnect()
+
     def getErrorsToDisplay(self):
         if self.__uArm is not None:
             return self.__uArm.getErrorsToDisplay()

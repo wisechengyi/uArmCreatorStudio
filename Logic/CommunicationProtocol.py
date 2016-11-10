@@ -62,6 +62,11 @@ class Device:
         # if not self.__handshake():  return False
         return True
 
+    def disconnect(self):
+        if self.__isConnected:
+            self.__serial.close()
+            self.__isConnected = False
+
     def getErrorsToDisplay(self):
         """
         Called by the GUI, this will return any errors that deserve being shown to the user in a dialog box.

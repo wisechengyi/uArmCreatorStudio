@@ -28,12 +28,12 @@ License:
 import ast  # To check if a statement is python parsible, for evals
 import re   # For variable santization
 import Paths
-import webbrowser  # For opening the user manual PDF
 from os.path      import basename
 from PyQt5        import QtGui, QtCore, QtWidgets
 from CameraGUI    import CameraSelector
 from CommonGUI    import ScriptWidget
-from Logic.Global import printf, ensurePathExists, openFile
+from Logic.Global import printf, ensurePathExists, openFile, getOSType, MACOSX
+
 __author__ = "Alexander Thiel"
 
 
@@ -124,8 +124,9 @@ class CommandWidget(QtWidgets.QWidget):
 
 
 class CommandMenuWidget(QtWidgets.QTabWidget):
-    def __init__(self, parent):
+    def __init__(self, parent, env=None):
         super(CommandMenuWidget, self).__init__(parent)
+        self.env = env
         self.initUI()
 
     def initUI(self):
@@ -204,11 +205,12 @@ class CommandMenuWidget(QtWidgets.QTabWidget):
         """
 
         newButton = self.DraggableButton(str(commandType.__name__), self)
-
-
+        command_instance = commandType(self.env)
+        tooltip = str(command_instance.tooltip)
+        command_instance = None
         newButton.setIcon(QtGui.QIcon(commandType.icon))
         newButton.setIconSize(QtCore.QSize(32, 32))
-        newButton.setToolTip(commandType.tooltip)
+        newButton.setToolTip(tooltip)
         newButton.setFixedHeight(40)
         newButton.setFixedWidth(40)
 
@@ -356,6 +358,9 @@ class CommandGUI:
         prompt.setWindowTitle(self.title)
         prompt.setWindowIcon(QtGui.QIcon(self.icon))
         prompt.setWhatsThis(self.tooltip)  # This makes the "Question Mark" button on the window show the tooltip msg
+        if getOSType() == MACOSX: # WhatsThis doesn't work in Mac
+            prompt.setToolTip(self.tooltip)
+            prompt.setToolTipDuration(5000)
 
 
         # Dress the base window (this is where the child actually puts the content into the widget)
@@ -593,13 +598,13 @@ class MoveXYZCommand(CommandGUI):
     icon      = Paths.command_xyz
 
     def __init__(self, env, parameters=None):
-        super(MoveXYZCommand, self).__init__(parameters)
         self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Move XYZ")
         self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI", "Set the robots position.\n") + \
                   QtCore.QCoreApplication.translate("CommandsGUI",
                                                     "If you do not want to set one of the robots axis, simply leave it empty. For example, put y and z \n") + \
                   QtCore.QCoreApplication.translate("CommandsGUI",
                                                     "empty and x to 5 will set the robots x position to 5 while keeping the current Y and Z the same.")
+        super(MoveXYZCommand, self).__init__(parameters)
         self.getCoordinates = env.getRobot().getCoords
 
         if self.parameters is None:
@@ -1607,7 +1612,6 @@ class StartBlockCommand(CommandGUI):
         super(StartBlockCommand, self).__init__(parameters)
         self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
                                                     "This is the start of a block of commands that only run if a conditional statement is met.")
-
 
 class EndBlockCommand(CommandGUI):
     """

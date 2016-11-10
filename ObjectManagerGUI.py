@@ -35,7 +35,7 @@ from CameraGUI           import CameraWidget, CameraSelector, cvToPixFrame
 from CommandsGUI         import CommandMenuWidget
 from CommonGUI           import centerScreen
 from ControlPanelGUI     import CommandList
-from Logic.Global        import printf
+from Logic.Global        import printf,getOSType,WINDOWS,MACOSX,LINUX
 from Logic.Resources     import TrackableObject, MotionPath, Function
 from Logic.RobotVision   import MIN_POINTS_TO_LEARN_OBJECT
 __author__ = "Alexander Thiel"
@@ -75,6 +75,12 @@ class ObjectManagerWindow(QtWidgets.QDialog):
         newGrpBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","New Vision Group"))
         newRecBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","New Move Recording"))
         newFncBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","New Function"))
+        # Fix Button font color
+        if getOSType() == MACOSX:
+            newObjBtn.setStyleSheet('QPushButton { color: Black;}')
+            newGrpBtn.setStyleSheet('QPushButton { color: Black;}')
+            newRecBtn.setStyleSheet('QPushButton { color: Black;}')
+            newFncBtn.setStyleSheet('QPushButton { color: Black;}')
 
         # Set the icons for the buttons
         newObjBtn.setIcon(QtGui.QIcon(Paths.event_recognize))

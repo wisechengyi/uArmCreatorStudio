@@ -28,8 +28,8 @@ License:
 __author__ = "Alexander Thiel"
 import os
 import sys
-import platform
 from os.path import expanduser
+from Logic import Global
 
 if getattr(sys, 'frozen', False):
     APPLICATION_PATH = os.path.dirname(sys.executable)
@@ -43,13 +43,13 @@ elif __file__:
 ################        PROGRAM RESOUCES    ################
 
 ## Check OS type
-if platform.system() == 'Darwin' and getattr(sys, 'frozen', False): # Mac os x frozen app
+if Global.getOSType() == Global.MACOSX and getattr(sys, 'frozen', False): # Mac os x frozen app
     resourcesLoc = os.path.join(APPLICATION_PATH, "..", "Resources")
-elif platform.system() == 'Darwin' and __file__: # Mac os x run in scripts
+elif Global.getOSType() == Global.MACOSX and __file__: # Mac os x run in scripts
     resourcesLoc = os.path.join(APPLICATION_PATH, "Resources")
-elif platform.system() == 'Windows':
+elif Global.getOSType() == Global.WINDOWS:
     resourcesLoc = os.path.join('.', "Resources")
-elif platform.system() == 'Linux':
+elif Global.getOSType() == Global.LINUX:
     resourcesLoc = os.path.join('.', "Resources")
 
 
@@ -63,11 +63,11 @@ exeResourcesPath = resourcePath(resourcesLoc)
 
 # Used by translation
 languageLoc = resourcePath(os.path.join(resourcesLoc, "Languages"))
-language_pack_zh_CN = os.path.join(languageLoc, "zh_CN.qm")
 
 # Used by Vision
-cascade_dir  = exeResourcesPath
-user_manual  = os.path.join(exeResourcesPath, "User_Manual.pdf")
+cascade_dir = exeResourcesPath
+global user_manual,language_pack
+
 
 
 ################        GUI PATHS         ################
@@ -176,3 +176,12 @@ if not os.path.exists(ucs_home_dir):
 settings_txt = os.path.join(ucs_home_dir, "Settings.txt")
 objects_dir  = os.path.join(ucs_home_dir, "Objects", "")
 saves_dir    = os.path.join(ucs_home_dir, "Save Files", "")
+
+## Language Init Path
+def loadLanguagePath(language_code=Global.EN_US):
+    global user_manual,language_pack
+    if language_code == Global.EN_US:
+        user_manual = os.path.join(exeResourcesPath, "User_Manual.pdf")
+    else:
+        user_manual = os.path.join(exeResourcesPath, "User_Manual_{}.pdf".format(language_code))
+        language_pack = os.path.join(languageLoc, "{}.qm".format(language_code))
