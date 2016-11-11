@@ -360,7 +360,6 @@ class CommandGUI:
         prompt.setWhatsThis(self.tooltip)  # This makes the "Question Mark" button on the window show the tooltip msg
         if getOSType() == MACOSX: # WhatsThis doesn't work in Mac
             prompt.setToolTip(self.tooltip)
-            prompt.setToolTipDuration(5000)
 
 
         # Dress the base window (this is where the child actually puts the content into the widget)

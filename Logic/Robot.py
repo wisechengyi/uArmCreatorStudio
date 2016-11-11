@@ -364,6 +364,7 @@ class Robot:
             with self.__lock:
                 self.gripperStatus  = status
                 self.__uArm.setPump(self.gripperStatus)
+                self.__uArm.setGripper(self.gripperStatus)
 
     def setBuzzer(self, frequency, duration):
         """

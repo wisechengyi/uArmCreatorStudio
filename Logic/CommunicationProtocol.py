@@ -140,6 +140,21 @@ class Device:
         # Send the command and receive a response
         self.__sendAndRecieve(cmnd)
 
+    def setGripper(self, onOff):
+        """
+        Set the gripper value.
+        :param onOff: True means turn the gripper on. False means off.
+        """
+        # Prepare the values
+        v = str(int(onOff))
+
+        # Create the command
+        cmnd = "sGriV" + v
+
+        # Send the command and receive a response
+        self.__sendAndRecieve(cmnd)
+
+
     def setServoAttach(self, servo):
         """
         Attach a certain servo.

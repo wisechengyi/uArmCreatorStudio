@@ -10,6 +10,8 @@
 - Add OSType (MAC, LINUX, WINDOWS) detect
 - Add Language Detect for User manual pdf
 - Add Reset Layout action in File Menu
+- Add Translation for function description
+- Fix Gripper not working
 - Filter useless serial port
 - Fix Tooltip not display
 - Fix Mac What is This Help Button(use Tooltip instead)

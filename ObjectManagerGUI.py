@@ -1361,7 +1361,7 @@ class OWPage2(QtWidgets.QWizardPage):
         # Create GUI objects
         # The instructions are set in self.setStep(step) function, and are changed as needed
         self.stepLbl      = QtWidgets.QLabel("")
-        self.howToLbl     = QtWidgets.QLabel("")
+        self.howToLbl     = QtWidgets.QTextEdit("")
         self.hintLbl      = QtWidgets.QLabel("")  # This will tell the user if the object is good or bad
 
         self.initUI()
@@ -1372,8 +1372,9 @@ class OWPage2(QtWidgets.QWizardPage):
         bold = QtGui.QFont()
         bold.setBold(True)
         self.stepLbl.setFont(bold)
-        self.hintLbl.setFont(bold)
-        self.hintLbl.setWordWrap(True)
+        self.howToLbl.setReadOnly(True)
+        self.howToLbl.setLineWrapMode(QtWidgets.QTextEdit.WidgetWidth)
+        self.howToLbl.setFrameStyle(QtWidgets.QFrame.NoFrame)
 
         # Create a tutorial gif that will be next to the video
         movieLbl   = QtWidgets.QLabel("")
@@ -1406,11 +1407,11 @@ class OWPage2(QtWidgets.QWizardPage):
         if step == 1:
             s = QtCore.QCoreApplication.translate("ObjectManagerGUI", "\nStep 2: Select the Object")
             h = QtCore.QCoreApplication.translate("ObjectManagerGUI",
-                                                  """Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.
-Make sure the background is consistent and there is nothing on the screen except the object. The
-work area should be well lit, but not cause too much glare on the object if it's shiny. The video
-should be focused, and the object in the orientation that it will be recognized in.
-When ready, Click the mouse on the corner of the object, drag it tightly over the object, then release the mouse button.""")
+                                                  """1. Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.
+1）Make sure the background is consistent and there is nothing on the screen except the object.
+2）The work area should be well lit, but not cause too much glare on the object if it's shiny.
+
+2. When ready, Click the mouse on the corner of the object, drag it tightly over the object, then release the mouse button.""")
 
         if step == 2:
             s = QtCore.QCoreApplication.translate("ObjectManagerGUI", "\n\nStep 3: Verify")
@@ -1463,19 +1464,6 @@ class OWPage3(QtWidgets.QWizardPage):
         self.howToLbl.setReadOnly(True)
         self.howToLbl.setLineWrapMode(QtWidgets.QTextEdit.WidgetWidth)
         self.howToLbl.setFrameStyle(QtWidgets.QFrame.NoFrame)
-
-        # Create a tutorial gif that will be next to the video
-        # movieLbl   = QtWidgets.QLabel("")
-        # movie = QtGui.QMovie(Paths.help_sel_obj)
-        # movieLbl.setMovie(movie)
-        # movie.start()
-
-        # Create a special row for the camera that will force it to remain in the center, regardless of size changes
-
-        # camRow = QtWidgets.QHBoxLayout()
-        # camRow.addWidget()
-        # camRow.addWidget(movieLbl)
-        # camRow.addStretch(1)
 
         # Place the GUI objects vertically
         col1 = QtWidgets.QVBoxLayout()
