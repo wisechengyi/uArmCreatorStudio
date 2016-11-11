@@ -9,6 +9,7 @@
 - Add Camera and Robot Disconnect
 - Add OSType (MAC, LINUX, WINDOWS) detect
 - Add Language Detect for User manual pdf
+- Add Reset Layout action in File Menu
 - Fix Tooltip not display
 - Fix Mac What is This Help Button(use Tooltip instead)
 - Fix Object Wizard screen size on low resolution

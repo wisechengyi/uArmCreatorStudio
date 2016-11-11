@@ -84,6 +84,7 @@ file_homedir        = os.path.join(imageLoc, "file_homedir.png")
 file_new            = os.path.join(imageLoc, "file_new.png")
 file_save           = os.path.join(imageLoc, "file_save.png")
 file_load           = os.path.join(imageLoc, "file_load.png")
+file_layout         = os.path.join(imageLoc, "file_layout.png")
 reddit_link         = os.path.join(imageLoc, "forum_link_reddit.png")
 
 

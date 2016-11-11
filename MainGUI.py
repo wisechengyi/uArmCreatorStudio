@@ -77,6 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.controlPanel    = ControlPanelGUI.ControlPanel(self.env, parent=self)
         self.cameraWidget    = CameraWidget(self.env.getVStream(), parent=self)
         self.floatingHint    = QtWidgets.QLabel()  # Used to display floating banners to inform the user of something
+        self.resetLayoutFlag = False # If True, Program will resetore the default layout
 
 
         # Create Menu items and set up the GUI
@@ -131,6 +132,7 @@ class MainWindow(QtWidgets.QMainWindow):
         aboutAction = QtWidgets.QAction( QtGui.QIcon(Paths.file_about),        self.tr('About'), self)
         helpAction = QtWidgets.QAction(   QtGui.QIcon(Paths.file_help),         self.tr('Help'), self)
         homeDirAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_homedir), self.tr('Open Home Folder'), self)
+        resetLayoutAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_layout), self.tr('Reset Layout'), self)
 
 
         aboutMessage = lambda: QtWidgets.QMessageBox.information(self, self.tr("About"),
@@ -144,6 +146,7 @@ class MainWindow(QtWidgets.QMainWindow):
         aboutAction.triggered.connect(  aboutMessage)
         helpAction.triggered.connect(   lambda: Global.openFile(Paths.user_manual))
         homeDirAction.triggered.connect(lambda: Global.openFile(Paths.ucs_home_dir))
+        resetLayoutAction.triggered.connect(self.resetLayoutState)
 
         fileMenu.addAction(newAction)
         fileMenu.addAction(saveAction)
@@ -152,6 +155,7 @@ class MainWindow(QtWidgets.QMainWindow):
         fileMenu.addAction(aboutAction)
         fileMenu.addAction(helpAction)
         fileMenu.addAction(homeDirAction)
+        fileMenu.addAction(resetLayoutAction)
 
 
         # Create Community Menu
@@ -650,6 +654,36 @@ class MainWindow(QtWidgets.QMainWindow):
                 printf("GUI| User canceled- aborting close!")
                 return True
 
+    def resetLayoutState(self):
+        reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
+                                      self.tr("Layout Reset need restart to apply, Would you like to continue?"),
+                                      QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel,
+                                      QtWidgets.QMessageBox.Yes)
+
+        if reply == QtWidgets.QMessageBox.Yes:
+            printf("GUI| Restarting")
+            self.resetLayoutFlag = True
+            self.close()
+            QtCore.QCoreApplication.exit(MainWindow.EXIT_CODE_REBOOT)
+
+        if reply == QtWidgets.QMessageBox.Cancel:
+            return
+
+    def saveLayoutState(self):
+        if not self.resetLayoutFlag:
+            # Save the window geometry as a string representation of a hex number
+            saveGeometry = ''.join([str(char) for char in self.saveGeometry().toHex()])
+            self.env.updateSettings("windowGeometry", saveGeometry)
+
+
+            # Save the dockWidget positions/states as a string representation of a hex number
+            saveState    = ''.join([str(char) for char in self.saveState().toHex()])
+            self.env.updateSettings("windowState", saveState)
+        else:
+            self.env.updateSettings("windowGeometry", None)
+            self.env.updateSettings("windowState", None)
+
+
     def closeEvent(self, event):
         """
             When window is closed, prompt for save, close the video stream, and close the control panel (thus script)
@@ -662,16 +696,7 @@ class MainWindow(QtWidgets.QMainWindow):
             event.ignore()
             return
 
-
-        # Save the window geometry as a string representation of a hex number
-        saveGeometry = ''.join([str(char) for char in self.saveGeometry().toHex()])
-        self.env.updateSettings("windowGeometry", saveGeometry)
-
-
-        # Save the dockWidget positions/states as a string representation of a hex number
-        saveState    = ''.join([str(char) for char in self.saveState().toHex()])
-        self.env.updateSettings("windowState", saveState)
-
+        self.saveLayoutState()
 
         # Deactivate the robots servos
         robot = self.env.getRobot()
@@ -681,7 +706,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # End the script *after* prompting for save and deactivating servos on the robot. Script thread is a Daemon
         self.interpreter.setExiting(True)
 
-
         # Close and delete GUI objects, to stop their events from running
         self.refreshTimer.stop()
         self.cameraWidget.close()
@@ -689,6 +713,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget.close()
         self.centralWidget.deleteLater()
 
+        # Delete all child Widget
+        for widget in self.findChildren(QtWidgets.QWidget):
+            widget.deleteLater()
+            widget = None
 
         # Close threads
         self.env.close()
