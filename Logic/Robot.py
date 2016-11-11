@@ -38,8 +38,12 @@ __author__ = "Alexander Thiel"
 def getConnectedRobots():
     # Returns any arduino serial ports in a list [port, port, port]
     # This is used to let the user choose the correct port that is their robot
-    ports = list(serial.tools.list_ports.comports())
-    return ports
+    UARM_HWID_KEYWORD = "USB VID:PID=0403:6001"
+    uarm_ports = []
+    for i in serial.tools.list_ports.comports():
+        if i.hwid[0:len(UARM_HWID_KEYWORD)] == UARM_HWID_KEYWORD:
+            uarm_ports.append(i)
+    return uarm_ports
 
 
 class Robot:
