@@ -261,7 +261,7 @@ def initLogger(consoleSettings):
 
     if consoleSettings['saveToFile']:
         if consoleSettings['logFileName'] is None:
-            log_file = os.path.join(Paths.ucs_home_dir, 'ucs.log')
+            log_file = os.path.join(Paths.ucs_home_dir, Paths.ucs_log)
         else:
             log_file = os.path.join(Paths.ucs_home_dir, consoleSettings['logFileName'])
         fh = logging.FileHandler(log_file)

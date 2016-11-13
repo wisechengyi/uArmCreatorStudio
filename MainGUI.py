@@ -46,6 +46,7 @@ from ObjectManagerGUI  import MakeGroupWindow           # For creating various r
 from ObjectManagerGUI  import MakeRecordingWindow
 from ObjectManagerGUI  import MakeFunctionWindow
 from ObjectManagerGUI  import MakeObjectWindow
+from zipfile import ZipFile
 __author__ = "Alexander Thiel"
 
 
@@ -129,10 +130,8 @@ class MainWindow(QtWidgets.QMainWindow):
         saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save),    self.tr('Save Task'), self)
         saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As'), self)
         loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load),    self.tr('Load Task'), self)
-        aboutAction = QtWidgets.QAction( QtGui.QIcon(Paths.file_about),        self.tr('About'), self)
-        helpAction = QtWidgets.QAction(   QtGui.QIcon(Paths.file_help),         self.tr('Help'), self)
         homeDirAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_homedir), self.tr('Open Home Folder'), self)
-        resetLayoutAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_layout), self.tr('Reset Layout'), self)
+
 
 
         aboutMessage = lambda: QtWidgets.QMessageBox.information(self, self.tr("About"),
@@ -142,20 +141,15 @@ class MainWindow(QtWidgets.QMainWindow):
         newAction.triggered.connect(    lambda: self.newTask(promptSave=True))
         saveAction.triggered.connect(   self.saveTask)
         saveAsAction.triggered.connect( lambda: self.saveTask(True))
-        loadAction.triggered.connect(   self.loadTask)
-        aboutAction.triggered.connect(  aboutMessage)
-        helpAction.triggered.connect(   lambda: Global.openFile(Paths.user_manual))
         homeDirAction.triggered.connect(lambda: Global.openFile(Paths.ucs_home_dir))
-        resetLayoutAction.triggered.connect(self.resetLayoutState)
+
 
         fileMenu.addAction(newAction)
         fileMenu.addAction(saveAction)
         fileMenu.addAction(saveAsAction)
         fileMenu.addAction(loadAction)
-        fileMenu.addAction(aboutAction)
-        fileMenu.addAction(helpAction)
         fileMenu.addAction(homeDirAction)
-        fileMenu.addAction(resetLayoutAction)
+
 
 
         # Create Community Menu
@@ -188,8 +182,15 @@ class MainWindow(QtWidgets.QMainWindow):
         resourceMenu.addAction(recAction)
         resourceMenu.addAction(fncAction)
 
+        # Settings Menug
+        settingsMenu = menuBar.addMenu(self.tr('Settings'))
+        resetLayoutAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_layout), self.tr('Reset Layout'), self)
+        resetLayoutAction.triggered.connect(self.resetLayoutState)
+        settingsMenu.addAction(resetLayoutAction)
+
+
         # Create Languages Menu
-        languageMenu = menuBar.addMenu(self.tr('Languages'))
+        languageMenu = settingsMenu.addMenu(self.tr('Languages'))
         enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english), self.tr('English'), self)
         cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'), self)
         cnLanAction.triggered.connect(lambda: self.updateLanguageSetting(Global.ZH_CN))
@@ -199,11 +200,38 @@ class MainWindow(QtWidgets.QMainWindow):
         languageMenu.addAction(enLanAction)
         languageMenu.addAction(cnLanAction)
 
+
+        # Create survey Action
+        surveyMenu = menuBar.addMenu(self.tr('Win A Gift!'))
+        surveyMenu.setObjectName('surveyMenu')
+        # surveyMenu.setStyleSheet('QMenu::item {color: Red; }')
+        surveyLinkAction = QtWidgets.QAction(self.tr('Survey'), self)
+        surveyLinkAction.triggered.connect(lambda: webbrowser.open_new(Paths.survey_link))
+
+        surveyMenu.addAction(surveyLinkAction)
+
+        # Create Help Menu
+        helpMenu        = menuBar.addMenu(self.tr('Help'))
+        bugReportAction = QtWidgets.QAction(QtGui.QIcon(Paths.help_bugreport), self.tr('Feedback'), self)
+        aboutAction = QtWidgets.QAction( QtGui.QIcon(Paths.file_about),        self.tr('About'), self)
+        helpAction = QtWidgets.QAction(   QtGui.QIcon(Paths.file_help),         self.tr('User Manual'), self)
+
+        loadAction.triggered.connect(   self.loadTask)
+        aboutAction.triggered.connect(  aboutMessage)
+        helpAction.triggered.connect(   lambda: Global.openFile(Paths.user_manual))
+        bugReportAction.triggered.connect(self.bugReport)
+
+        helpMenu.addAction(bugReportAction)
+        helpMenu.addAction(aboutAction)
+        helpMenu.addAction(helpAction)
+
         # Add menus to menuBar
         menuBar.addMenu(fileMenu)
         menuBar.addMenu(communityMenu)
         menuBar.addMenu(resourceMenu)
-        menuBar.addMenu(languageMenu)
+        menuBar.addMenu(settingsMenu)
+        menuBar.addMenu(helpMenu)
+        menuBar.addMenu(surveyMenu)
 
 
         # Create Toolbar
@@ -372,7 +400,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Make sure the UI matches the state of the script
         self.scriptToggleBtn.setIcon(QtGui.QIcon(Paths.pause_script))
-        self.scriptToggleBtn.setText("Stop")
+        self.scriptToggleBtn.setText(self.tr("Stop"))
 
     def endScript(self):
         # Tell the interpreter to exit the thread, then wait
@@ -629,6 +657,13 @@ class MainWindow(QtWidgets.QMainWindow):
                                 str(filename) + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": "
                                 + str(e))
 
+    def bugReport(self):
+        # Open the bug report link & zip the log files prompt the log.zip folder
+        webbrowser.open_new(Paths.bugreport_link)
+        with ZipFile(Paths.bugreport_zipfile, 'w') as logzip:
+            logzip.write(Paths.ucs_log)
+            logzip.write(Paths.error_log)
+        Global.openFile(Paths.bugreport_dir)
 
 
     def promptSave(self):
@@ -779,6 +814,7 @@ class DeviceWindow(QtWidgets.QDialog):
         else:
             self.robotScanBtn = QtWidgets.QPushButton(self.tr("Disconnect"))
             self.selectRobotTxt = QtWidgets.QLabel(self.tr('Connected to Robot {}:'.format(self.robotID)))
+            self.robSetting = self.robotID
             self.robotScanBtn.clicked.connect(self.disconnectForRobotClicked)
         if self.cameraID is None: # IF Camera ID Exist Show Disconnect
             self.cameraScanBtn = QtWidgets.QPushButton(self.tr("Scan for Cameras"))
@@ -787,6 +823,7 @@ class DeviceWindow(QtWidgets.QDialog):
         else:
             self.cameraScanBtn = QtWidgets.QPushButton(self.tr("Disconnect"))
             self.selectCameraTxt = QtWidgets.QLabel(self.tr('Connected to Camera {}'.format(self.cameraID)))
+            self.camSetting = self.cameraID
             self.cameraScanBtn.clicked.connect(self.disconnectForCameraClicked)
 
         applyBtn      = QtWidgets.QPushButton(self.tr("Apply"))
@@ -958,22 +995,23 @@ if __name__ == '__main__':
     errorLogger = logging.getLogger('error')
     errorLogger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    logFile   = os.path.join(Paths.ucs_home_dir, 'error.log')
+    logFile   = os.path.join(Paths.ucs_home_dir, Paths.error_log)
     fHandler  = logging.FileHandler(logFile)
     fHandler.setLevel(logging.INFO)
     fHandler.setFormatter(formatter)
     errorLogger.addHandler(fHandler)
-    errorLogger.info('---------------------------Logging Start---------------------------')
 
     def handle_exception(exc_type, exc_value, exc_traceback):
+        errorLogger.info('---------------------------Logging Start---------------------------')
         if issubclass(exc_type, KeyboardInterrupt):
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
 
             return
 
         errorLogger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+        errorLogger.info('----------------------------Logging End----------------------------')
     sys.excepthook = handle_exception
-    errorLogger.info('----------------------------Logging End----------------------------')
+
 
     # Set up global variables
     Global.init()

@@ -1012,7 +1012,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1315"/>
         <source>Pick Up </source>
-        <translation>捡起</translation>
+        <translation>捡起物体</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1316"/>
@@ -1052,12 +1052,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1514"/>
         <source>Test If </source>
-        <translation>检测如果 </translation>
+        <translation>条件：若“看见”物体</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1409"/>
         <source> Seen</source>
-        <translation> 看见</translation>
+        <translation> </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1413"/>
@@ -1127,7 +1127,7 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1594"/>
         <source>Test Angle of </source>
-        <translation>检测角度</translation>
+        <translation>条件：如果物体的摆放角度为...</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1597"/>
@@ -1509,17 +1509,17 @@ USERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!</source>
     <message>
         <location filename="../../CommandsGUI.py" line="1179"/>
         <source>Move Relative To </source>
-        <translation>移动相对位置到 </translation>
+        <translation>移动到物体</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1593"/>
         <source>Object</source>
-        <translation>物体</translation>
+        <translation> </translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1260"/>
         <source>Set Wrist Relative To </source>
-        <translation>将吸盘旋转到相对角度 </translation>
+        <translation>随物体旋转吸盘</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1372"/>
@@ -2366,6 +2366,262 @@ This is a function that returns True if the user has pressed the &quot;stop&quot
 For source code on the Interpreter environment that runs your script, go to:
 https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
 
+You might notice that scripts with big loops or &apos;while True&apos; statements will take a long time to end when the ?stop&quot; button is pressed on the GUI. Sometimes, they might freeze the program. The reason for this is because your code is running inside of a seperate thread/process, and when you end the task the thread has to end as well.
+
+Any drag-and-drop command will end quickly, because they have been designed to do so. However, you will have to do this yourself if you have a long lasting script that you want to be able to quit at any time. In order to do so, you can use the function &quot;scriptStopping()&quot;
+
+scriptStopping() returns True if the user has attempted to end the task, and False if the task has not been ended
+
+    The typical use case is:
+
+    while [Some Condition]:
+        if scriptStopping(): break  # Break out of the loop if the program has ended. Place this wherever needed
+        # ... code ...
+        # ... code ...
+        # ... code ...
+
+    or, if it&apos;s in a big loop
+
+    for i in range(0, 100000):
+
+6. sleep
+
+The usual python sleep variable has been replaced by one that will automatically stop sleeping when the user presses the &quot;stop script&quot; button on the GUI. So don&apos;t worry about writing blocking code, that&apos;s been handled!
+
+</source>
+        <translation type="obsolete">
+    在脚本模式下你可以尽情发挥你的想象空间。你可以在你的项目里面直接注入 Python 代码但不用步署和配置任何环境。
+你可以实时的使用任何内置的库或者模块，但不需要对 UCS 本身做任何修改。
+
+    UCS 在打开的时候已经加载了常用的类，你不需要通过函数去调用，也不需要理会它是全局变量还是临时变量。总共有这些：
+
+内置变量：
+    robot - 机械臂
+      你拥有全部的机械臂的访问权限，你可以直接使用 Robot.py 库封装了通信协议。
+
+      你可以在这里找到相关的源代码：
+      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Robot.py
+
+    vision - 视觉
+      使用视觉模块，你可以不用再为追踪物体换算机械臂坐标而烦恼，并且你已经可以直接使用素材库里添加的视觉素材，并且
+      可以实时查找他们的位置，最长还可以追踪 60 帧之前的物体。你可以清除追踪物体，并且重新添加，然后就可以像平常一
+      样使用UCS内置好的的计算机视觉函数。
+
+      你可以在这里找到相关的源代码：
+      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
+
+    settings - 设置
+      有关界面（GUI）的设置是存放在一个 python 的字典(dictionary)里。这里面包含了像校正之类的各种各样的信息。
+      你可以尝试使用 print(settings) 来查看里面有些什么东西。
+
+    scriptStopping() - 脚本停止
+      这是帮助你在设计 Python 脚本时检测停止信号的一个函数，当用户在主工具栏按下 &quot;停止&quot; 按钮的时候，你可以使用这个函数
+      来判断是否要终止你的脚本，特别是你在使用一个循环时。
+
+      你可以在这里找到相关的源代码：
+      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
+
+    sleep - 休眠
+      这跟 Python 内置的 sleep 函数(time.sleep)有点不太一样，它们的区别是，当用户按下 &quot;停止&quot; 按钮的时候，Sleep
+      函数将会失效。你不用再去担心写阻塞代码会影响到整个程序，这个函数会处理好的。
+
+&apos;robot&apos;脚本使用示例
+      robot.setPos(x=0, y=15, z=15)     # 使机械臂移动到一个坐标 XYZ(0, 15, 15)
+      robot.setPos(x=0, wait=False)     # 异步式移动
+      robot.setPos(x=0)                 # 只会设置 x 的坐标，其它保持一致
+      robot.setPump(True)               # 打开气泵（夹子），如果是 False 会关闭气泵（夹子）
+      robot.setBuzzer(1500, 2)          # 可以使用机械臂内置的蜂鸣器播放一段音乐，第一个参数是频率，单位是 hz, 第二个是持续时间
+      robot.setSpeed(10)                # 设置机械臂的运动速度
+      robot.connected()                 # 如果机械臂已连接会返回 True
+      robot.getAngles()                 # 返回当前机械臂的电机角度 [servo0, servo1, servo2, servo3]
+      robot.getCoords()                 # 返回当前机械臂的空间坐标 [x, y, z]
+      robot.getTipSensor()              # 返回限位开关的状态 True or False
+      robot.getMoving()                 # 返回当前机械臂的运动情况 True or False
+
+&apos;vision&apos; 脚本使用示例
+      # 使用视觉的第一步是获取一个追踪物体。先在素材库添加一个，然后你就可以在脚本中用名字访问它。
+      trackableObject = resources.getObject(&quot;Ace of Spades&quot;)
+
+      # 下一步，确保视觉正在追踪这个物体。通常这会在初始化事件里面完成。
+      # 物体只会在脚本终止的时候才会停止被追踪。这个函数只用执行一次。
+      vision.addPlaneTarget(trackableObject)
+
+      # 等待两秒来确保视觉有足够的时间去查找这个新物体
+      sleep(2)
+
+      # 你可以选择使用下面的方式，等待 30 帧再继续
+      vision.waitForNewFrames(30)
+
+      # 如果物体是已经被追踪过有一段时间的，你可以尝试用视觉来寻找它
+      # 这个函数会返回物体被识别之前总共有多少帧，并且带有 &quot;被追踪的&quot; 物体的信息
+      frameID, trackedObject = vision.getObjectLatestRecognition(trackableObject)
+
+      # 如果没有找到物体，这个 &quot;trackedObject&quot; 将会是空 （None）。使用前请先检查是否为 空。
+      if trackedObject is None:
+          # 在这里处理错误
+          print(&quot;Object &quot;, trackableObject.name, &quot; was not recognized!&quot;)
+          return     
+           
+      # 如果这个物体真的被追踪到了，你可以在这里使用它的所有信息
+      print(trackedObject.center)     # 打印这个物体在摄像头的空间坐标系以[x, y, z] 
+      print(trackedObject.rotation)   # 打印每个轴的转角以[xRotation, yRotation, zRotation]
+      print(trackedObject.ptCount)    # 打印有多少个点被识别，点数越多，越精确
+
+      # 这是另外一个追踪物体的函数
+      # 这个函数会查找 trackableObject 过去的 30 帧, 并且会找到识别点数大于 50 的帧。
+      trackedObject = vision.searchTrackedHistory(trackable=trackableObject, maxAge=30, minPoints=50)
+
+
+所有在脚本中创建的变量，都是全局的，意味着你可以在其它脚本，包括其它代码块中使用它们
+    def someFunctionName(someArgument):
+        # 随便写一个函数
+        print(&quot;This function can work in any script command in the task!&quot;)
+        print(someArgument)
+
+    someVariableName = &quot;This string can be used in any Script command in the program&quot;
+
+你也许已经注意到了，在按下 &quot;停止&quot; 按钮时，脚本如果在一个大循环或者 &apos;While True&apos; 的语句中退出需要等待一段很长的时间。
+有时候，整个程序还会变得无响应。造成这个的原因是，你的代码是跑在一个独立的 线程/进程中的，当按下停止按钮的时候，线程也
+必须停止。
+
+任何拖拽命令设计成停止按钮按下时会立即停止。但是，你必须为你的脚本显式的退出以确保脚本可以快速终止。你可以使用上面我
+们介绍的函数 &quot;scriptStopping()&quot;
+
+通常使用的方式如下：
+
+while [条件]:
+    if scriptStopping(): break  # 使用 Break 可以帮助你快速的跳出程序。请无论如何都要使用这个。
+    # ... 代码 ...
+    # ... 代码 ...
+    # ... 代码 ...
+
+或者，在一个大循环中。
+
+for i in range(0, 100000):
+    if scriptStopping(): break
+    # ... 代码 ...
+    # ... 代码 ...
+    # ... 代码 ...</translation>
+    </message>
+    <message>
+        <location filename="../../CommonGUI.py" line="165"/>
+        <source>
+Using this scripting module, the possibilities are endless. You can directly inject python code into your program without a hassle. You can use any of the libraries and modules that are built into this software, real time, and without any extra modification.
+
+There are certain classes that are loaded into the script as python builtins, so you don&apos;t need to pass them to functions or worry about scope, or even worry about setting them global.
+
+Important tips:
+Any variable created in the scope of the script command can be used in any other script command, or block command
+    def someFunctionName(someArgument):
+        # Any python function here
+        print(&quot;This function can work in any script command in the task!&quot;)
+        print(someArgument)
+
+    someVariableName = &quot;This string can be used in any Script command in the program&quot;
+
+
+Types of built-in variables:
+robot
+vision
+resources
+settings
+scriptStopping()
+sleep
+
+Detailed description:
+
+robot
+
+You have full access to controlling the robot, using the Robot.py library that was built as a wrapper for a communication protocol.
+
+        For source code on the Robot class, go to:
+        https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Robot.py
+
+Examples scripts using &apos;robot&apos;
+    robot.setPos(x=0, y=15, z=15)  # This will set the robots position to XYZ(0, 15, 15)
+    robot.setPos(x=0, wait=False)  # Allows your code to continue while the robot moves.
+    robot.setPos(x=0)              # Will only set the x position, keeps the rest the same
+    robot.setGripper(True)         # Turn on the pump. If false, it will deactivate the pump
+    robot.setBuzzer(1500, 2)       # Play a tone through the robots buzzer. Parameters: Frequency, duration (seconds)
+    robot.setSpeed(10)             # Sets speed for all future moves using robot.setPos. Speed set in cm/s
+    robot.connected()              # Returns True if the robot is connected and working, False if not
+
+    robot.getAngles()              # Returns the current angles of the robots servos: [servo0, servo1, servo2, servo3]
+    robot.getCoords()              # Returns the current coordinate of the robot in [x, y, z] format
+    robot.getTipSensor()           # Returns True or False, if the tip sensor on the robot is being pressed or not
+    robot.getMoving()              # Returns True if the robot is currently moving
+
+
+2. vision
+
+Using this module, you can easly and without hassle track objects that you have taught the software in the Resource manager, find their location real time, search for past &quot;tracks&quot; of the objects, and act based upon that information.
+
+You can clear tracked objects, add new ones, and generally use powerful pre-made computer vision functions that have been built into this software already.
+
+For source code on the Vision class, go to:
+https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Vision.py
+
+Example scripts using &apos;vision&apos;
+    # The first step of using vision is getting a trackable object. Make an object in Resources then access it by name.
+    trackableObject = resources.getObject(&quot;Ace of Spades&quot;)
+
+
+    # The next step is to make sure vision is tracking the object. Usually this should be done in Initialization event.
+    # Objects only stop being tracked when the script ends. Do this only once.
+    vision.addPlaneTarget(trackableObject)
+
+
+    # Wait two seconds to make sure that vision has time to search for the new object
+    sleep(2)
+
+
+    # Alternatively you can use the following, which will wait for 30 frames to pass before continuing
+    vision.waitForNewFrames(30)
+
+
+    # If the object is already being tracked and has been for a while, you can try using vision to search for it
+    # This function returns how many frames ago the object was recognized, and a &quot;tracked&quot; object with some information
+    frameID, trackedObject = vision.getObjectLatestRecognition(trackableObject)
+
+
+    # If no object is found, the &quot;trackedObject&quot; will be None. Check if its None before continuing
+    if trackedObject is None:
+        # Handle the error here
+        print(&quot;Object &quot;, trackableObject.name, &quot; was not recognized!&quot;)
+        return
+
+    # If the object was, in fact, found, then you can pull all sorts of information from it
+    print(trackedObject.center)     # Prints a list [x, y, z] of the objects position in the cameras coordinate system
+    print(trackedObject.rotation)   # Prints a list [xRotation, yRotation, zRotation] of rotation along each axis
+    print(trackedObject.ptCount)    # Prints how many points the object was recognized with. More points = more accuracy
+
+
+    # Here is another function for looking for tracked objects
+    # This will search through the last 30 frames for trackableObject, and try to find a recognition with &gt; 50 keypoints
+    trackedObject = vision.searchTrackedHistory(trackable=trackableObject, maxAge=30, minPoints=50)
+
+
+
+3. resources
+
+You can pull any &quot;objects&quot; that you have built using the Resource Manager.
+This means, for example, that you could request a Movement Recording and replay it, or request a Vision object and track it.
+
+For source code on the Object Manager class, go to:
+https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
+
+4. settings
+
+This is a python dictionary of the GUI settings. This includes things like calibrations for various things.
+ Try doing print(settings) to see what it contains.
+
+5. scriptStopping()
+
+This is a function that returns True if the user has pressed the &quot;stop&quot; button on the top left. You can use this to check if your script should end, if you&apos;re doing long loops.
+
+For source code on the Interpreter environment that runs your script, go to:
+https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
+
 You might notice that scripts with big loops or &apos;while True&apos; statements will take a long time to end when the “stop&quot; button is pressed on the GUI. Sometimes, they might freeze the program. The reason for this is because your code is running inside of a seperate thread/process, and when you end the task the thread has to end as well.
 
 Any drag-and-drop command will end quickly, because they have been designed to do so. However, you will have to do this yourself if you have a long lasting script that you want to be able to quit at any time. In order to do so, you can use the function &quot;scriptStopping()&quot;
@@ -2389,33 +2645,41 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 The usual python sleep variable has been replaced by one that will automatically stop sleeping when the user presses the &quot;stop script&quot; button on the GUI. So don&apos;t worry about writing blocking code, that&apos;s been handled!
 
 </source>
-        <translation>在这里，你可以尽情发挥你的想象力，无需另外安装Python环境即可直接编写Python 代码。
-我们为uArm准备了内置的库和模块，欢迎使用！
+        <translation>
+    在脚本模式下你可以尽情发挥你的想象空间。你可以在你的项目里面直接注入 Python 代码但不用步署和配置任何环境。
+你可以实时的使用任何内置的库或者模块，但不需要对 UCS 本身做任何修改。
 
- UCS 在打开的时候已经加载了常用的类，你不需要通过函数去调用，也不需要理会它是全局变量还是临时变量。
+    UCS 在打开的时候已经加载了常用的类，你不需要通过函数去调用，也不需要理会它是全局变量还是临时变量。总共有这些：
 
-所有在脚本中创建的变量，都是全局的，意味着你可以在其它脚本，包括其它代码块中使用它们
-    def someFunctionName(someArgument):
-        # 随便写一个函数
-        print(&quot;This function can work in any script command in the task!&quot;)
-        print(someArgument)
-
-内置变量有：
-1.  robot - 机械臂 
-2. vision - 视觉
-3. recourses - 调用素材
-4. settings - 设置
-5. scriptStopping() - 脚本停止
-6. sleep - 休眠
-
-各变量详细介绍如下：
-
- 1.  robot - 机械臂
-
-      你拥有机械臂的访问权限，你可以直接使用 Robot.py 库封装了通信协议。
+内置变量：
+    robot - 机械臂
+      你拥有全部的机械臂的访问权限，你可以直接使用 Robot.py 库封装了通信协议。
 
       你可以在这里找到相关的源代码：
       https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Robot.py
+
+    vision - 视觉
+      使用视觉模块，你可以不用再为追踪物体换算机械臂坐标而烦恼，并且你已经可以直接使用素材库里添加的视觉素材，并且
+      可以实时查找他们的位置，最长还可以追踪 60 帧之前的物体。你可以清除追踪物体，并且重新添加，然后就可以像平常一
+      样使用UCS内置好的的计算机视觉函数。
+
+      你可以在这里找到相关的源代码：
+      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
+
+    settings - 设置
+      有关界面（GUI）的设置是存放在一个 python 的字典(dictionary)里。这里面包含了像校正之类的各种各样的信息。
+      你可以尝试使用 print(settings) 来查看里面有些什么东西。
+
+    scriptStopping() - 脚本停止
+      这是帮助你在设计 Python 脚本时检测停止信号的一个函数，当用户在主工具栏按下 &quot;停止&quot; 按钮的时候，你可以使用这个函数
+      来判断是否要终止你的脚本，特别是你在使用一个循环时。
+
+      你可以在这里找到相关的源代码：
+      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
+
+    sleep - 休眠
+      这跟 Python 内置的 sleep 函数(time.sleep)有点不太一样，它们的区别是，当用户按下 &quot;停止&quot; 按钮的时候，Sleep
+      函数将会失效。你不用再去担心写阻塞代码会影响到整个程序，这个函数会处理好的。
 
 &apos;robot&apos;脚本使用示例
       robot.setPos(x=0, y=15, z=15)     # 使机械臂移动到一个坐标 XYZ(0, 15, 15)
@@ -2430,33 +2694,25 @@ The usual python sleep variable has been replaced by one that will automatically
       robot.getTipSensor()              # 返回限位开关的状态 True or False
       robot.getMoving()                 # 返回当前机械臂的运动情况 True or False
 
- 2. vision - 视觉
-      使用视觉模块，你可以不用再为追踪物体而换算机械臂坐标
-      你可以直接使用素材库里添加的视觉素材，并实时查找他们的位置，最长还可以追踪 60 帧（约两秒）之前的物体。
-      当然，你可以清除追踪物体，重新添加，然后就可以像平常一样使用UCS内置好的的计算机视觉函数。
-
-      你可以在这里找到相关的源代码：
-      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
-
 &apos;vision&apos; 脚本使用示例
       # 使用视觉的第一步是获取一个追踪物体。先在素材库添加一个，然后你就可以在脚本中用名字访问它。
       trackableObject = resources.getObject(&quot;Ace of Spades&quot;)
 
       # 下一步，确保视觉正在追踪这个物体。通常这会在初始化事件里面完成。
-      # 物体只会在脚本停止的时候才会停止被追踪。这个函数只用执行一次。
+      # 物体只会在脚本终止的时候才会停止被追踪。这个函数只用执行一次。
       vision.addPlaneTarget(trackableObject)
 
-      # 等待两秒来确保视觉有足够的时间去寻找这个新物体
+      # 等待两秒来确保视觉有足够的时间去查找这个新物体
       sleep(2)
 
       # 你可以选择使用下面的方式，等待 30 帧再继续
       vision.waitForNewFrames(30)
 
       # 如果物体是已经被追踪过有一段时间的，你可以尝试用视觉来寻找它
-      # 这个函数会返回物体被识别之前总共有多少帧，并且带有 &quot;被追踪的&quot;物体的信息
+      # 这个函数会返回物体被识别之前总共有多少帧，并且带有 &quot;被追踪的&quot; 物体的信息
       frameID, trackedObject = vision.getObjectLatestRecognition(trackableObject)
 
-      # 如果没有找到物体，这个 &quot;trackedObject&quot; 将会是空 None。使用前请先检查是否为 None。
+      # 如果没有找到物体，这个 &quot;trackedObject&quot; 将会是空 （None）。使用前请先检查是否为 空。
       if trackedObject is None:
           # 在这里处理错误
           print(&quot;Object &quot;, trackableObject.name, &quot; was not recognized!&quot;)
@@ -2468,48 +2724,40 @@ The usual python sleep variable has been replaced by one that will automatically
       print(trackedObject.ptCount)    # 打印有多少个点被识别，点数越多，越精确
 
       # 这是另外一个追踪物体的函数
-      # 这个函数会查找trackableObject过去的 30 帧, 并且会找到识别点数大于 50 的帧。
+      # 这个函数会查找 trackableObject 过去的 30 帧, 并且会找到识别点数大于 50 的帧。
       trackedObject = vision.searchTrackedHistory(trackable=trackableObject, maxAge=30, minPoints=50)
 
-3. recourses - 调用素材
 
-你可以用代码调用你在“素材库”创建的素材（如：之前创建的可识别物体，已录制的动作，等等）。
+所有在脚本中创建的变量，都是全局的，意味着你可以在其它脚本，包括其它代码块中使用它们
+    def someFunctionName(someArgument):
+        # 随便写一个函数
+        print(&quot;This function can work in any script command in the task!&quot;)
+        print(someArgument)
 
-源代码：
-https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py 
+    someVariableName = &quot;This string can be used in any Script command in the program&quot;
 
- 4. settings - 设置
+你也许已经注意到了，在按下 &quot;停止&quot; 按钮时，脚本如果在一个大循环或者 &apos;While True&apos; 的语句中退出需要等待一段很长的时间。
+有时候，整个程序还会变得无响应。造成这个的原因是，你的代码是跑在一个独立的 线程/进程中的，当按下停止按钮的时候，线程也
+必须停止。
 
-有关界面（GUI）的设置是存放在一个 python 的字典(dictionary)里。这里面包含了校正之类的信息。
-      你可以尝试使用 print(settings) 来查看里面有什么。
-
- 5. scriptStopping() - 脚本停止
-      这是帮助你在设计 Python 脚本时检测停止信号的一个函数，当用户在主工具栏按下 &quot;停止&quot; 按钮的时候，你可以使用这个函数来判断是否要停止你的脚本，这在你使用循环时非常有用。
-
-      你可以在这里找到相关的源代码：
-      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
-
-确保脚本可以快速终止：使用函数 &quot;scriptStopping()&quot;
+任何拖拽命令设计成停止按钮按下时会立即停止。但是，你必须为你的脚本显式的退出以确保脚本可以快速终止。你可以使用上面我
+们介绍的函数 &quot;scriptStopping()&quot;
 
 通常使用的方式如下：
 
 while [条件]:
     if scriptStopping(): break  # 使用 Break 可以帮助你快速的跳出程序。请无论如何都要使用这个。
-    # … 代码 …
-    # … 代码 …
-    # … 代码 …
+    # ... 代码 ...
+    # ... 代码 ...
+    # ... 代码 ...
 
 或者，在一个大循环中。
 
 for i in range(0, 100000):
     if scriptStopping(): break
-    # … 代码 …
-    # … 代码 …
-    # … 代码 
-
- 6. sleep - 休眠
-      这跟Python 内置的 sleep 函数(time.sleep)有点不太一样，它们的区别是，当用户按下 &quot;停止&quot; 按钮的时候，Sleep函数将会失效。你不用再去担心写阻塞代码会影响到整个程序，这个函数会处理好的。
-</translation>
+    # ... 代码 ...
+    # ... 代码 ...
+    # ... 代码 ...</translation>
     </message>
 </context>
 <context>
@@ -2624,67 +2872,67 @@ for i in range(0, 100000):
 <context>
     <name>DeviceWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="781"/>
+        <location filename="../../MainGUI.py" line="815"/>
         <source>Please select the robot you will be using:</source>
         <translation>请选择你正在使用的uArm端口：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="789"/>
+        <location filename="../../MainGUI.py" line="824"/>
         <source>Please select the camera you will be using:</source>
         <translation>请选择你正在使用的摄像头：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="780"/>
+        <location filename="../../MainGUI.py" line="814"/>
         <source>Scan for Robots</source>
         <translation>查找uArm</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="788"/>
+        <location filename="../../MainGUI.py" line="823"/>
         <source>Scan for Cameras</source>
         <translation>查找摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="796"/>
+        <location filename="../../MainGUI.py" line="832"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="797"/>
+        <location filename="../../MainGUI.py" line="833"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="856"/>
+        <location filename="../../MainGUI.py" line="892"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="875"/>
+        <location filename="../../MainGUI.py" line="911"/>
         <source>No devices were found.</source>
         <translation>没有找到设备。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="888"/>
+        <location filename="../../MainGUI.py" line="924"/>
         <source>Camera </source>
         <translation>摄像头 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="895"/>
+        <location filename="../../MainGUI.py" line="931"/>
         <source>No cameras were found.</source>
         <translation>没有找到摄像头。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="792"/>
+        <location filename="../../MainGUI.py" line="827"/>
         <source>Disconnect</source>
         <translation>断开连接</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="785"/>
+        <location filename="../../MainGUI.py" line="819"/>
         <source>Connected to Robot {}:</source>
         <translation>已连接到机械臂设备：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="793"/>
+        <location filename="../../MainGUI.py" line="828"/>
         <source>Connected to Camera {}</source>
         <translation>已连接到摄像头设备：</translation>
     </message>
@@ -2936,136 +3184,136 @@ for i in range(0, 100000):
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="73"/>
+        <location filename="../../MainGUI.py" line="74"/>
         <source>uArm Creator Studio</source>
         <translation>uArm创意百宝箱</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="74"/>
+        <location filename="../../MainGUI.py" line="75"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="75"/>
+        <location filename="../../MainGUI.py" line="76"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="128"/>
+        <location filename="../../MainGUI.py" line="129"/>
         <source>New Task</source>
         <translation>新建任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="129"/>
+        <location filename="../../MainGUI.py" line="130"/>
         <source>Save Task</source>
         <translation>保存任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="130"/>
+        <location filename="../../MainGUI.py" line="131"/>
         <source>Save Task As</source>
         <translation>另存为任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="131"/>
+        <location filename="../../MainGUI.py" line="132"/>
         <source>Load Task</source>
         <translation>导入任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="163"/>
+        <location filename="../../MainGUI.py" line="157"/>
         <source>Visit the forum!</source>
         <translation>欢迎访问论坛！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="164"/>
+        <location filename="../../MainGUI.py" line="158"/>
         <source>Visit our subreddit!</source>
         <translation>欢迎参与 subreddit讨论!</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="175"/>
+        <location filename="../../MainGUI.py" line="169"/>
         <source>Vision Object</source>
         <translation>可识别物体</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="176"/>
+        <location filename="../../MainGUI.py" line="170"/>
         <source>Vision Group</source>
         <translation>可识别物体分组</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="177"/>
+        <location filename="../../MainGUI.py" line="171"/>
         <source>Movement Recording</source>
         <translation>录制新动作</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="178"/>
+        <location filename="../../MainGUI.py" line="172"/>
         <source>Function</source>
         <translation>函数/自定义功能</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="213"/>
+        <location filename="../../MainGUI.py" line="241"/>
         <source>Calibrate</source>
         <translation>校正</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="214"/>
+        <location filename="../../MainGUI.py" line="242"/>
         <source>Resources</source>
         <translation>素材库</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="216"/>
+        <location filename="../../MainGUI.py" line="244"/>
         <source>Run/Pause the command script (Ctrl+R)</source>
         <translation>运行/暂停任务 (Ctrl+R)</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="217"/>
+        <location filename="../../MainGUI.py" line="245"/>
         <source>Open Camera and Robot settings</source>
         <translation>连接摄像头和uArm</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="218"/>
+        <location filename="../../MainGUI.py" line="246"/>
         <source>Open Robot and Camera Calibration Center</source>
         <translation>校正中心（视觉功能 &amp; 运动检测功能）</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="219"/>
+        <location filename="../../MainGUI.py" line="247"/>
         <source>Open Resource Manager</source>
         <translation>进入素材库</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="221"/>
+        <location filename="../../MainGUI.py" line="249"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="256"/>
+        <location filename="../../MainGUI.py" line="284"/>
         <source>Camera</source>
         <translation>摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="257"/>
+        <location filename="../../MainGUI.py" line="285"/>
         <source>Console</source>
         <translation>控制台</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="348"/>
+        <location filename="../../MainGUI.py" line="376"/>
         <source>Certain Events and Commands are missing the following requirements to work properly: 
 
 </source>
         <translation>某些事件和命令无法正常运行，请先满足以下条件：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="349"/>
+        <location filename="../../MainGUI.py" line="377"/>
         <source>
 Would you like to continue anyways? Events and commands with errors will not activate.</source>
         <translation>
 事件和命令出错，无法运行，你还要继续运行任务吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="737"/>
+        <location filename="../../MainGUI.py" line="771"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="389"/>
+        <location filename="../../MainGUI.py" line="417"/>
         <source>The script was unable to end.
 This may mean the script crashed, or it is taking time finishing.
 
@@ -3076,17 +3324,17 @@ If you are running Python code inside of this script, make sure you check isExit
 如果你在命令中运行了 python 代码，请确保 isExiting() 在循环命令中。这可以确保当你按下“停止”后，命令能快速终止。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="416"/>
+        <location filename="../../MainGUI.py" line="444"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="433"/>
+        <location filename="../../MainGUI.py" line="461"/>
         <source>Communication Errors</source>
         <translation>通信协议错误</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="433"/>
+        <location filename="../../MainGUI.py" line="461"/>
         <source>The following errors have occured communicating with your robot.
 Try reconnecting under the Devices menu.
 
@@ -3103,7 +3351,7 @@ ERROR:
         <translation type="obsolete">未找到！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="631"/>
+        <location filename="../../MainGUI.py" line="659"/>
         <source>
 
  The following error occured: </source>
@@ -3112,86 +3360,121 @@ ERROR:
 出现以下错误：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="127"/>
+        <location filename="../../MainGUI.py" line="128"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="162"/>
+        <location filename="../../MainGUI.py" line="156"/>
         <source>Community</source>
         <translation>社区</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="174"/>
+        <location filename="../../MainGUI.py" line="168"/>
         <source>New Resource</source>
         <translation>新建素材</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="192"/>
+        <location filename="../../MainGUI.py" line="193"/>
         <source>Languages</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="193"/>
+        <location filename="../../MainGUI.py" line="194"/>
         <source>English</source>
         <translation>英语</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="194"/>
+        <location filename="../../MainGUI.py" line="195"/>
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="210"/>
+        <location filename="../../MainGUI.py" line="238"/>
         <source>MainToolbar</source>
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="645"/>
+        <location filename="../../MainGUI.py" line="679"/>
         <source>You have unsaved changes. Would you like to save before continuing?</source>
         <translation>你是否要保存刚刚的修改？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="138"/>
+        <location filename="../../MainGUI.py" line="216"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="138"/>
+        <location filename="../../MainGUI.py" line="137"/>
         <source>Version: </source>
         <translation>版本：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="737"/>
+        <location filename="../../MainGUI.py" line="771"/>
         <source>Language switching need restart to apply, Would you like to continue?</source>
         <translation>切换语言后需要重启软件。你要继续切换吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="133"/>
+        <location filename="../../MainGUI.py" line="214"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="134"/>
+        <location filename="../../MainGUI.py" line="133"/>
         <source>Open Home Folder</source>
         <translation>打开主目录</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="631"/>
+        <location filename="../../MainGUI.py" line="659"/>
         <source>The program was unable to load the following script:
 </source>
         <translation>程序无法加载以下脚本：
 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="135"/>
+        <location filename="../../MainGUI.py" line="187"/>
         <source>Reset Layout</source>
         <translation>重置窗口布局</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="662"/>
+        <location filename="../../MainGUI.py" line="696"/>
         <source>Layout Reset need restart to apply, Would you like to continue?</source>
         <translation>重置布局需要重启，你是否要继续？</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="405"/>
+        <source>Stop</source>
+        <translation>终止</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="205"/>
+        <source>Win A Gift!</source>
+        <translation>有奖调查</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="208"/>
+        <source>Survey</source>
+        <translation>调查</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="214"/>
+        <source>Bug Report</source>
+        <translation type="obsolete">Bug 提交</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="215"/>
+        <source>Feedback</source>
+        <translation>反馈</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="217"/>
+        <source>User Manual</source>
+        <translation>用户指南</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="186"/>
+        <source>Settings</source>
+        <translation>设置</translation>
     </message>
 </context>
 <context>

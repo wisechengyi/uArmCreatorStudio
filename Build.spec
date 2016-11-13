@@ -13,7 +13,9 @@ languages_dir= os.path.join(resource_dir, "Languages")
 resourceList   = ["face_cascade.xml",
                   "smile_cascade.xml",
                   "eye_cascade.xml",
-                  "User_Manual.pdf"]
+                  "User_Manual.pdf",
+                  "User_Manual_zh_cn.pdf"
+                  ]
 
 # Files that need to be bundled that are in icons_dir
 iconsList = ["cancel.png",
@@ -26,9 +28,11 @@ iconsList = ["cancel.png",
              "file_about.png",
              "file_help.png",
              "file_homedir.png",
+             "file_layout.png",
              "file_new.png",
              "file_save.png",
              "file_load.png",
+             "help_bugreport.png",
              "forum_link_reddit.png",
              "script_run.png",
              "script_pause.png",

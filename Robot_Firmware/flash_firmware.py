@@ -198,11 +198,12 @@ def main(args):
     if args.path:
         firmware_path = args.path
     else:
-        firmware_path = os.path.join(os.getcwd(), default_config['filename'])
+        firmware_path = os.path.join(os.path.dirname(sys.executable), default_config['filename'])
 
     if args.download:
         download(default_config['download_url'], firmware_path)
 
+    avrdude_path = None
     if not FROZEN_APP:
         if platform.system() == 'Darwin':
             avrdude_path = os.path.join(".", "avrdude", "mac")

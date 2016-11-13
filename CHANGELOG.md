@@ -11,6 +11,9 @@
 - Add Language Detect for User manual pdf
 - Add Reset Layout action in File Menu
 - Add Translation for function description
+- Add Survey menu
+- Add Setting menu
+- Add Bug Report menu action
 - Fix Gripper not working
 - Filter useless serial port
 - Fix Tooltip not display

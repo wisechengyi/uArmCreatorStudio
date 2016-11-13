@@ -66,7 +66,7 @@ languageLoc = resourcePath(os.path.join(resourcesLoc, "Languages"))
 
 # Used by Vision
 cascade_dir = exeResourcesPath
-global user_manual,language_pack
+global user_manual,language_pack,survey_link, bugreport_link
 
 
 
@@ -86,6 +86,7 @@ file_save           = os.path.join(imageLoc, "file_save.png")
 file_load           = os.path.join(imageLoc, "file_load.png")
 file_layout         = os.path.join(imageLoc, "file_layout.png")
 reddit_link         = os.path.join(imageLoc, "forum_link_reddit.png")
+help_bugreport      = os.path.join(imageLoc, "help_bugreport.png")
 
 
 # Toolbar
@@ -170,9 +171,19 @@ help_rob_connect    = os.path.join(imageLoc, "help_rob_connect.gif")
 
 
 ################        USERS RESOUCES    ################
-ucs_home_dir = os.path.join(expanduser("~"), "uArmCreatorStudio") # uArmCreatorStudio home dir
+ucs_home_dir = os.path.join(expanduser("~"), "uArmCreatorStudio", "") # uArmCreatorStudio home dir
+log_dir      = os.path.join(ucs_home_dir, "log", "")
+bugreport_dir= os.path.join(ucs_home_dir, "bugreport", "")
 if not os.path.exists(ucs_home_dir):
     os.makedirs(ucs_home_dir)
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+if not os.path.exists(bugreport_dir):
+    os.makedirs(bugreport_dir)
+
+error_log    = os.path.join(log_dir, "error.log")
+ucs_log      = os.path.join(log_dir, "ucs.log")
+bugreport_zipfile = os.path.join(bugreport_dir, "log.zip")
 
 settings_txt = os.path.join(ucs_home_dir, "Settings.txt")
 objects_dir  = os.path.join(ucs_home_dir, "Objects", "")
@@ -180,9 +191,11 @@ saves_dir    = os.path.join(ucs_home_dir, "Save Files", "")
 
 ## Language Init Path
 def loadLanguagePath(language_code=Global.EN_US):
-    global user_manual,language_pack
+    global user_manual,language_pack,survey_link,bugreport_link
     if language_code == Global.EN_US:
-        user_manual = os.path.join(exeResourcesPath, "User_Manual.pdf")
+        pass
     else:
         user_manual = os.path.join(exeResourcesPath, "User_Manual_{}.pdf".format(language_code))
         language_pack = os.path.join(languageLoc, "{}.qm".format(language_code))
+        survey_link = "http://form.mikecrm.com/Az9pM8"
+        bugreport_link = "https://form.jotform.me/63162320754450"
