@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## V1.1.8
+- Update - Alex Tan
+- Date - 2016-11-14
+
+- Fix Switch English language didn't change survey link and user manual docs
+- Change Execute icon
+
+## Changes
+
 ## V1.1.7
 - Update - Alex Tan
 - Date - 2016-11-10

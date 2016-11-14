@@ -205,14 +205,14 @@ class MainWindow(QtWidgets.QMainWindow):
         surveyMenu = menuBar.addMenu(self.tr('Win A Gift!'))
         surveyMenu.setObjectName('surveyMenu')
         # surveyMenu.setStyleSheet('QMenu::item {color: Red; }')
-        surveyLinkAction = QtWidgets.QAction(self.tr('Survey'), self)
+        surveyLinkAction = QtWidgets.QAction(self.tr('Win A Gift!'), self)
         surveyLinkAction.triggered.connect(lambda: webbrowser.open_new(Paths.survey_link))
 
         surveyMenu.addAction(surveyLinkAction)
 
         # Create Help Menu
         helpMenu        = menuBar.addMenu(self.tr('Help'))
-        bugReportAction = QtWidgets.QAction(QtGui.QIcon(Paths.help_bugreport), self.tr('Feedback'), self)
+        bugReportAction = QtWidgets.QAction(QtGui.QIcon(Paths.help_bugreport), self.tr('Bug Report'), self)
         aboutAction = QtWidgets.QAction( QtGui.QIcon(Paths.file_about),        self.tr('About'), self)
         helpAction = QtWidgets.QAction(   QtGui.QIcon(Paths.file_help),         self.tr('User Manual'), self)
 
@@ -1047,12 +1047,12 @@ if __name__ == '__main__':
                 printf("GUI| Error - Can not detect system locale")
         env.updateSettings("language", language_code)
         # Load the appropriate language pack, if there is need for one
+        Paths.loadLanguagePath(language_code)
         if language_code == Global.EN_US:
             pass
         else:
-            Paths.loadLanguagePath(language_code)
             trans.load(Paths.language_pack)
-            app.installTranslator(trans)
+        app.installTranslator(trans)
 
         w = MainWindow(env)
         w.show()

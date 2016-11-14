@@ -33,7 +33,7 @@ import Paths
 
 import logging
 
-__version__ = '1.1.7'
+__version__ = '1.1.8'
 
 version = __version__
 

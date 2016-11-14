@@ -2872,67 +2872,67 @@ for i in range(0, 100000):
 <context>
     <name>DeviceWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="815"/>
+        <location filename="../../MainGUI.py" line="816"/>
         <source>Please select the robot you will be using:</source>
         <translation>请选择你正在使用的uArm端口：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="824"/>
+        <location filename="../../MainGUI.py" line="825"/>
         <source>Please select the camera you will be using:</source>
         <translation>请选择你正在使用的摄像头：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="814"/>
+        <location filename="../../MainGUI.py" line="815"/>
         <source>Scan for Robots</source>
         <translation>查找uArm</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="823"/>
+        <location filename="../../MainGUI.py" line="824"/>
         <source>Scan for Cameras</source>
         <translation>查找摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="832"/>
+        <location filename="../../MainGUI.py" line="833"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="833"/>
+        <location filename="../../MainGUI.py" line="834"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="892"/>
+        <location filename="../../MainGUI.py" line="893"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="911"/>
+        <location filename="../../MainGUI.py" line="912"/>
         <source>No devices were found.</source>
         <translation>没有找到设备。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="924"/>
+        <location filename="../../MainGUI.py" line="925"/>
         <source>Camera </source>
         <translation>摄像头 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="931"/>
+        <location filename="../../MainGUI.py" line="932"/>
         <source>No cameras were found.</source>
         <translation>没有找到摄像头。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="827"/>
+        <location filename="../../MainGUI.py" line="828"/>
         <source>Disconnect</source>
         <translation>断开连接</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="819"/>
+        <location filename="../../MainGUI.py" line="820"/>
         <source>Connected to Robot {}:</source>
         <translation>已连接到机械臂设备：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="828"/>
+        <location filename="../../MainGUI.py" line="829"/>
         <source>Connected to Camera {}</source>
         <translation>已连接到摄像头设备：</translation>
     </message>
@@ -3308,7 +3308,7 @@ Would you like to continue anyways? Events and commands with errors will not act
 事件和命令出错，无法运行，你还要继续运行任务吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="771"/>
+        <location filename="../../MainGUI.py" line="772"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -3395,7 +3395,7 @@ ERROR:
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="679"/>
+        <location filename="../../MainGUI.py" line="680"/>
         <source>You have unsaved changes. Would you like to save before continuing?</source>
         <translation>你是否要保存刚刚的修改？</translation>
     </message>
@@ -3410,7 +3410,7 @@ ERROR:
         <translation>版本：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="771"/>
+        <location filename="../../MainGUI.py" line="772"/>
         <source>Language switching need restart to apply, Would you like to continue?</source>
         <translation>切换语言后需要重启软件。你要继续切换吗？</translation>
     </message>
@@ -3437,7 +3437,7 @@ ERROR:
         <translation>重置窗口布局</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="696"/>
+        <location filename="../../MainGUI.py" line="697"/>
         <source>Layout Reset need restart to apply, Would you like to continue?</source>
         <translation>重置布局需要重启，你是否要继续？</translation>
     </message>
@@ -3447,24 +3447,24 @@ ERROR:
         <translation>终止</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="205"/>
+        <location filename="../../MainGUI.py" line="208"/>
         <source>Win A Gift!</source>
         <translation>有奖调查</translation>
     </message>
     <message>
         <location filename="../../MainGUI.py" line="208"/>
         <source>Survey</source>
-        <translation>调查</translation>
+        <translation type="obsolete">调查</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="214"/>
+        <location filename="../../MainGUI.py" line="215"/>
         <source>Bug Report</source>
-        <translation type="obsolete">Bug 提交</translation>
+        <translation>问题反馈</translation>
     </message>
     <message>
         <location filename="../../MainGUI.py" line="215"/>
         <source>Feedback</source>
-        <translation>反馈</translation>
+        <translation type="obsolete">问题反馈</translation>
     </message>
     <message>
         <location filename="../../MainGUI.py" line="217"/>

@@ -66,7 +66,7 @@ languageLoc = resourcePath(os.path.join(resourcesLoc, "Languages"))
 
 # Used by Vision
 cascade_dir = exeResourcesPath
-global user_manual,language_pack,survey_link, bugreport_link
+
 
 
 
@@ -184,18 +184,24 @@ if not os.path.exists(bugreport_dir):
 error_log    = os.path.join(log_dir, "error.log")
 ucs_log      = os.path.join(log_dir, "ucs.log")
 bugreport_zipfile = os.path.join(bugreport_dir, "log.zip")
+user_manual     = os.path.join(exeResourcesPath, "User_Manual.pdf")
+survey_link = "https://goo.gl/forms/ZWN6xKvBssyRWqVI3"
+bugreport_link = "https://form.jotform.me/63162320754450"
 
 settings_txt = os.path.join(ucs_home_dir, "Settings.txt")
 objects_dir  = os.path.join(ucs_home_dir, "Objects", "")
 saves_dir    = os.path.join(ucs_home_dir, "Save Files", "")
 
 ## Language Init Path
+global language_pack
 def loadLanguagePath(language_code=Global.EN_US):
     global user_manual,language_pack,survey_link,bugreport_link
     if language_code == Global.EN_US:
-        pass
+        user_manual = os.path.join(exeResourcesPath, "User_Manual.pdf")
+        survey_link = "https://goo.gl/forms/ZWN6xKvBssyRWqVI3"
+        bugreport_link = "https://form.jotform.me/63162320754450"
     else:
         user_manual = os.path.join(exeResourcesPath, "User_Manual_{}.pdf".format(language_code))
         language_pack = os.path.join(languageLoc, "{}.qm".format(language_code))
         survey_link = "http://form.mikecrm.com/Az9pM8"
-        bugreport_link = "https://form.jotform.me/63162320754450"
+        bugreport_link = "http://form.mikecrm.com/jlq5Uv"
