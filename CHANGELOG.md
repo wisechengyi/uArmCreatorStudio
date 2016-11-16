@@ -1,13 +1,30 @@
 # CHANGELOG
 
+## V1.2.2
+- Update - Alex Tan
+- Date - 2016-11-16
+
+## Changes
+- Fix Translation for Disconnect Camera & Robot
+- Fix `New Function` not Working issue
+
+
+## V1.2.1
+- Update - Alex Tan
+- Date - 2016-11-15
+
+## Changes
+- Compatible GCode Communication Protocol
+- Add Protocol Version
+
 ## V1.1.8
 - Update - Alex Tan
 - Date - 2016-11-14
 
+## Changes
 - Fix Switch English language didn't change survey link and user manual docs
 - Change Execute icon
 
-## Changes
 
 ## V1.1.7
 - Update - Alex Tan

@@ -120,6 +120,7 @@ def download(url, filepath):
 
 
 def flash(port, firmware_path, avrdude_path=None):
+    avrdude_conf = ""
     if avrdude_path is None:
         avrdude_path = resourcePath('avrdude')
     if port:
@@ -127,23 +128,19 @@ def flash(port, firmware_path, avrdude_path=None):
         if platform.system() == 'Darwin':
             avrdude_bin = os.path.join(avrdude_path, 'avrdude')
             avrdude_conf = os.path.join(avrdude_path, 'avrdude.conf')
-
+            avrdude_conf = '-C' + avrdude_conf
             error_description = "built-in avrdude is not working, Trying to install avrdude..."
 
         elif platform.system() == 'Windows':
             avrdude_bin = os.path.join(avrdude_path, 'avrdude.exe')
             avrdude_conf = os.path.join(avrdude_path, 'avrdude.conf')
+            avrdude_conf = '-C' + avrdude_conf
             error_description = "built-in avrdude is not working, Trying to download winavr..."
 
         elif platform.system() == 'Linux':
-            if platform.architecture()[0] == '64bit':
-                avrdude_bin = os.path.join(avrdude_path, 'avrdude-x64')
-            else:
-                avrdude_bin = os.path.join(avrdude_path, 'avrdude')
-            avrdude_conf = os.path.join(avrdude_path, 'avrdude.conf')
-            error_description = "built-in avrdude is not working, Trying to install avrdude..."
-
-        cmd = [avrdude_bin, '-C' + avrdude_conf, '-v', '-patmega328p', '-carduino', '-P' + port, '-b115200', '-D',
+            avrdude_bin = "avrdude"
+            error_description = "built-in avrdude is not working, Please Try install avrdude..."
+        cmd = [avrdude_bin, avrdude_conf, '-v', '-patmega328p', '-carduino', '-P' + port, '-b115200', '-D',
                '-Uflash:w:{0}:i'.format(firmware_path)]
 
         print((' '.join(cmd)))
@@ -198,7 +195,10 @@ def main(args):
     if args.path:
         firmware_path = args.path
     else:
-        firmware_path = os.path.join(os.path.dirname(sys.executable), default_config['filename'])
+        if FROZEN_APP:
+            firmware_path = os.path.join(os.path.dirname(sys.executable), default_config['filename'])
+        else:
+            firmware_path = os.path.join(os.path.dirname(__file__), default_config['filename'])
 
     if args.download:
         download(default_config['download_url'], firmware_path)
@@ -209,8 +209,6 @@ def main(args):
             avrdude_path = os.path.join(".", "avrdude", "mac")
         elif platform.system() == 'Windows':
             avrdude_path = os.path.join(".", "avrdude", "windows")
-        elif platform.system() == 'Linux':
-            avrdude_path = os.path.join(".", "avrdude", "linux")
 
     flash(port_name, firmware_path,avrdude_path)
 

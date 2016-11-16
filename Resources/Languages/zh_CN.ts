@@ -2645,119 +2645,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 The usual python sleep variable has been replaced by one that will automatically stop sleeping when the user presses the &quot;stop script&quot; button on the GUI. So don&apos;t worry about writing blocking code, that&apos;s been handled!
 
 </source>
-        <translation>
-    在脚本模式下你可以尽情发挥你的想象空间。你可以在你的项目里面直接注入 Python 代码但不用步署和配置任何环境。
-你可以实时的使用任何内置的库或者模块，但不需要对 UCS 本身做任何修改。
-
-    UCS 在打开的时候已经加载了常用的类，你不需要通过函数去调用，也不需要理会它是全局变量还是临时变量。总共有这些：
-
-内置变量：
-    robot - 机械臂
-      你拥有全部的机械臂的访问权限，你可以直接使用 Robot.py 库封装了通信协议。
-
-      你可以在这里找到相关的源代码：
-      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Robot.py
-
-    vision - 视觉
-      使用视觉模块，你可以不用再为追踪物体换算机械臂坐标而烦恼，并且你已经可以直接使用素材库里添加的视觉素材，并且
-      可以实时查找他们的位置，最长还可以追踪 60 帧之前的物体。你可以清除追踪物体，并且重新添加，然后就可以像平常一
-      样使用UCS内置好的的计算机视觉函数。
-
-      你可以在这里找到相关的源代码：
-      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
-
-    settings - 设置
-      有关界面（GUI）的设置是存放在一个 python 的字典(dictionary)里。这里面包含了像校正之类的各种各样的信息。
-      你可以尝试使用 print(settings) 来查看里面有些什么东西。
-
-    scriptStopping() - 脚本停止
-      这是帮助你在设计 Python 脚本时检测停止信号的一个函数，当用户在主工具栏按下 &quot;停止&quot; 按钮的时候，你可以使用这个函数
-      来判断是否要终止你的脚本，特别是你在使用一个循环时。
-
-      你可以在这里找到相关的源代码：
-      https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
-
-    sleep - 休眠
-      这跟 Python 内置的 sleep 函数(time.sleep)有点不太一样，它们的区别是，当用户按下 &quot;停止&quot; 按钮的时候，Sleep
-      函数将会失效。你不用再去担心写阻塞代码会影响到整个程序，这个函数会处理好的。
-
-&apos;robot&apos;脚本使用示例
-      robot.setPos(x=0, y=15, z=15)     # 使机械臂移动到一个坐标 XYZ(0, 15, 15)
-      robot.setPos(x=0, wait=False)     # 异步式移动
-      robot.setPos(x=0)                 # 只会设置 x 的坐标，其它保持一致
-      robot.setPump(True)               # 打开气泵（夹子），如果是 False 会关闭气泵（夹子）
-      robot.setBuzzer(1500, 2)          # 可以使用机械臂内置的蜂鸣器播放一段音乐，第一个参数是频率，单位是 hz, 第二个是持续时间
-      robot.setSpeed(10)                # 设置机械臂的运动速度
-      robot.connected()                 # 如果机械臂已连接会返回 True
-      robot.getAngles()                 # 返回当前机械臂的电机角度 [servo0, servo1, servo2, servo3]
-      robot.getCoords()                 # 返回当前机械臂的空间坐标 [x, y, z]
-      robot.getTipSensor()              # 返回限位开关的状态 True or False
-      robot.getMoving()                 # 返回当前机械臂的运动情况 True or False
-
-&apos;vision&apos; 脚本使用示例
-      # 使用视觉的第一步是获取一个追踪物体。先在素材库添加一个，然后你就可以在脚本中用名字访问它。
-      trackableObject = resources.getObject(&quot;Ace of Spades&quot;)
-
-      # 下一步，确保视觉正在追踪这个物体。通常这会在初始化事件里面完成。
-      # 物体只会在脚本终止的时候才会停止被追踪。这个函数只用执行一次。
-      vision.addPlaneTarget(trackableObject)
-
-      # 等待两秒来确保视觉有足够的时间去查找这个新物体
-      sleep(2)
-
-      # 你可以选择使用下面的方式，等待 30 帧再继续
-      vision.waitForNewFrames(30)
-
-      # 如果物体是已经被追踪过有一段时间的，你可以尝试用视觉来寻找它
-      # 这个函数会返回物体被识别之前总共有多少帧，并且带有 &quot;被追踪的&quot; 物体的信息
-      frameID, trackedObject = vision.getObjectLatestRecognition(trackableObject)
-
-      # 如果没有找到物体，这个 &quot;trackedObject&quot; 将会是空 （None）。使用前请先检查是否为 空。
-      if trackedObject is None:
-          # 在这里处理错误
-          print(&quot;Object &quot;, trackableObject.name, &quot; was not recognized!&quot;)
-          return     
-           
-      # 如果这个物体真的被追踪到了，你可以在这里使用它的所有信息
-      print(trackedObject.center)     # 打印这个物体在摄像头的空间坐标系以[x, y, z] 
-      print(trackedObject.rotation)   # 打印每个轴的转角以[xRotation, yRotation, zRotation]
-      print(trackedObject.ptCount)    # 打印有多少个点被识别，点数越多，越精确
-
-      # 这是另外一个追踪物体的函数
-      # 这个函数会查找 trackableObject 过去的 30 帧, 并且会找到识别点数大于 50 的帧。
-      trackedObject = vision.searchTrackedHistory(trackable=trackableObject, maxAge=30, minPoints=50)
-
-
-所有在脚本中创建的变量，都是全局的，意味着你可以在其它脚本，包括其它代码块中使用它们
-    def someFunctionName(someArgument):
-        # 随便写一个函数
-        print(&quot;This function can work in any script command in the task!&quot;)
-        print(someArgument)
-
-    someVariableName = &quot;This string can be used in any Script command in the program&quot;
-
-你也许已经注意到了，在按下 &quot;停止&quot; 按钮时，脚本如果在一个大循环或者 &apos;While True&apos; 的语句中退出需要等待一段很长的时间。
-有时候，整个程序还会变得无响应。造成这个的原因是，你的代码是跑在一个独立的 线程/进程中的，当按下停止按钮的时候，线程也
-必须停止。
-
-任何拖拽命令设计成停止按钮按下时会立即停止。但是，你必须为你的脚本显式的退出以确保脚本可以快速终止。你可以使用上面我
-们介绍的函数 &quot;scriptStopping()&quot;
-
-通常使用的方式如下：
-
-while [条件]:
-    if scriptStopping(): break  # 使用 Break 可以帮助你快速的跳出程序。请无论如何都要使用这个。
-    # ... 代码 ...
-    # ... 代码 ...
-    # ... 代码 ...
-
-或者，在一个大循环中。
-
-for i in range(0, 100000):
-    if scriptStopping(): break
-    # ... 代码 ...
-    # ... 代码 ...
-    # ... 代码 ...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2872,57 +2760,57 @@ for i in range(0, 100000):
 <context>
     <name>DeviceWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="816"/>
+        <location filename="../../MainGUI.py" line="818"/>
         <source>Please select the robot you will be using:</source>
         <translation>请选择你正在使用的uArm端口：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="825"/>
+        <location filename="../../MainGUI.py" line="816"/>
         <source>Please select the camera you will be using:</source>
         <translation>请选择你正在使用的摄像头：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="815"/>
+        <location filename="../../MainGUI.py" line="819"/>
         <source>Scan for Robots</source>
         <translation>查找uArm</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="824"/>
+        <location filename="../../MainGUI.py" line="817"/>
         <source>Scan for Cameras</source>
         <translation>查找摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="833"/>
+        <location filename="../../MainGUI.py" line="849"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="834"/>
+        <location filename="../../MainGUI.py" line="850"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="893"/>
+        <location filename="../../MainGUI.py" line="909"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="912"/>
+        <location filename="../../MainGUI.py" line="928"/>
         <source>No devices were found.</source>
         <translation>没有找到设备。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="925"/>
+        <location filename="../../MainGUI.py" line="941"/>
         <source>Camera </source>
         <translation>摄像头 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="932"/>
+        <location filename="../../MainGUI.py" line="948"/>
         <source>No cameras were found.</source>
         <translation>没有找到摄像头。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="828"/>
+        <location filename="../../MainGUI.py" line="821"/>
         <source>Disconnect</source>
         <translation>断开连接</translation>
     </message>
@@ -2932,8 +2820,13 @@ for i in range(0, 100000):
         <translation>已连接到机械臂设备：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="829"/>
+        <location filename="../../MainGUI.py" line="833"/>
         <source>Connected to Camera {}</source>
+        <translation type="obsolete">已连接到摄像头设备：</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="822"/>
+        <source>Connected to Camera {}:</source>
         <translation>已连接到摄像头设备：</translation>
     </message>
 </context>
@@ -3184,136 +3077,136 @@ for i in range(0, 100000):
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../MainGUI.py" line="74"/>
+        <location filename="../../MainGUI.py" line="76"/>
         <source>uArm Creator Studio</source>
         <translation>uArm创意百宝箱</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="75"/>
+        <location filename="../../MainGUI.py" line="77"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="76"/>
+        <location filename="../../MainGUI.py" line="78"/>
         <source>Devices</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="129"/>
+        <location filename="../../MainGUI.py" line="131"/>
         <source>New Task</source>
         <translation>新建任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="130"/>
+        <location filename="../../MainGUI.py" line="132"/>
         <source>Save Task</source>
         <translation>保存任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="131"/>
+        <location filename="../../MainGUI.py" line="133"/>
         <source>Save Task As</source>
         <translation>另存为任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="132"/>
+        <location filename="../../MainGUI.py" line="134"/>
         <source>Load Task</source>
         <translation>导入任务</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="157"/>
+        <location filename="../../MainGUI.py" line="159"/>
         <source>Visit the forum!</source>
         <translation>欢迎访问论坛！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="158"/>
+        <location filename="../../MainGUI.py" line="160"/>
         <source>Visit our subreddit!</source>
         <translation>欢迎参与 subreddit讨论!</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="169"/>
+        <location filename="../../MainGUI.py" line="171"/>
         <source>Vision Object</source>
         <translation>可识别物体</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="170"/>
+        <location filename="../../MainGUI.py" line="172"/>
         <source>Vision Group</source>
         <translation>可识别物体分组</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="171"/>
+        <location filename="../../MainGUI.py" line="173"/>
         <source>Movement Recording</source>
         <translation>录制新动作</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="172"/>
+        <location filename="../../MainGUI.py" line="174"/>
         <source>Function</source>
         <translation>函数/自定义功能</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="241"/>
+        <location filename="../../MainGUI.py" line="243"/>
         <source>Calibrate</source>
         <translation>校正</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="242"/>
+        <location filename="../../MainGUI.py" line="244"/>
         <source>Resources</source>
         <translation>素材库</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="244"/>
+        <location filename="../../MainGUI.py" line="246"/>
         <source>Run/Pause the command script (Ctrl+R)</source>
         <translation>运行/暂停任务 (Ctrl+R)</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="245"/>
+        <location filename="../../MainGUI.py" line="247"/>
         <source>Open Camera and Robot settings</source>
         <translation>连接摄像头和uArm</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="246"/>
+        <location filename="../../MainGUI.py" line="248"/>
         <source>Open Robot and Camera Calibration Center</source>
         <translation>校正中心（视觉功能 &amp; 运动检测功能）</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="247"/>
+        <location filename="../../MainGUI.py" line="249"/>
         <source>Open Resource Manager</source>
         <translation>进入素材库</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="249"/>
+        <location filename="../../MainGUI.py" line="251"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="284"/>
+        <location filename="../../MainGUI.py" line="286"/>
         <source>Camera</source>
         <translation>摄像头</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="285"/>
+        <location filename="../../MainGUI.py" line="287"/>
         <source>Console</source>
         <translation>控制台</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="376"/>
+        <location filename="../../MainGUI.py" line="378"/>
         <source>Certain Events and Commands are missing the following requirements to work properly: 
 
 </source>
         <translation>某些事件和命令无法正常运行，请先满足以下条件：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="377"/>
+        <location filename="../../MainGUI.py" line="379"/>
         <source>
 Would you like to continue anyways? Events and commands with errors will not activate.</source>
         <translation>
 事件和命令出错，无法运行，你还要继续运行任务吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="772"/>
+        <location filename="../../MainGUI.py" line="776"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="417"/>
+        <location filename="../../MainGUI.py" line="419"/>
         <source>The script was unable to end.
 This may mean the script crashed, or it is taking time finishing.
 
@@ -3324,17 +3217,17 @@ If you are running Python code inside of this script, make sure you check isExit
 如果你在命令中运行了 python 代码，请确保 isExiting() 在循环命令中。这可以确保当你按下“停止”后，命令能快速终止。</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="444"/>
+        <location filename="../../MainGUI.py" line="446"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="461"/>
+        <location filename="../../MainGUI.py" line="463"/>
         <source>Communication Errors</source>
         <translation>通信协议错误</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="461"/>
+        <location filename="../../MainGUI.py" line="463"/>
         <source>The following errors have occured communicating with your robot.
 Try reconnecting under the Devices menu.
 
@@ -3351,7 +3244,7 @@ ERROR:
         <translation type="obsolete">未找到！</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="659"/>
+        <location filename="../../MainGUI.py" line="663"/>
         <source>
 
  The following error occured: </source>
@@ -3360,94 +3253,94 @@ ERROR:
 出现以下错误：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="128"/>
+        <location filename="../../MainGUI.py" line="130"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="156"/>
+        <location filename="../../MainGUI.py" line="158"/>
         <source>Community</source>
         <translation>社区</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="168"/>
+        <location filename="../../MainGUI.py" line="170"/>
         <source>New Resource</source>
         <translation>新建素材</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="193"/>
+        <location filename="../../MainGUI.py" line="195"/>
         <source>Languages</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="194"/>
+        <location filename="../../MainGUI.py" line="196"/>
         <source>English</source>
         <translation>英语</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="195"/>
+        <location filename="../../MainGUI.py" line="197"/>
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="238"/>
+        <location filename="../../MainGUI.py" line="240"/>
         <source>MainToolbar</source>
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="680"/>
+        <location filename="../../MainGUI.py" line="684"/>
         <source>You have unsaved changes. Would you like to save before continuing?</source>
         <translation>你是否要保存刚刚的修改？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="216"/>
+        <location filename="../../MainGUI.py" line="218"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="137"/>
+        <location filename="../../MainGUI.py" line="139"/>
         <source>Version: </source>
         <translation>版本：</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="772"/>
+        <location filename="../../MainGUI.py" line="776"/>
         <source>Language switching need restart to apply, Would you like to continue?</source>
         <translation>切换语言后需要重启软件。你要继续切换吗？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="214"/>
+        <location filename="../../MainGUI.py" line="216"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="133"/>
+        <location filename="../../MainGUI.py" line="135"/>
         <source>Open Home Folder</source>
         <translation>打开主目录</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="659"/>
+        <location filename="../../MainGUI.py" line="663"/>
         <source>The program was unable to load the following script:
 </source>
         <translation>程序无法加载以下脚本：
 </translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="187"/>
+        <location filename="../../MainGUI.py" line="189"/>
         <source>Reset Layout</source>
         <translation>重置窗口布局</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="697"/>
+        <location filename="../../MainGUI.py" line="701"/>
         <source>Layout Reset need restart to apply, Would you like to continue?</source>
         <translation>重置布局需要重启，你是否要继续？</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="405"/>
+        <location filename="../../MainGUI.py" line="407"/>
         <source>Stop</source>
         <translation>终止</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="208"/>
+        <location filename="../../MainGUI.py" line="210"/>
         <source>Win A Gift!</source>
         <translation>有奖调查</translation>
     </message>
@@ -3457,7 +3350,7 @@ ERROR:
         <translation type="obsolete">调查</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="215"/>
+        <location filename="../../MainGUI.py" line="217"/>
         <source>Bug Report</source>
         <translation>问题反馈</translation>
     </message>
@@ -3467,14 +3360,19 @@ ERROR:
         <translation type="obsolete">问题反馈</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="217"/>
+        <location filename="../../MainGUI.py" line="219"/>
         <source>User Manual</source>
         <translation>用户指南</translation>
     </message>
     <message>
-        <location filename="../../MainGUI.py" line="186"/>
+        <location filename="../../MainGUI.py" line="188"/>
         <source>Settings</source>
         <translation>设置</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="139"/>
+        <source>Protocol Version: </source>
+        <translation>通信协议版本号：</translation>
     </message>
 </context>
 <context>
@@ -4140,13 +4038,7 @@ Step 2: Select the Object</source>
 2）The work area should be well lit, but not cause too much glare on the object if it&apos;s shiny.
 
 2. When ready, Click the mouse on the corner of the object, drag it tightly over the object, then release the mouse button.</source>
-        <translation>1. 请将你的物体置于平面上，并确保：
-
-1）物体位于摄像头视野的中心；
-2）物体的空间背景干净、无杂物；
-3）光线充足，但不会导致物体反光；
-
-2. 用鼠标拖拽选取物体（如GIF所示）。</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

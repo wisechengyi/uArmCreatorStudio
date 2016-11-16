@@ -30,6 +30,8 @@ import os
 import sys
 from os.path import expanduser
 from Logic import Global
+import logging
+from __init__ import version
 
 if getattr(sys, 'frozen', False):
     APPLICATION_PATH = os.path.dirname(sys.executable)
@@ -174,12 +176,10 @@ help_rob_connect    = os.path.join(imageLoc, "help_rob_connect.gif")
 ucs_home_dir = os.path.join(expanduser("~"), "uArmCreatorStudio", "") # uArmCreatorStudio home dir
 log_dir      = os.path.join(ucs_home_dir, "log", "")
 bugreport_dir= os.path.join(ucs_home_dir, "bugreport", "")
-if not os.path.exists(ucs_home_dir):
-    os.makedirs(ucs_home_dir)
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir)
-if not os.path.exists(bugreport_dir):
-    os.makedirs(bugreport_dir)
+
+Global.ensurePathExists(ucs_home_dir)
+Global.ensurePathExists(log_dir)
+Global.ensurePathExists(bugreport_dir)
 
 error_log    = os.path.join(log_dir, "error.log")
 ucs_log      = os.path.join(log_dir, "ucs.log")
@@ -193,15 +193,37 @@ objects_dir  = os.path.join(ucs_home_dir, "Objects", "")
 saves_dir    = os.path.join(ucs_home_dir, "Save Files", "")
 
 ## Language Init Path
-global language_pack
-def loadLanguagePath(language_code=Global.EN_US):
+def loadLanguagePath(language_code):
     global user_manual,language_pack,survey_link,bugreport_link
     if language_code == Global.EN_US:
         user_manual = os.path.join(exeResourcesPath, "User_Manual.pdf")
         survey_link = "https://goo.gl/forms/ZWN6xKvBssyRWqVI3"
         bugreport_link = "https://form.jotform.me/63162320754450"
-    else:
+    elif language_code == Global.ZH_CN:
         user_manual = os.path.join(exeResourcesPath, "User_Manual_{}.pdf".format(language_code))
         language_pack = os.path.join(languageLoc, "{}.qm".format(language_code))
         survey_link = "http://form.mikecrm.com/Az9pM8"
         bugreport_link = "http://form.mikecrm.com/jlq5Uv"
+
+
+## Init Logger
+def initLogger(consoleSettings):
+    logger = logging.getLogger('application')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    if consoleSettings['saveToFile']:
+        if consoleSettings['logFileName'] is None:
+            log_file = os.path.join(ucs_home_dir, ucs_log)
+        else:
+            log_file = os.path.join(ucs_home_dir, consoleSettings['logFileName'])
+        fh = logging.FileHandler(log_file)
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    logger.info('---------------------------Logging Start------------------------------------------')
+    logger.info('Version: ' + version)

@@ -253,7 +253,7 @@ class Environment:
     def closeVideo(self):
         self.__vision.setExiting(True)
         self.__vStream.endThread()
-        self.__vStream.frame = None
-        self.__vStream.cap = None
-        self.__vStream.setCamera = None
+        # self.__vStream.frame = None
+        # self.__vStream.cap = None
+        # self.__vStream.setCamera = None
 

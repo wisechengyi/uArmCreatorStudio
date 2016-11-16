@@ -29,13 +29,7 @@ import os
 import errno
 import platform
 from time import time, sleep
-import Paths
-
 import logging
-
-__version__ = '1.1.8'
-
-version = __version__
 
 __author__ = "Alexander Thiel"
 
@@ -51,8 +45,8 @@ MACOSX  = 1
 LINUX   = 2
 
 # Language Country code
-ZH_CN = 'zh_cn'
-EN_US = 'en_us'
+ZH_CN = 'zh_CN'
+EN_US = 'en_US'
 
 # Special 'sleep' commands that can exit immediately if 'exitFunc()' returns false
 def wait(waitTime, exitFunc):
@@ -214,7 +208,6 @@ def ensurePathExists(path):
     """
     try:
         path = os.path.join(path, "")  # Make it a file
-        print(path)
         directory = os.path.dirname(path)
         os.makedirs(directory)
     except OSError as exception:
@@ -252,28 +245,6 @@ def openFile(path):
         os.startfile(path)
     elif getOSType() == LINUX:
         os.system('xdg-open '+path)
-
-
-def initLogger(consoleSettings):
-    logger = logging.getLogger('application')
-    logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    if consoleSettings['saveToFile']:
-        if consoleSettings['logFileName'] is None:
-            log_file = os.path.join(Paths.ucs_home_dir, Paths.ucs_log)
-        else:
-            log_file = os.path.join(Paths.ucs_home_dir, consoleSettings['logFileName'])
-        fh = logging.FileHandler(log_file)
-        fh.setLevel(logging.INFO)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-    logger.info('---------------------------Logging Start------------------------------------------')
-    logger.info('Version: ' + version)
 
 
 """  Deprecated function for finding who called the current function (DO NOT USE IN PRODUCTION)

@@ -320,7 +320,6 @@ class Vision:
 
         self.exiting = exiting
 
-
     '''     OLD (NO LONGER USED) VISION FUNCTIONS
     def findObjectColor(self, hue, tolerance, lowSat, highSat, lowVal, highVal):
         low, high = self.getRange(hue, tolerance)

@@ -47,6 +47,8 @@ from ObjectManagerGUI  import MakeRecordingWindow
 from ObjectManagerGUI  import MakeFunctionWindow
 from ObjectManagerGUI  import MakeObjectWindow
 from zipfile import ZipFile
+from __init__ import version
+from Logic.CommunicationProtocol import PROTOCOL_VERSION
 __author__ = "Alexander Thiel"
 
 
@@ -136,7 +138,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         aboutMessage = lambda: QtWidgets.QMessageBox.information(self, self.tr("About"),
                                                                  self.tr("Version: ") +
-                                                                 Global.version)
+                                                                 version + "\n\n" + self.tr("Protocol Version: ") + PROTOCOL_VERSION)
         saveAction.setShortcut("Ctrl+S")
         newAction.triggered.connect(    lambda: self.newTask(promptSave=True))
         saveAction.triggered.connect(   self.saveTask)
@@ -492,7 +494,6 @@ class MainWindow(QtWidgets.QMainWindow):
         deviceWindow = DeviceWindow(parent=self, cameraID=cameraID, robotID=robotID)
         accepted     = deviceWindow.exec_()
 
-        self.cameraWidget.play()
         if not accepted:
             printf("GUI| Cancel clicked, no settings applied.")
             return
@@ -515,8 +516,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.cameraWidget.play()
         else:
             self.env.updateSettings("cameraID", None) # Disconnect Camera
+            printf("GUI| cameraID save None")
+            # self.cameraWidget.pause()
+            printf("GUI| cameraWidget pause")
             self.env.closeVideo()
-            self.cameraWidget.pause()
+            printf("GUI| closeVideo")
             self.cameraWidget.initUI()
 
 
@@ -805,24 +809,36 @@ class DeviceWindow(QtWidgets.QDialog):
         self.initUI()
 
     def initUI(self):
+        cameraConnectDescText = self.tr('Please select the camera you will be using:')
+        cameraConnectBtnText = self.tr("Scan for Cameras")
+        robotConnectDescText = self.tr('Please select the robot you will be using:')
+        robotConnectBtnText  = self.tr("Scan for Robots")
+        robotDisconnectDescText = self.tr("Connected to Robot {}:")
+        disconnectBtnText  = self.tr("Disconnect")
+        cameraDisconnectDescText = self.tr("Connected to Camera {}:")
 
+        self.robotScanBtn = QtWidgets.QPushButton(robotConnectBtnText)
+        self.selectRobotTxt = QtWidgets.QLabel(robotConnectDescText)
+        self.cameraScanBtn = QtWidgets.QPushButton(cameraConnectBtnText)
+        self.selectCameraTxt = QtWidgets.QLabel(cameraConnectDescText)
         # CREATE BUTTONS
         if self.robotID is None: # If Robot ID Exist Show Scan
-            self.robotScanBtn  = QtWidgets.QPushButton(self.tr("Scan for Robots"))
-            self.selectRobotTxt = QtWidgets.QLabel(self.tr('Please select the robot you will be using:'))
+            self.robotScanBtn.setText(robotConnectBtnText)
+            self.selectRobotTxt.setText(robotConnectDescText)
             self.robotScanBtn.clicked.connect(self.scanForRobotsClicked)
         else:
-            self.robotScanBtn = QtWidgets.QPushButton(self.tr("Disconnect"))
-            self.selectRobotTxt = QtWidgets.QLabel(self.tr('Connected to Robot {}:'.format(self.robotID)))
+            self.robotScanBtn.setText(disconnectBtnText)
+            self.selectRobotTxt.setText(robotDisconnectDescText + str(self.robotID))
             self.robSetting = self.robotID
             self.robotScanBtn.clicked.connect(self.disconnectForRobotClicked)
+
         if self.cameraID is None: # IF Camera ID Exist Show Disconnect
-            self.cameraScanBtn = QtWidgets.QPushButton(self.tr("Scan for Cameras"))
-            self.selectCameraTxt = QtWidgets.QLabel(self.tr('Please select the camera you will be using:'))
+            self.cameraScanBtn.setText(cameraConnectBtnText)
+            self.selectCameraTxt.setText(cameraConnectDescText)
             self.cameraScanBtn.clicked.connect(self.scanForCamerasClicked)
         else:
-            self.cameraScanBtn = QtWidgets.QPushButton(self.tr("Disconnect"))
-            self.selectCameraTxt = QtWidgets.QLabel(self.tr('Connected to Camera {}'.format(self.cameraID)))
+            self.cameraScanBtn = QtWidgets.QPushButton(disconnectBtnText)
+            self.selectCameraTxt = QtWidgets.QLabel(cameraDisconnectDescText + str(self.cameraID))
             self.camSetting = self.cameraID
             self.cameraScanBtn.clicked.connect(self.disconnectForCameraClicked)
 
@@ -1014,11 +1030,11 @@ if __name__ == '__main__':
 
 
     # Set up global variables
-    Global.init()
+    # Global.init()
 
     # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
     env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
-    Global.initLogger(env.getSetting('consoleSettings'))
+    Paths.initLogger(env.getSetting('consoleSettings'))
 
 
     # Create an exit code to track whether or not to reboot the GUI, or close it for good (for language changes)
@@ -1041,12 +1057,14 @@ if __name__ == '__main__':
         if language_code is None:
             try:
                 import locale
+                printf("GUI| Detect System locale: {}".format(locale.getdefaultlocale()[0]))
                 if locale.getdefaultlocale()[0] == Global.ZH_CN:
                     language_code = Global.ZH_CN
             except ValueError:
                 printf("GUI| Error - Can not detect system locale")
         env.updateSettings("language", language_code)
         # Load the appropriate language pack, if there is need for one
+        if language_code is None: language_code = Global.EN_US
         Paths.loadLanguagePath(language_code)
         if language_code == Global.EN_US:
             pass

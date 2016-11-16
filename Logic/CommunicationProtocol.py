@@ -242,7 +242,7 @@ class Device:
         response  = self.__sendAndRecieve("M200")
 
         # Create the return
-        ret = (False, True)["V0" in response]
+        ret = (False, True)["V1" in response]
         # printf("DEBUG| ret:{}".format(ret))
 
         return ret

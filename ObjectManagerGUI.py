@@ -1063,7 +1063,7 @@ class MakeFunctionWindow(QtWidgets.QDialog):
 
         # Initialize UI variables
         self.commandList = CommandList(environment, parent=self)
-        self.commandMenu = CommandMenuWidget(parent=self)
+        self.commandMenu = CommandMenuWidget(parent=self,env=environment)
         self.argList     = self.ArgumentsList(parent=self)
         self.nameEdit    = QtWidgets.QLineEdit()
         self.descEdit    = QtWidgets.QLineEdit()

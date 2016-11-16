@@ -645,7 +645,7 @@ class Console(QtWidgets.QWidget):
                 self.text.setWordWrapMode(QtGui.QTextOption.NoWrap)
 
             # Update log file settings
-            Global.initLogger(self.settings)
+            Paths.initLogger(self.settings)
 
             self.settingsChanged.emit()
 
