@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 from time import sleep
 from Logic.Environment import Environment
@@ -25,10 +26,10 @@ GUI in the same directory, so it will generate the correct settings file and obj
 run this it will already know the robots COM port and the cameras ID, and all the calibration information.
 """
 
-taskPath     = "Resources\\Save Files\\test.task"
-settingsPath = "Resources\\Settings.txt"
-cascadePath  = "Resources\\"
-objectsPath  = "Resources\\Objects"
+taskPath     = os.path.join('Resources', 'Save Files', 'test.task')
+settingsPath = os.path.join('Resources', 'Settings.txt')
+cascadePath  = 'Resources'
+objectsPath  = os.path.join('Resources', 'Objects')
 
 
 print("Place this .py file in the same directory as uArmCreatorStudio.exe.")
