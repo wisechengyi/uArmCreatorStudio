@@ -6,5 +6,4 @@ python:
   - "3.5"
 
 script:
-#  - pip freeze
-  - ./build-support/bootstrap.sh
+  - python -m pytest Tests
