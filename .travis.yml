@@ -6,5 +6,5 @@ python:
   - "3.5"
 
 script:
-  - pip freeze
-#  - ./build-support/bootstrap.sh
+#  - pip freeze
+  - ./build-support/bootstrap.sh
