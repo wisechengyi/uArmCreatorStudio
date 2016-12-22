@@ -28,12 +28,6 @@ if OS_TYPE.lower() == 'macosx':
                     (os.path.join(avrdude_path, 'mac', 'libusb-1.0.0.dylib')  ,     os.path.join('avrdude')),
                     (os.path.join(avrdude_path, 'mac', 'libusb-1.0.dylib')     ,    os.path.join('avrdude')),
                     ]
-elif OS_TYPE.lower()  == 'linux':
-    avrdude_list = [(os.path.join(avrdude_path, 'linux', 'avrdude'),      os.path.join('avrdude')),
-                    (os.path.join(avrdude_path, 'linux', 'avrdude-x64'),  os.path.join('avrdude')),
-                    (os.path.join(avrdude_path, 'linux', 'avrdude.conf'), os.path.join('avrdude')),
-
-    ]
 elif OS_TYPE.lower()  == 'windows':
     avrdude_list = [(os.path.join(avrdude_path, 'windows', 'avrdude.exe'),  os.path.join('avrdude')),
                     (os.path.join(avrdude_path, 'windows', 'libusb0.dll'),  os.path.join('avrdude')),

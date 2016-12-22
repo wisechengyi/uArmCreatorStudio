@@ -813,9 +813,9 @@ class DeviceWindow(QtWidgets.QDialog):
         cameraConnectBtnText = self.tr("Scan for Cameras")
         robotConnectDescText = self.tr('Please select the robot you will be using:')
         robotConnectBtnText  = self.tr("Scan for Robots")
-        robotDisconnectDescText = self.tr("Connected to Robot {}:")
+        robotDisconnectDescText = self.tr("Connected to Robot:")
         disconnectBtnText  = self.tr("Disconnect")
-        cameraDisconnectDescText = self.tr("Connected to Camera {}:")
+        cameraDisconnectDescText = self.tr("Connected to Camera:")
 
         self.robotScanBtn = QtWidgets.QPushButton(robotConnectBtnText)
         self.selectRobotTxt = QtWidgets.QLabel(robotConnectDescText)

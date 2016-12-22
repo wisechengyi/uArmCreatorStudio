@@ -897,12 +897,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="984"/>
         <source>Activate Gripper</source>
-        <translation>开启吸盘</translation>
+        <translation>开启吸盘/夹子</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="985"/>
         <source>Activates the robots gripper</source>
-        <translation>开启末端吸取功能</translation>
+        <translation>开始吸取/夹取</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="993"/>
@@ -927,12 +927,12 @@ Results will be saved when you click Apply
     <message>
         <location filename="../../CommandsGUI.py" line="1032"/>
         <source>Deactivate Gripper</source>
-        <translation>关闭吸盘</translation>
+        <translation>关闭吸盘/夹子</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1033"/>
         <source>Deactivates the robots gripper</source>
-        <translation>关闭末端吸取功能</translation>
+        <translation>停止吸取/夹取</translation>
     </message>
     <message>
         <location filename="../../CommandsGUI.py" line="1042"/>
@@ -2366,7 +2366,7 @@ This is a function that returns True if the user has pressed the &quot;stop&quot
 For source code on the Interpreter environment that runs your script, go to:
 https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
 
-You might notice that scripts with big loops or &apos;while True&apos; statements will take a long time to end when the ?stop&quot; button is pressed on the GUI. Sometimes, they might freeze the program. The reason for this is because your code is running inside of a seperate thread/process, and when you end the task the thread has to end as well.
+You might notice that scripts with big loops or &apos;while True&apos; statements will take a long time to end when the “stop&quot; button is pressed on the GUI. Sometimes, they might freeze the program. The reason for this is because your code is running inside of a seperate thread/process, and when you end the task the thread has to end as well.
 
 Any drag-and-drop command will end quickly, because they have been designed to do so. However, you will have to do this yourself if you have a long lasting script that you want to be able to quit at any time. In order to do so, you can use the function &quot;scriptStopping()&quot;
 
@@ -2389,7 +2389,7 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
 The usual python sleep variable has been replaced by one that will automatically stop sleeping when the user presses the &quot;stop script&quot; button on the GUI. So don&apos;t worry about writing blocking code, that&apos;s been handled!
 
 </source>
-        <translation type="obsolete">
+        <translation>
     在脚本模式下你可以尽情发挥你的想象空间。你可以在你的项目里面直接注入 Python 代码但不用步署和配置任何环境。
 你可以实时的使用任何内置的库或者模块，但不需要对 UCS 本身做任何修改。
 
@@ -2501,151 +2501,8 @@ for i in range(0, 100000):
     if scriptStopping(): break
     # ... 代码 ...
     # ... 代码 ...
-    # ... 代码 ...</translation>
-    </message>
-    <message>
-        <location filename="../../CommonGUI.py" line="165"/>
-        <source>
-Using this scripting module, the possibilities are endless. You can directly inject python code into your program without a hassle. You can use any of the libraries and modules that are built into this software, real time, and without any extra modification.
-
-There are certain classes that are loaded into the script as python builtins, so you don&apos;t need to pass them to functions or worry about scope, or even worry about setting them global.
-
-Important tips:
-Any variable created in the scope of the script command can be used in any other script command, or block command
-    def someFunctionName(someArgument):
-        # Any python function here
-        print(&quot;This function can work in any script command in the task!&quot;)
-        print(someArgument)
-
-    someVariableName = &quot;This string can be used in any Script command in the program&quot;
-
-
-Types of built-in variables:
-robot
-vision
-resources
-settings
-scriptStopping()
-sleep
-
-Detailed description:
-
-robot
-
-You have full access to controlling the robot, using the Robot.py library that was built as a wrapper for a communication protocol.
-
-        For source code on the Robot class, go to:
-        https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Robot.py
-
-Examples scripts using &apos;robot&apos;
-    robot.setPos(x=0, y=15, z=15)  # This will set the robots position to XYZ(0, 15, 15)
-    robot.setPos(x=0, wait=False)  # Allows your code to continue while the robot moves.
-    robot.setPos(x=0)              # Will only set the x position, keeps the rest the same
-    robot.setGripper(True)         # Turn on the pump. If false, it will deactivate the pump
-    robot.setBuzzer(1500, 2)       # Play a tone through the robots buzzer. Parameters: Frequency, duration (seconds)
-    robot.setSpeed(10)             # Sets speed for all future moves using robot.setPos. Speed set in cm/s
-    robot.connected()              # Returns True if the robot is connected and working, False if not
-
-    robot.getAngles()              # Returns the current angles of the robots servos: [servo0, servo1, servo2, servo3]
-    robot.getCoords()              # Returns the current coordinate of the robot in [x, y, z] format
-    robot.getTipSensor()           # Returns True or False, if the tip sensor on the robot is being pressed or not
-    robot.getMoving()              # Returns True if the robot is currently moving
-
-
-2. vision
-
-Using this module, you can easly and without hassle track objects that you have taught the software in the Resource manager, find their location real time, search for past &quot;tracks&quot; of the objects, and act based upon that information.
-
-You can clear tracked objects, add new ones, and generally use powerful pre-made computer vision functions that have been built into this software already.
-
-For source code on the Vision class, go to:
-https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Vision.py
-
-Example scripts using &apos;vision&apos;
-    # The first step of using vision is getting a trackable object. Make an object in Resources then access it by name.
-    trackableObject = resources.getObject(&quot;Ace of Spades&quot;)
-
-
-    # The next step is to make sure vision is tracking the object. Usually this should be done in Initialization event.
-    # Objects only stop being tracked when the script ends. Do this only once.
-    vision.addPlaneTarget(trackableObject)
-
-
-    # Wait two seconds to make sure that vision has time to search for the new object
-    sleep(2)
-
-
-    # Alternatively you can use the following, which will wait for 30 frames to pass before continuing
-    vision.waitForNewFrames(30)
-
-
-    # If the object is already being tracked and has been for a while, you can try using vision to search for it
-    # This function returns how many frames ago the object was recognized, and a &quot;tracked&quot; object with some information
-    frameID, trackedObject = vision.getObjectLatestRecognition(trackableObject)
-
-
-    # If no object is found, the &quot;trackedObject&quot; will be None. Check if its None before continuing
-    if trackedObject is None:
-        # Handle the error here
-        print(&quot;Object &quot;, trackableObject.name, &quot; was not recognized!&quot;)
-        return
-
-    # If the object was, in fact, found, then you can pull all sorts of information from it
-    print(trackedObject.center)     # Prints a list [x, y, z] of the objects position in the cameras coordinate system
-    print(trackedObject.rotation)   # Prints a list [xRotation, yRotation, zRotation] of rotation along each axis
-    print(trackedObject.ptCount)    # Prints how many points the object was recognized with. More points = more accuracy
-
-
-    # Here is another function for looking for tracked objects
-    # This will search through the last 30 frames for trackableObject, and try to find a recognition with &gt; 50 keypoints
-    trackedObject = vision.searchTrackedHistory(trackable=trackableObject, maxAge=30, minPoints=50)
-
-
-
-3. resources
-
-You can pull any &quot;objects&quot; that you have built using the Resource Manager.
-This means, for example, that you could request a Movement Recording and replay it, or request a Vision object and track it.
-
-For source code on the Object Manager class, go to:
-https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
-
-4. settings
-
-This is a python dictionary of the GUI settings. This includes things like calibrations for various things.
- Try doing print(settings) to see what it contains.
-
-5. scriptStopping()
-
-This is a function that returns True if the user has pressed the &quot;stop&quot; button on the top left. You can use this to check if your script should end, if you&apos;re doing long loops.
-
-For source code on the Interpreter environment that runs your script, go to:
-https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
-
-You might notice that scripts with big loops or &apos;while True&apos; statements will take a long time to end when the “stop&quot; button is pressed on the GUI. Sometimes, they might freeze the program. The reason for this is because your code is running inside of a seperate thread/process, and when you end the task the thread has to end as well.
-
-Any drag-and-drop command will end quickly, because they have been designed to do so. However, you will have to do this yourself if you have a long lasting script that you want to be able to quit at any time. In order to do so, you can use the function &quot;scriptStopping()&quot;
-
-scriptStopping() returns True if the user has attempted to end the task, and False if the task has not been ended
-
-    The typical use case is:
-
-    while [Some Condition]:
-        if scriptStopping(): break  # Break out of the loop if the program has ended. Place this wherever needed
-        # ... code ...
-        # ... code ...
-        # ... code ...
-
-    or, if it&apos;s in a big loop
-
-    for i in range(0, 100000):
-
-6. sleep
-
-The usual python sleep variable has been replaced by one that will automatically stop sleeping when the user presses the &quot;stop script&quot; button on the GUI. So don&apos;t worry about writing blocking code, that&apos;s been handled!
-
-</source>
-        <translation type="unfinished"></translation>
+    # ... 代码 ...
+</translation>
     </message>
 </context>
 <context>
@@ -2817,7 +2674,7 @@ The usual python sleep variable has been replaced by one that will automatically
     <message>
         <location filename="../../MainGUI.py" line="820"/>
         <source>Connected to Robot {}:</source>
-        <translation>已连接到机械臂设备：</translation>
+        <translation type="obsolete">已连接到机械臂设备：</translation>
     </message>
     <message>
         <location filename="../../MainGUI.py" line="833"/>
@@ -2827,6 +2684,16 @@ The usual python sleep variable has been replaced by one that will automatically
     <message>
         <location filename="../../MainGUI.py" line="822"/>
         <source>Connected to Camera {}:</source>
+        <translation type="obsolete">已连接到摄像头设备：</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="820"/>
+        <source>Connected to Robot:</source>
+        <translation>已连接到机械臂设备：</translation>
+    </message>
+    <message>
+        <location filename="../../MainGUI.py" line="822"/>
+        <source>Connected to Camera:</source>
         <translation>已连接到摄像头设备：</translation>
     </message>
 </context>
@@ -4019,26 +3886,17 @@ Step 2: Select the Object</source>
     <message>
         <location filename="../../ObjectManagerGUI.py" line="1413"/>
         <source>1. Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.
-1?Make sure the background is consistent and there is nothing on the screen except the object.
-2?The work area should be well lit, but not cause too much glare on the object if it&apos;s shiny.
+1）Make sure the background is consistent and there is nothing on the screen except the object.
+2）The work area should be well lit, but not cause too much glare on the object if it&apos;s shiny.
 
 2. When ready, Click the mouse on the corner of the object, drag it tightly over the object, then release the mouse button.</source>
-        <translation type="obsolete">1. 请将你的物体置于平面上，并确保：
+        <translation>1. 请将你的物体置于平面上，并确保：
 
 1）物体位于摄像头视野的中心；
 2）物体的空间背景干净、无杂物；
 3）光线充足，但不会导致物体反光；
 
-2. 用鼠标拖拽选取物体（如GIF所示）。</translation>
-    </message>
-    <message>
-        <location filename="../../ObjectManagerGUI.py" line="1413"/>
-        <source>1. Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.
-1）Make sure the background is consistent and there is nothing on the screen except the object.
-2）The work area should be well lit, but not cause too much glare on the object if it&apos;s shiny.
-
-2. When ready, Click the mouse on the corner of the object, drag it tightly over the object, then release the mouse button.</source>
-        <translation type="unfinished"></translation>
+2. 用鼠标拖拽选取物体。</translation>
     </message>
 </context>
 <context>
