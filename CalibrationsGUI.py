@@ -798,24 +798,22 @@ class CWPage5(QtWidgets.QWizardPage):
 
         # Test the z on 3 xy points
         zTest = int(round(zLower, 0))  # Since range requires an integer, round zLower just for this case
-        for x in range(  -20, 20, 4): testCoords += [[x,  15,    11]]  # Center of XYZ grid
-        for y in range(    8, 24, 4): testCoords += [[ 0,  y,    11]]
-        for z in range(zTest, 19, 1): testCoords += [[ 0, 15,     z]]
+        for x in range(  -10, 10, 1): testCoords.append([x,  15,    11])  # Center of XYZ grid
+        for y in range(    8, 24, 4): testCoords.append([ 0,  y,    11])
+        for z in range(zTest, 19, 1): testCoords.append([ 0, 15,     z])
 
         # for x in range(  -20, 20, 1): testCoords += [[x,  15, zTest]]  # Center of XY, Bottom z
         # for y in range(    8, 25, 1): testCoords += [[ 0,  y, zTest]]
         # for z in range(zTest, 25): testCoords += [[ 0, 15,     z]]
 
-        for x in range(  -20, 20, 4): testCoords += [[x,  15,    17]]  # Center of XY, top z
-        for y in range(   12, 24, 4): testCoords += [[ 0,  y,    17]]
+        for x in range(  -10, 10, 1): testCoords.append([x,  15,    17])  # Center of XY, top z
+        for y in range(   12, 24, 4): testCoords.append([ 0,  y,    17])
 
-
-
-        direction  = int(1)
+        direction = int(1)
         for y in range(12, 25, 2):
-            for x in range(-20 * direction, 20 * direction, 2 * direction):
-                testCoords += [[x, y, zTest]]
-            direction *= -1
+          for x in range(-10 * direction, 10 * direction, 2 * direction):
+            testCoords.append([x, y, zTest])
+          direction *= -1
 
 
 
