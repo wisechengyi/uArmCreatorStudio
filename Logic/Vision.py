@@ -873,3 +873,5 @@ def drawOutlineText(frame, text, point, font, scale, color, thickness):
     frame = cv2.putText(frame, text, tuple(point), font, scale, color=color, thickness=thickness)
 
     return frame
+
+
