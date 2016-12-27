@@ -29,6 +29,9 @@ import ast  # To check if a statement is python parsible, for evals
 import Paths
 from threading    import RLock
 from PyQt5        import QtGui, QtCore, QtWidgets
+from Logic        import Global                    # For keeping track of keypresses
+import logging
+
 __author__ = "Alexander Thiel"
 
 
@@ -157,56 +160,40 @@ class LineTextWidget(QtWidgets.QFrame):
 class ScriptWidget(QtWidgets.QWidget):
     """This class is for making a text editor that will help you write python code"""
 
-    documentation = "" \
+    def __init__(self, previousCode, parent):
+        self.documentation = "" + \
+                        QtCore.QCoreApplication.translate("CommonGUI",
 """
-    Using this scripting module, the possibilities are endless. You can directly inject python code into your program
-without a hassle. You can use any of the libraries and modules that are built into this software, real time, and
-without any extra modification.
+Using this scripting module, the possibilities are endless. You can directly inject python code into your program without a hassle. You can use any of the libraries and modules that are built into this software, real time, and without any extra modification.
 
-    There are certain classes that are loaded into the script as python builtins, so you don't need to pass them to
-functions or worry about scope, or even worry about setting them global. They are:
+There are certain classes that are loaded into the script as python builtins, so you don't need to pass them to functions or worry about scope, or even worry about setting them global.
+
+Important tips:
+Any variable created in the scope of the script command can be used in any other script command, or block command
+    def someFunctionName(someArgument):
+        # Any python function here
+        print("This function can work in any script command in the task!")
+        print(someArgument)
+
+    someVariableName = "This string can be used in any Script command in the program"
 
 
-Builtin Variables:
-    robot
-        You have full access to controlling the robot, using the Robot.py library that was built as a wrapper for
-        a communication protocol.
+Types of built-in variables:
+robot
+vision
+resources
+settings
+scriptStopping()
+sleep
+
+Detailed description:
+
+robot
+
+You have full access to controlling the robot, using the Robot.py library that was built as a wrapper for a communication protocol.
 
         For source code on the Robot class, go to:
         https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Robot.py
-
-
-    vision
-        Using this module, you can easly and without hassle track objects that you have taught the software in the
-        Resource manager, find their location real time, search for past "tracks" of the objects, and act based upon
-        that information. You can clear tracked objects, add new ones, and generally use powerful premade computer
-        vision functions that have been built into this software already.
-
-        For source code on the Vision class, go to:
-        https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Vision.py
-
-    resources
-        You can pull any "objects" that you have built using the Resource Manager. This means, for example,
-        that you could request a Movement Recording and replay it, or request a Vision object and track it.
-
-        For source code on the Object Manager class, go to:
-        https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
-
-    settings
-        This is a python dictionary of the GUI settings. This includes things like calibrations for various things.
-        Try doing print(settings) to see what it contains.
-
-
-    scriptStopping()
-        This is a function that returns True if the user has pressed the "stop" button on the top left. You can use
-        this to check if your script should end, if you're doing long loops.
-
-        For source code on the Interpreter environment that runs your script, go to:
-        https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
-
-    sleep
-        The usual python sleep variable has been replaced by one that will automatically stop sleeping when the user
-        presses the "stop script" button on the GUI. So don't worry about writing blocking code, that's been handled!
 
 Examples scripts using 'robot'
     robot.setPos(x=0, y=15, z=15)  # This will set the robots position to XYZ(0, 15, 15)
@@ -223,6 +210,14 @@ Examples scripts using 'robot'
     robot.getMoving()              # Returns True if the robot is currently moving
 
 
+2. vision
+
+Using this module, you can easly and without hassle track objects that you have taught the software in the Resource manager, find their location real time, search for past "tracks" of the objects, and act based upon that information.
+
+You can clear tracked objects, add new ones, and generally use powerful pre-made computer vision functions that have been built into this software already.
+
+For source code on the Vision class, go to:
+https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Vision.py
 
 Example scripts using 'vision'
     # The first step of using vision is getting a trackable object. Make an object in Resources then access it by name.
@@ -265,23 +260,29 @@ Example scripts using 'vision'
 
 
 
-Any variable created in the scope of the script command can be used in any other script command, or block command
-    def someFunctionName(someArgument):
-        # Any python function here
-        print("This function can work in any script command in the task!")
-        print(someArgument)
+3. resources
 
-    someVariableName = "This string can be used in any Script command in the program"
+You can pull any "objects" that you have built using the Resource Manager.
+This means, for example, that you could request a Movement Recording and replay it, or request a Vision object and track it.
 
+For source code on the Object Manager class, go to:
+https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/ObjectManager.py
 
+4. settings
 
-You might notice that scripts with big loops or 'while True' statements will take a long time to end when the "stop"
-button is pressed on the GUI. Sometimes, they might freeze the program. The reason for this is because your code
-is running inside of a seperate thread/process, and when you end the task the thread has to end as well.
+This is a python dictionary of the GUI settings. This includes things like calibrations for various things.
+ Try doing print(settings) to see what it contains.
 
-Any drag-and-drop command will end quickly, because they have been designed to do so. However, you will have to do this
-yourself if you have a long lasting script that you want to be able to quit at any time. In order to do so, you can use
-the function "scriptStopping()"
+5. scriptStopping()
+
+This is a function that returns True if the user has pressed the "stop" button on the top left. You can use this to check if your script should end, if you're doing long loops.
+
+For source code on the Interpreter environment that runs your script, go to:
+https://github.com/apockill/uArmCreatorStudio/blob/master/Logic/Interpreter.py
+
+You might notice that scripts with big loops or 'while True' statements will take a long time to end when the “stop" button is pressed on the GUI. Sometimes, they might freeze the program. The reason for this is because your code is running inside of a seperate thread/process, and when you end the task the thread has to end as well.
+
+Any drag-and-drop command will end quickly, because they have been designed to do so. However, you will have to do this yourself if you have a long lasting script that you want to be able to quit at any time. In order to do so, you can use the function "scriptStopping()"
 
 scriptStopping() returns True if the user has attempted to end the task, and False if the task has not been ended
 
@@ -296,21 +297,19 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
     or, if it's in a big loop
 
     for i in range(0, 100000):
-        if scriptStopping(): break
-        # ... code ...
-        # ... code ...
-        # ... code ...
 
-"""
+6. sleep
 
+The usual python sleep variable has been replaced by one that will automatically stop sleeping when the user presses the "stop script" button on the GUI. So don't worry about writing blocking code, that's been handled!
 
-    def __init__(self, previousCode, parent):
+""")
+
         super(ScriptWidget, self).__init__(parent)
         self.prompt = parent
         self.prompt.content.setContentsMargins(5, 5, 5, 5)
 
         self.docText   = QtWidgets.QTextEdit()
-        self.docBtn    = QtWidgets.QPushButton("Show Documentation")
+        self.docBtn    = QtWidgets.QPushButton(self.tr("Show Documentation"))
         self.textEdit  = LineTextWidget()
         self.textEdit.setText(previousCode)
 
@@ -370,12 +369,12 @@ scriptStopping() returns True if the user has attempted to end the task, and Fal
         hiding = not self.docText.isHidden()
 
         if hiding:
-            self.docBtn.setText("Show Documentation")
+            self.docBtn.setText(self.tr("Show Documentation"))
             self.docText.hide()
             self.textEdit.show()
             self.prompt.resize(self.prompt.sizeHint())
         else:
-            self.docBtn.setText("Show Code")
+            self.docBtn.setText(self.tr("Show Code"))
             self.textEdit.hide()
             self.docText.show()
 
@@ -446,7 +445,7 @@ class Console(QtWidgets.QWidget):
 
 
         codeLayout = QtWidgets.QHBoxLayout()
-        codeLayout.addWidget(QtWidgets.QLabel("Run Code: "))
+        codeLayout.addWidget(QtWidgets.QLabel(self.tr("Run Code: ")))
         codeLayout.addWidget(self.inputEdt)
         codeLayout.addWidget(settingsBtn)
 
@@ -573,22 +572,23 @@ class Console(QtWidgets.QWidget):
 
         # Set the main layout and general window parameters
         window.setLayout(window.mainVLayout)
-        window.setWindowTitle("Console Settings")
+        window.setWindowTitle(self.tr("Console Settings"))
         window.setWindowIcon(QtGui.QIcon(Paths.settings))
-        window.setWhatsThis("Here you can change settings about what you see in the console")
+        window.setWhatsThis(self.tr("Here you can change settings about what you see in the console"))
 
 
         # Dress the base window (this is where the child actually puts the content into the widget)
-        descLbl   = QtWidgets.QLabel("Customize what you see printed on the Console")
+        descLbl   = QtWidgets.QLabel(self.tr("Customize what you see printed on the Console"))
 
-        wrapLbl   = QtWidgets.QLabel("Wrap Lines ")
-        robotLbl  = QtWidgets.QLabel("Robot Logs ")
-        visionLbl = QtWidgets.QLabel("Vision Logs ")
-        comLbl    = QtWidgets.QLabel("Communication Logs ")
-        interpLbl = QtWidgets.QLabel("Interpreter Logs ")
-        scriptLbl = QtWidgets.QLabel("Script Logs ")
-        guiLbl    = QtWidgets.QLabel("GUI Logs ")
-        othLbl    = QtWidgets.QLabel("Other Logs ")
+        wrapLbl   = QtWidgets.QLabel(self.tr("Wrap Lines "))
+        robotLbl  = QtWidgets.QLabel(self.tr("Robot Logs "))
+        visionLbl = QtWidgets.QLabel(self.tr("Vision Logs "))
+        comLbl    = QtWidgets.QLabel(self.tr("Communication Logs "))
+        interpLbl = QtWidgets.QLabel(self.tr("Interpreter Logs "))
+        scriptLbl = QtWidgets.QLabel(self.tr("Script Logs "))
+        guiLbl    = QtWidgets.QLabel(self.tr("GUI Logs "))
+        othLbl    = QtWidgets.QLabel(self.tr("Other Logs "))
+        stfLbl    = QtWidgets.QLabel(self.tr("Save to File"))
 
         window.wrapChk   = QtWidgets.QCheckBox()
         window.robotChk  = QtWidgets.QCheckBox()   # Show prints from robot class
@@ -598,6 +598,7 @@ class Console(QtWidgets.QWidget):
         window.scriptChk = QtWidgets.QCheckBox()   # Show prints from Command and Event Elements
         window.guiChk    = QtWidgets.QCheckBox()   # Show prints from GUI Elements
         window.othChk    = QtWidgets.QCheckBox()   # Show prints from anything else
+        window.stfChk    = QtWidgets.QCheckBox()   # Save Logs to Files
 
         window.wrapChk  .setChecked(self.settings["wordWrap"])
         window.robotChk .setChecked(self.settings["robot"])
@@ -607,6 +608,7 @@ class Console(QtWidgets.QWidget):
         window.scriptChk.setChecked(self.settings["script"])
         window.guiChk   .setChecked(self.settings["gui"])
         window.othChk   .setChecked(self.settings["other"])
+        window.stfChk   .setChecked(self.settings['saveToFile'])
 
         window.content.addWidget(descLbl)
         addRow(wrapLbl,   window.wrapChk)
@@ -618,6 +620,7 @@ class Console(QtWidgets.QWidget):
         addRow(scriptLbl, window.scriptChk)
         addRow(guiLbl,    window.guiChk)
         addRow(othLbl,    window.othChk)
+        addRow(stfLbl,    window.stfChk)
 
         window.mainVLayout.addLayout(buttonRow)  # Add button after, so hints appear above buttons
 
@@ -633,12 +636,16 @@ class Console(QtWidgets.QWidget):
             self.settings["script"]      = window.scriptChk.isChecked()
             self.settings["gui"]         = window.guiChk.isChecked()
             self.settings["other"]       = window.othChk.isChecked()
+            self.settings["saveToFile"] = window.othChk.isChecked()
 
             # Update the wordWrap settings
             if self.settings["wordWrap"]:
                 self.text.setWordWrapMode(QtGui.QTextOption.WordWrap)
             else:
                 self.text.setWordWrapMode(QtGui.QTextOption.NoWrap)
+
+            # Update log file settings
+            Paths.initLogger(self.settings)
 
             self.settingsChanged.emit()
 

@@ -28,12 +28,12 @@ License:
 import ast  # To check if a statement is python parsible, for evals
 import re   # For variable santization
 import Paths
-import webbrowser  # For opening the user manual PDF
 from os.path      import basename
 from PyQt5        import QtGui, QtCore, QtWidgets
 from CameraGUI    import CameraSelector
 from CommonGUI    import ScriptWidget
-from Logic.Global import printf, ensurePathExists
+from Logic.Global import printf, ensurePathExists, openFile, getOSType, MACOSX
+
 __author__ = "Alexander Thiel"
 
 
@@ -124,17 +124,18 @@ class CommandWidget(QtWidgets.QWidget):
 
 
 class CommandMenuWidget(QtWidgets.QTabWidget):
-    def __init__(self, parent):
+    def __init__(self, parent, env=None):
         super(CommandMenuWidget, self).__init__(parent)
+        self.env = env
         self.initUI()
 
     def initUI(self):
         self.setStyleSheet("QTabBar::tab{width:23px; height:90;}")
 
-        self.addTab(self.generateBasicTab(),     "Basic")
-        self.addTab(self.generateVisionTab(),    "Vision")
-        self.addTab(self.generateLogicTab(),     "Logic")
-        self.addTab(self.generateFunctionsTab(), "Functions")
+        self.addTab(self.generateBasicTab(),     self.tr("Basic"))
+        self.addTab(self.generateVisionTab(),    self.tr("Vision"))
+        self.addTab(self.generateLogicTab(),     self.tr("Logic"))
+        self.addTab(self.generateFunctionsTab(), self.tr("Functions"))
 
         self.setTabPosition(QtWidgets.QTabWidget.East)
         self.setFixedWidth(85)
@@ -204,11 +205,12 @@ class CommandMenuWidget(QtWidgets.QTabWidget):
         """
 
         newButton = self.DraggableButton(str(commandType.__name__), self)
-
-
+        command_instance = commandType(self.env)
+        tooltip = str(command_instance.tooltip)
+        command_instance = None
         newButton.setIcon(QtGui.QIcon(commandType.icon))
         newButton.setIconSize(QtCore.QSize(32, 32))
-        newButton.setToolTip(commandType.tooltip)
+        newButton.setToolTip(tooltip)
         newButton.setFixedHeight(40)
         newButton.setFixedWidth(40)
 
@@ -314,9 +316,9 @@ class CommandGUI:
 
 
         # Create the apply/cancel buttons, connect them, and format them
-        prompt.applyBtn = QtWidgets.QPushButton('Apply')
-        cancelBtn       = QtWidgets.QPushButton('Cancel')
-        helpBtn         = QtWidgets.QPushButton('User Manual')
+        prompt.applyBtn = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("CommandsGUI",'Apply'))
+        cancelBtn       = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("CommandsGUI",'Cancel'))
+        helpBtn         = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("CommandsGUI",'User Manual'))
 
         prompt.applyBtn.setMinimumWidth(90)
         cancelBtn.setMinimumWidth(90)
@@ -324,7 +326,7 @@ class CommandGUI:
 
         prompt.applyBtn.clicked.connect(prompt.accept)
         cancelBtn.clicked.connect(prompt.reject)
-        helpBtn.clicked.connect(lambda: webbrowser.open_new(Paths.user_manual))
+        helpBtn.clicked.connect(lambda: openFile(Paths.user_manual))
         prompt.applyBtn.setDefault(True)
 
 
@@ -332,7 +334,7 @@ class CommandGUI:
         prompt.content    = QtWidgets.QVBoxLayout()
         prompt.content.setContentsMargins(20, 10, 20, 10)
         prompt.content.setAlignment(QtCore.Qt.AlignTop)
-        contentGroupBox = QtWidgets.QGroupBox("Parameters")
+        contentGroupBox = QtWidgets.QGroupBox(QtCore.QCoreApplication.translate("CommandsGUI", "Parameters"))
         contentGroupBox.setLayout(prompt.content)
 
 
@@ -356,6 +358,8 @@ class CommandGUI:
         prompt.setWindowTitle(self.title)
         prompt.setWindowIcon(QtGui.QIcon(self.icon))
         prompt.setWhatsThis(self.tooltip)  # This makes the "Question Mark" button on the window show the tooltip msg
+        if getOSType() == MACOSX: # WhatsThis doesn't work in Mac
+            prompt.setToolTip(self.tooltip)
 
 
         # Dress the base window (this is where the child actually puts the content into the widget)
@@ -497,12 +501,12 @@ class CommandGUI:
         """
         # If there are no objects, place a nice label to let the user know
         if numResources == 0:
-            hintText = "You have not created any trackable objects yet." + \
-                       " Try adding new objects in the Resource Manager!"
+            hintText = QtCore.QCoreApplication.translate("CommandsGUI","You have not created any trackable objects yet.") + \
+                       QtCore.QCoreApplication.translate("CommandsGUI"," Try adding new objects in the Resource Manager!")
             self._addHint(prompt, hintText)
         elif numResources == 1:
-            hintText = "It looks like you've only created one object." + \
-                       " Feel free to add new objects in the Resource Manager!"
+            hintText = QtCore.QCoreApplication.translate("CommandsGUI","It looks like you've only created one object.") + \
+                       QtCore.QCoreApplication.translate("CommandsGUI"," Feel free to add new objects in the Resource Manager!")
             self._addHint(prompt, hintText)
 
     def _addRecordingHint(self, prompt, numResources):
@@ -512,14 +516,14 @@ class CommandGUI:
         """
 
         if numResources == 0:
-            hintText = "You have not created any Movement Recordings yet. " + \
-                       "Try creating new recordings in the Resource Manager!"
+            hintText = QtCore.QCoreApplication.translate("CommandsGUI","You have not created any Movement Recordings yet. ") + \
+                       QtCore.QCoreApplication.translate("CommandsGUI","Try creating new recordings in the Resource Manager!")
             self._addHint(prompt, hintText)
 
     def _addFunctionHint(self, prompt, numResources):
         if numResources == 0:
-            hintText = "You have not created any Functions yet. " + \
-                        "Try creating new functions in the Resource Manager!"
+            hintText = QtCore.QCoreApplication.translate("CommandsGUI","You have not created any Functions yet. ") + \
+                        QtCore.QCoreApplication.translate("CommandsGUI","Try creating new functions in the Resource Manager!")
 
             self._addHint(prompt, hintText)
 
@@ -589,13 +593,16 @@ class NameCommand(CommandGUI):
 
 #   BASIC CONTROL COMMANDS
 class MoveXYZCommand(CommandGUI):
-    title     = "Move XYZ"
-    tooltip   = "Set the robots position.\n"\
-                "If you do not want to set one of the robots axis, simply leave it empty. For example, put y and z \n"\
-                "empty and x to 5 will set the robots x position to 5 while keeping the current Y and Z the same."
+
     icon      = Paths.command_xyz
 
     def __init__(self, env, parameters=None):
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Move XYZ")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI", "Set the robots position.\n") + \
+                  QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "If you do not want to set one of the robots axis, simply leave it empty. For example, put y and z \n") + \
+                  QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "empty and x to 5 will set the robots x position to 5 while keeping the current Y and Z the same.")
         super(MoveXYZCommand, self).__init__(parameters)
         self.getCoordinates = env.getRobot().getCoords
 
@@ -619,7 +626,7 @@ class MoveXYZCommand(CommandGUI):
             zEdt.setText(str(round(z, 1)))
 
         # Input: the base window with the cancel and apply buttons, and the layouts set up and connected
-        getCurrBtn      = QtWidgets.QPushButton("Get Position")
+        getCurrBtn      = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("CommandsGUI","Get Position"))
         prompt.xEdit    = QtWidgets.QLineEdit()  # Rotation textbox
         prompt.yEdit    = QtWidgets.QLineEdit()  # Stretch textbox
         prompt.zEdit    = QtWidgets.QLineEdit()  # Height textbox
@@ -632,7 +639,7 @@ class MoveXYZCommand(CommandGUI):
         xLabel = QtWidgets.QLabel('X ')
         yLabel = QtWidgets.QLabel('Y ')
         zLabel = QtWidgets.QLabel('Z ')
-        rltCheck = QtWidgets.QLabel('Relative ')
+        rltCheck = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Relative '))
 
 
         # Fill the textboxes with the default parameters
@@ -666,16 +673,18 @@ class MoveXYZCommand(CommandGUI):
                            ', ' + str(self.parameters['y'])    + \
                            ', ' + str(self.parameters['z'])    + ')'
 
-        if self.parameters['relative']: self.description += '   Relative'
+        if self.parameters['relative']: self.description += QtCore.QCoreApplication.translate("CommandsGUI",'   Relative')
 
 
 class MoveWristCommand(CommandGUI):
-    title     = "Set Wrist Angle"
-    tooltip   = "This command sets the angle of the robots 4th axis, the wrist."
+
     icon      = Paths.command_move_wrist
 
     def __init__(self, env, parameters=None):
         super(MoveWristCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Set Wrist Angle")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This command sets the angle of the robots 4th axis, the wrist.")
         self.getWristAngle = lambda: env.getRobot().getAngles()[3]
 
         if self.parameters is None:
@@ -691,13 +700,13 @@ class MoveWristCommand(CommandGUI):
         # Create what the user will be interacting with
         prompt.wristEdit = QtWidgets.QLineEdit()
         prompt.rltCheck  = QtWidgets.QCheckBox()  # "relative" CheckBox
-        currentAngleBtn  = QtWidgets.QPushButton("Get Angle")
+        currentAngleBtn  = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("CommandsGUI","Get Angle"))
 
         currentAngleBtn.clicked.connect(lambda: setCurrentAngle(prompt.wristEdit))
 
         # Create the labels for the interactive stuff
-        wristLabel       = QtWidgets.QLabel('Angle ')
-        rltLabel         = QtWidgets.QLabel('Relative ')
+        wristLabel       = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Angle '))
+        rltLabel         = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Relative '))
 
         # Set up everything so it matches the current parameters
         prompt.wristEdit.setText(  self.parameters["angle"])
@@ -717,19 +726,23 @@ class MoveWristCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        self.description = "Set the wrist position to " + self.parameters["angle"] + " degrees"
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","Set the wrist position to ") + self.parameters["angle"] + QtCore.QCoreApplication.translate("CommandsGUI"," degrees")
 
-        if self.parameters['relative']: self.description += '   Relative'
+        if self.parameters['relative']: self.description += QtCore.QCoreApplication.translate("CommandsGUI",'   Relative')
 
 
 class MotionRecordingCommand(CommandGUI):
-    title     = "Play Movement Recording"
-    tooltip   = "This will play back a 'Movement recording' at a playback speed of your choosing. To create robot\n" + \
-                "movement recordings, simply click on 'Resources' on the toolbar and add a new recording."
+
     icon      = Paths.command_play_path
 
     def __init__(self, env, parameters=None):
         super(MotionRecordingCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Play Movement Recording")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                         """
+                                                    This will play back a 'Movement recording' at a playback speed of your choosing. To create robot\n"
+                                                    movement recordings, simply click on 'Resources' on the toolbar and add a new recording.
+                                                    """)
 
         objManager = env.getObjectManager()
         self.getObjectList = lambda: objManager.getObjectNameList(typeFilter=objManager.MOTIONPATH)
@@ -743,7 +756,7 @@ class MotionRecordingCommand(CommandGUI):
     def dressWindow(self, prompt):
 
         # Choose a recording
-        choiceLbl = QtWidgets.QLabel("Choose a Recording ")
+        choiceLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Choose a Recording "))
         prompt.recChoices = QtWidgets.QComboBox()
         prompt.recChoices.addItem(self.parameters["objectID"])
         recList = self.getObjectList()
@@ -752,14 +765,14 @@ class MotionRecordingCommand(CommandGUI):
 
 
         # PlaybackSpeed
-        speedLbl = QtWidgets.QLabel("Playback Speed ")
+        speedLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Playback Speed "))
         prompt.speedEdit = QtWidgets.QLineEdit()
         prompt.speedEdit.setText(self.parameters["speed"])
         self._addRow(prompt, speedLbl, prompt.speedEdit)
 
 
         # Reversed?
-        reversedLbl = QtWidgets.QLabel("Play in reverse?")
+        reversedLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Play in reverse?"))
         prompt.reverseCheck = QtWidgets.QCheckBox()
         prompt.reverseCheck.setChecked(self.parameters["reversed"])
         self._addRow(prompt, reversedLbl, prompt.reverseCheck)
@@ -777,20 +790,25 @@ class MotionRecordingCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        self.description = "Play movement recording " + self.parameters["objectID"] \
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","Play movement recording ") + self.parameters["objectID"] \
                            + " Speed x" + str(self.parameters["speed"])
         if self.parameters["reversed"]: self.description += " reversed"
 
 
 class SpeedCommand(CommandGUI):
-    title     = "Set Speed"
-    tooltip   = "This tool sets the speed of the robot for any move commands that are done after this. \n" \
-                "For example, if you set the speed to 20, then do two Move XYZ commands, the robot will move to \n" \
-                "those locations with a speed of 20 cm/s. The default robot speed is 10 cm/s. "
+
     icon      = Paths.command_speed
 
     def __init__(self, env, parameters=None):
         super(SpeedCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Set Speed")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    """
+                                                    This tool sets the speed of the robot for any move commands that are done after this. \n
+                                                    For example, if you set the speed to 20, then do two Move XYZ commands, the robot will move to \n
+                                                    those locations with a speed of 20 cm/s. The default robot speed is 10 cm/s.
+                                                    """
+                                                         )
 
         if self.parameters is None:
             # Some code to set up default parameters
@@ -800,7 +818,7 @@ class SpeedCommand(CommandGUI):
         prompt.speedEdit = QtWidgets.QLineEdit()
 
         # Set up all the labels for the inputs
-        speedLabel = QtWidgets.QLabel('Speed (cm/s) ')
+        speedLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Speed (cm/s) '))
 
         # Fill the textboxes with the default parameters
         prompt.speedEdit.setText(str(self.parameters['speed']))
@@ -822,12 +840,13 @@ class SpeedCommand(CommandGUI):
 
 
 class DetachCommand(CommandGUI):
-    title     = "Detach Servos"
-    tooltip   = "Disengage the specified servos on the robot"
+
     icon      = Paths.command_detach
 
     def __init__(self, env, parameters=None):
         super(DetachCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Detach Servos")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI", "Disengage the specified servos on the robot")
 
         if self.parameters is None:
             self.parameters = {'servo0': True,
@@ -845,10 +864,10 @@ class DetachCommand(CommandGUI):
         prompt.srvo4Box = QtWidgets.QCheckBox()  # "relative" CheckBox
 
         # Set up all the labels for the inputs
-        label1 = QtWidgets.QLabel('Base Servo ')
-        label2 = QtWidgets.QLabel('Stretch Servo ')
-        label3 = QtWidgets.QLabel('Height Servo ')
-        label4 = QtWidgets.QLabel('Wrist Servo ')
+        label1 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Base Servo '))
+        label2 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Stretch Servo '))
+        label3 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Height Servo '))
+        label4 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Wrist Servo '))
 
         # Fill the textboxes with the default parameters
         prompt.srvo1Box.setChecked(self.parameters['servo0'])
@@ -873,10 +892,10 @@ class DetachCommand(CommandGUI):
 
     def _updateDescription(self):
         descriptionBuild = "Servos"
-        if self.parameters["servo0"]: descriptionBuild += "  Base"
-        if self.parameters["servo1"]: descriptionBuild += "  Stretch"
-        if self.parameters["servo2"]: descriptionBuild += "  Height"
-        if self.parameters["servo3"]: descriptionBuild += "  Wrist"
+        if self.parameters["servo0"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Base")
+        if self.parameters["servo1"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Stretch")
+        if self.parameters["servo2"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Height")
+        if self.parameters["servo3"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Wrist")
 
         self.description = descriptionBuild
 
@@ -886,12 +905,14 @@ class AttachCommand(CommandGUI):
     A command for attaching the servos of the robot
     """
 
-    title     = "Attach Servos"
-    tooltip   = "Re-engage servos on the robot. This will 'stiffen' the servos, and they will resist movement."
+
     icon      = Paths.command_attach
 
     def __init__(self, env, parameters=None):
         super(AttachCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Attach Servos")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "Re-engage servos on the robot. This will 'stiffen' the servos, and they will resist movement.")
 
         if self.parameters is None:
             self.parameters = {'servo0': True,
@@ -909,10 +930,10 @@ class AttachCommand(CommandGUI):
         prompt.srvo4Box = QtWidgets.QCheckBox()  #  "relative" CheckBox
 
         # Set up all the labels for the inputs
-        label1 = QtWidgets.QLabel('Base Servo ')
-        label2 = QtWidgets.QLabel('Stretch Servo ')
-        label3 = QtWidgets.QLabel('Height Servo ')
-        label4 = QtWidgets.QLabel('Wrist Servo ')
+        label1 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Base Servo '))
+        label2 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Stretch Servo '))
+        label3 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Height Servo '))
+        label4 = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Wrist Servo '))
 
         # Fill the textboxes with the default parameters
         prompt.srvo1Box.setChecked(self.parameters['servo0'])
@@ -938,31 +959,33 @@ class AttachCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        descriptionBuild = "Servos"
-        if self.parameters["servo0"]: descriptionBuild += "  Base"
-        if self.parameters["servo1"]: descriptionBuild += "  Stretch"
-        if self.parameters["servo2"]: descriptionBuild += "  Height"
-        if self.parameters["servo3"]: descriptionBuild += "  Wrist"
+        descriptionBuild = QtCore.QCoreApplication.translate("CommandsGUI","Servos")
+        if self.parameters["servo0"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Base")
+        if self.parameters["servo1"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Stretch")
+        if self.parameters["servo2"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Height")
+        if self.parameters["servo3"]: descriptionBuild += QtCore.QCoreApplication.translate("CommandsGUI","  Wrist")
 
         self.description = descriptionBuild
 
 
 class GripCommand(CommandGUI):
-    title     = "Activate Gripper"
-    tooltip   = "Activates the robots gripper"
+
     icon      = Paths.command_grip
 
     def __init__(self, env, parameters=None):
         super(GripCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Activate Gripper")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI", "Activates the robots gripper")
 
 
 class WaitCommand(CommandGUI):
-    title     = "Wait"
-    tooltip   = "This command will wait for a certain amount of time. Time is measured in seconds."
     icon      = Paths.command_wait
 
     def __init__(self, env, parameters=None):
         super(WaitCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Wait")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This command will wait for a certain amount of time. Time is measured in seconds.")
 
         if self.parameters is None:
             self.parameters = {'time': 0.5}
@@ -972,7 +995,7 @@ class WaitCommand(CommandGUI):
         prompt.timeEdit = QtWidgets.QLineEdit()
 
         # Set up all the labels for the inputs
-        timeLabel = QtWidgets.QLabel('Number of seconds ')
+        timeLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Number of seconds '))
 
 
         # Fill the textboxes with the default parameters
@@ -990,25 +1013,28 @@ class WaitCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        self.description = str(self.parameters['time']) + " seconds"
+        self.description = str(self.parameters['time']) + QtCore.QCoreApplication.translate("CommandsGUI"," seconds")
 
 
 class DropCommand(CommandGUI):
-    title     = "Deactivate Gripper"
-    tooltip   = "Deactivates the robots gripper"
+
     icon      = Paths.command_drop
 
     def __init__(self, env, parameters=None):
         super(DropCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Deactivate Gripper")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI", "Deactivates the robots gripper")
 
 
 class BuzzerCommand(CommandGUI):
-    title     = "Play Tone"
-    tooltip   = "This tool uses the robots buzzer to play a tone at a certain frequency for a certain amount of time"
+
     icon      = Paths.command_buzzer
 
     def __init__(self, env, parameters=None):
         super(BuzzerCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Play Tone")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This tool uses the robots buzzer to play a tone at a certain frequency for a certain amount of time")
 
         if self.parameters is None:
             # Some code to set up default parameters
@@ -1023,9 +1049,9 @@ class BuzzerCommand(CommandGUI):
         prompt.waitCheck = QtWidgets.QCheckBox()  # "override" CheckBox
 
         # Set up all the labels for the inputs
-        frqLabel = QtWidgets.QLabel('Frequency ')
-        tmeLabel = QtWidgets.QLabel('Duration ')
-        waitLabel = QtWidgets.QLabel('Wait ')
+        frqLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Frequency '))
+        tmeLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Duration '))
+        waitLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Wait '))
 
         # Fill the textboxes with the default parameters
         prompt.frqEdit.setText(str(self.parameters['frequency']))
@@ -1051,8 +1077,8 @@ class BuzzerCommand(CommandGUI):
 
     def _updateDescription(self):
         # Some string that uses your parameters to describe the object.
-        self.description = "Play a tone of " + self.parameters["frequency"] + "HZ for  " +\
-                           self.parameters["time"] + " seconds"
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","Play a tone of ") + self.parameters["frequency"] + "HZ for  " +\
+                           self.parameters["time"] + QtCore.QCoreApplication.translate("CommandsGUI"," seconds")
 
 
 
@@ -1062,16 +1088,19 @@ class BuzzerCommand(CommandGUI):
 
 #   Robot + Vision COmmands
 class MoveRelativeToObjectCommand(CommandGUI):
-    title     = "Move Relative To Object"
-    tooltip   = "This tool uses computer vision to recognize an object of your choice, and position the robot directly"\
-               "\nrelative to this objects XYZ location. If XYZ = 0,0,0, the robot will move directly onto the object."\
-               "\n\nIf you don't want to set one of the robots axis, simply leave it empty. For example, put y and z\n"\
-               "empty and x to 5 will set the robots x position to objX + 5 while keeping the current Y and Z the same."
+
     icon      = Paths.command_move_rel_to
 
     def __init__(self, env, parameters=None):
         super(MoveRelativeToObjectCommand, self).__init__(parameters)
-
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Move Relative To Object")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    """
+                                                    This tool uses computer vision to recognize an object of your choice, and position the robot directly
+                                                    \nrelative to this objects XYZ location. If XYZ = 0,0,0, the robot will move directly onto the object.
+                                                    \n\nIf you don't want to set one of the robots axis, simply leave it empty. For example, put y and z\n
+                                                    empty and x o 5 will set the robots x position to objX + 5 while keeping the current Y and Z the same.
+                                                    """)
         objManager = env.getObjectManager()
 
         # Save a list that gets all loaded objects. This is used only when the window is opened, to populate the objlist
@@ -1090,7 +1119,7 @@ class MoveRelativeToObjectCommand(CommandGUI):
 
 
         # Set up all the labels for the inputs
-        choiceLbl = QtWidgets.QLabel("Choose an object ")
+        choiceLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Choose an object "))
         xLabel    = QtWidgets.QLabel('X ')
         yLabel    = QtWidgets.QLabel('Y ')
         zLabel    = QtWidgets.QLabel('Z ')
@@ -1139,8 +1168,8 @@ class MoveRelativeToObjectCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Move Relative To " + objName
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI","Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI","Move Relative To ") + objName
 
         self.description = 'XYZ( ' + str(self.parameters['x']) + \
                            ', ' + str(self.parameters['y'])    + \
@@ -1149,15 +1178,20 @@ class MoveRelativeToObjectCommand(CommandGUI):
 
 
 class MoveWristRelativeToObjectCommand(CommandGUI):
-    title     = "Set Wrist Relative To Object"
-    tooltip   = "This tool will look at the orientation of an object in the cameras view, and align the wrist with \n"\
-                "the rotation of the object. The rotation of the object is determined by the orientation that it was\n"\
-                "in when the object was memorized. It's recommended to experiment around a bit with this function to\n"\
-                " get a feel for how it works!"
+
     icon      = Paths.command_wrist_rel
 
     def __init__(self, env, parameters=None):
         super(MoveWristRelativeToObjectCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Set Wrist Relative To Object")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    """
+                                                    This tool will look at the orientation of an object in the cameras view, and align the wrist with \n
+                                                    the rotation of the object. The rotation of the object is determined by the orientation that it was\n
+                                                    in when the object was memorized. It's recommended to experiment around a bit with this function to\n
+                                                    get a feel for how it works!
+                                                    """)
+
         objManager         =  env.getObjectManager()
         self.getObjectList = lambda: objManager.getObjectNameList(typeFilter=objManager.TRACKABLE)
 
@@ -1172,7 +1206,7 @@ class MoveWristRelativeToObjectCommand(CommandGUI):
 
 
         # Create the "ObjectList" choice box
-        objLbl     = QtWidgets.QLabel("Choose an Object")
+        objLbl     = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Choose an Object"))
         prompt.objChoices = QtWidgets.QComboBox()
         prompt.objChoices.addItem(self.parameters["objectID"])  # Add an empty item at the top
         objectList = self.getObjectList()
@@ -1182,7 +1216,7 @@ class MoveWristRelativeToObjectCommand(CommandGUI):
 
 
         # Create the "angle" textbox
-        wristLabel       = QtWidgets.QLabel('Angle ')
+        wristLabel       = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI", 'Angle '))
         prompt.wristEdit = QtWidgets.QLineEdit(self.parameters["angle"])
         self._addRow(prompt, wristLabel, prompt.wristEdit)
 
@@ -1197,8 +1231,8 @@ class MoveWristRelativeToObjectCommand(CommandGUI):
         prompt.relToAxis.setChecked(not self.parameters["relToBase"])
         prompt.relToBase.setChecked(self.parameters["relToBase"])
 
-        self._addRow(prompt,     QtWidgets.QLabel("Relative to X Axis "), prompt.relToAxis)
-        self._addRow(prompt, QtWidgets.QLabel("Relative to Robot Base "), prompt.relToBase)
+        self._addRow(prompt,     QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Relative to X Axis ")), prompt.relToAxis)
+        self._addRow(prompt, QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Relative to Robot Base ")), prompt.relToBase)
         self._addObjectHint(prompt, len(objectList))
 
         return prompt
@@ -1215,21 +1249,25 @@ class MoveWristRelativeToObjectCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Set Wrist Relative To " + objName
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI", "Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Set Wrist Relative To ") + objName
 
-        self.description = "Set the wrist " + self.parameters["angle"] + \
-                           " degrees relative to " + self.parameters["objectID"]
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","Set the wrist ") + self.parameters["angle"] + \
+                           QtCore.QCoreApplication.translate("CommandsGUI"," degrees relative to ") + self.parameters["objectID"]
 
 
 class PickupObjectCommand(CommandGUI):
-    title     = "Pick Up Object"
-    tooltip   = "This tool uses computer vision to recognize an object of your choice, and attempt to pick up the " \
-                "\nobject. If the object cannot be found or picked up, then False will be returned"
+
     icon      = Paths.command_pickup
 
     def __init__(self, env, parameters=None):
         super(PickupObjectCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Pick Up Object")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    """
+                                                    This tool uses computer vision to recognize an object of your choice, and attempt to pick up the
+                                                    \nobject. If the object cannot be found or picked up, then False will be returned
+                                                    """)
 
         objManager = env.getObjectManager()
 
@@ -1245,7 +1283,7 @@ class PickupObjectCommand(CommandGUI):
 
 
         # Create a Combobox with the appropriate items
-        choiceLbl = QtWidgets.QLabel("Choose an object ")
+        choiceLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Choose an object "))
         prompt.objChoices = QtWidgets.QComboBox()
         prompt.objChoices.addItem(self.parameters["objectID"])  # Add an empty item at the top
         objectList = self.getObjectList()
@@ -1266,26 +1304,27 @@ class PickupObjectCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Pick Up " + objName
-        self.description = "Find " + self.parameters["objectID"] + " and pick it up"
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI", "Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI","Pick Up ") + objName
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","Find ") + self.parameters["objectID"] + QtCore.QCoreApplication.translate("CommandsGUI"," and pick it up")
 
 
 class TestObjectSeenCommand(CommandGUI):
-    title     = "Test If Object Seen"
-    tooltip   = "This command will allow code in blocked brackets below it to run IF the specified object has been " \
-                "recognized."
+
     icon      = Paths.command_test_see
 
     def __init__(self, env, parameters=None):
         super(TestObjectSeenCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Test If Object Seen")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This command will allow code in blocked brackets below it to run IF the specified object has been recognized.")
 
         objManager = env.getObjectManager()
         vision     = env.getVision()
         self.maxAge          = vision.historyLen - 1
         self.getObjectList   = lambda: objManager.getObjectNameList(typeFilter=objManager.TRACKABLE)
         self.ageChoices      = ["latest frame", "last 5 frames", "last 15 frames", "last 30 frames", "last 60 frames"]
-        self.accChoices      = ["low", "medium", "high"]
+        self.accChoices      = [QtCore.QCoreApplication.translate("CommandsGUI","low"), QtCore.QCoreApplication.translate("CommandsGUI","medium"), QtCore.QCoreApplication.translate("CommandsGUI","high")]
 
         # If parameters do not exist, then set up the default parameters
         if self.parameters is None:
@@ -1297,10 +1336,10 @@ class TestObjectSeenCommand(CommandGUI):
 
     def dressWindow(self, prompt):
         # Define what happens when the user changes the object selection
-        choiceLbl         = QtWidgets.QLabel("If recognized ")
-        accLbl            = QtWidgets.QLabel("Confidence level ")
-        prompt.ageLbl     = QtWidgets.QLabel("When ")
-        notLbl            = QtWidgets.QLabel("NOT")
+        choiceLbl         = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","If recognized "))
+        accLbl            = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Confidence level "))
+        prompt.ageLbl     = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","When "))
+        notLbl            = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","NOT"))
 
         prompt.objChoices = QtWidgets.QComboBox()
         prompt.accChoices = QtWidgets.QComboBox()
@@ -1323,11 +1362,11 @@ class TestObjectSeenCommand(CommandGUI):
         # Set up the Age slider
         def updateAgeSliderLabel():
             # Create the text next to the "How Recently" label
-            newText = "When: "
+            newText = QtCore.QCoreApplication.translate("CommandsGUI", "When: ")
             if prompt.ageSlider.value() == 1:
-                newText += "Just now"
+                newText += QtCore.QCoreApplication.translate("CommandsGUI", "Just now")
             else:
-                newText += "< " + str(prompt.ageSlider.value()) + " frames"
+                newText += "< " + str(prompt.ageSlider.value()) + QtCore.QCoreApplication.translate("CommandsGUI"," frames")
             prompt.ageLbl.setText(newText)
         prompt.ageSlider.valueChanged.connect(updateAgeSliderLabel)
         prompt.ageSlider.setMinimum(1)
@@ -1359,25 +1398,28 @@ class TestObjectSeenCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Test If " + objName + " Seen"
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI", "Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI","Test If ") + objName + QtCore.QCoreApplication.translate("CommandsGUI"," Seen")
 
-        confidenceText = ["slightly", "fairly", "highly"]
+        confidenceText = [QtCore.QCoreApplication.translate("CommandsGUI","slightly"), QtCore.QCoreApplication.translate("CommandsGUI","fairly"), QtCore.QCoreApplication.translate("CommandsGUI", "highly")]
 
-        self.description = "If"
-        if self.parameters["not"]: self.description += " NOT"
-        self.description += " " + confidenceText[self.parameters["confidence"]] + " confident object was seen"
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","If")
+        if self.parameters["not"]: self.description += QtCore.QCoreApplication.translate("CommandsGUI"," NOT")
+        self.description += " " + confidenceText[self.parameters["confidence"]] + QtCore.QCoreApplication.translate("CommandsGUI"," confident object was seen")
 
 
 class TestObjectLocationCommand(CommandGUI):
-    title     = "Test If Object Inside Region"
-    tooltip   = "This command will allow code in blocked brackets below it to run IF the specified object has been" \
-                "recognized and the objects location in a particular location."
+
     icon      = Paths.command_test_region
 
     def __init__(self, env, parameters=None):
         super(TestObjectLocationCommand, self).__init__(parameters)
-
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Test If Object Inside Region")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                         """
+                                                    This command will allow code in blocked brackets below it to run IF the specified object has been
+                                                    recognized and the objects location in a particular location.
+                                                    """)
         objManager         = env.getObjectManager()
         self.vStream       = env.getVStream()
         self.getObjectList = lambda: objManager.getObjectNameList(typeFilter=objManager.TRACKABLE)
@@ -1394,10 +1436,10 @@ class TestObjectLocationCommand(CommandGUI):
 
     def dressWindow(self, prompt):
         # Define what happens when the user changes the object selection
-        choiceLbl = QtWidgets.QLabel("Choose an Object ")
-        partLbl   = QtWidgets.QLabel("What part of object must enter the location ")
-        selectLbl = QtWidgets.QLabel("Click and drag the area of the screen that the object will be in")
-        notLbl    = QtWidgets.QLabel("NOT")
+        choiceLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Choose an Object "))
+        partLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","What part of object must enter the location "))
+        selectLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Click and drag the area of the screen that the object will be in"))
+        notLbl    = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","NOT"))
 
 
         # Create the "input" objects
@@ -1461,25 +1503,29 @@ class TestObjectLocationCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Test If " + objName + " Inside Region"
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI","Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI","Test If ") + objName + QtCore.QCoreApplication.translate("CommandsGUI"," Inside Region")
 
 
-        self.description = "If " + self.parameters["part"] + " of " + objName + " is"
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","If ") + self.parameters["part"] + QtCore.QCoreApplication.translate("CommandsGUI"," of ") + objName + QtCore.QCoreApplication.translate("CommandsGUI"," is")
         if self.parameters["not"]: self.description += " NOT"
-        self.description += " seen within a region"
+        self.description += QtCore.QCoreApplication.translate("CommandsGUI"," seen within a region")
 
 
 class TestObjectAngleCommand(CommandGUI):
-    title     = "Test Angle Of Object"
-    tooltip   = "This command will allow code in blocked brackets below it to run IF the object's rotation is\n"\
-                "between two angles. The angles are measured from the robots positive X axis, counter clockwise. The\n"\
-                "positive X axis is 0 degrees, the positive Y axis is 90 degrees, the negative X axis is 180degrees,\n"\
-                "and so on."
+
     icon      = Paths.command_test_angle
 
     def __init__(self, env, parameters=None):
         super(TestObjectAngleCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Test Angle Of Object")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                         """
+                                                    This command will allow code in blocked brackets below it to run IF the object's rotation is\n
+                                                    between two angles. The angles are measured from the robots positive X axis, counter clockwise. The\n
+                                                    positive X axis is 0 degrees, the positive Y axis is 90 degrees, the negative X axis is 180degrees,\n
+                                                     and so on.
+                                                        """)
 
         objManager         = env.getObjectManager()
         self.getObjectList = lambda: objManager.getObjectNameList(typeFilter=objManager.TRACKABLE)
@@ -1494,7 +1540,7 @@ class TestObjectAngleCommand(CommandGUI):
 
     def dressWindow(self, prompt):
         # Create a Combobox with the appropriate items
-        choiceLbl = QtWidgets.QLabel("Choose an object ")
+        choiceLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Choose an object "))
         prompt.objChoices = QtWidgets.QComboBox()
         prompt.objChoices.addItem(self.parameters["objectID"])  # Add an empty item at the top
         objectList = self.getObjectList()
@@ -1507,12 +1553,12 @@ class TestObjectAngleCommand(CommandGUI):
 
 
         # "Lower" Textbox
-        valLLbl = QtWidgets.QLabel('Start Angle ')
+        valLLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI", 'Start Angle '))
         prompt.valLEdit.setText(str(self.parameters['start']))
         self._addRow(prompt, valLLbl, prompt.valLEdit)
 
         # "Upper" Textbox
-        valULbl = QtWidgets.QLabel('End Angle ')
+        valULbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'End Angle '))
         prompt.valUEdit.setText(str(self.parameters['end']))
         self._addRow(prompt, valULbl, prompt.valUEdit)
 
@@ -1537,14 +1583,15 @@ class TestObjectAngleCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        objName = (self.parameters["objectID"], "Object")[len(self.parameters["objectID"]) == 0]
-        self.title = "Test Angle of " + objName
+        objName = (self.parameters["objectID"], QtCore.QCoreApplication.translate("CommandsGUI","Object"))[len(self.parameters["objectID"]) == 0]
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI","Test Angle of ") + objName
 
 
-        self.description = "If angle is"
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI","If angle is")
 
-        if self.parameters["not"]: self.description += " NOT"
-        self.description += " between (" + self.parameters["start"] + ", " + self.parameters["end"] + ") degrees from the X Axis"
+        if self.parameters["not"]: self.description += QtCore.QCoreApplication.translate("CommandsGUI"," NOT")
+        self.description += QtCore.QCoreApplication.translate("CommandsGUI"," between (") + self.parameters["start"] + \
+        ", " + self.parameters["end"] + QtCore.QCoreApplication.translate("CommandsGUI",") degrees from the X Axis")
 
 
 
@@ -1558,11 +1605,12 @@ class StartBlockCommand(CommandGUI):
     """
 
     icon      = Paths.command_startblock
-    tooltip   = "This is the start of a block of commands that only run if a conditional statement is met."
+
 
     def __init__(self, env, parameters=None):
         super(StartBlockCommand, self).__init__(parameters)
-
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This is the start of a block of commands that only run if a conditional statement is met.")
 
 class EndBlockCommand(CommandGUI):
     """
@@ -1570,10 +1618,11 @@ class EndBlockCommand(CommandGUI):
     """
 
     icon      = Paths.command_endblock
-    tooltip   = "This is the end of a block of commands."
+
 
     def __init__(self, env, parameters=None):
         super(EndBlockCommand, self).__init__(parameters)
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI", "This is the end of a block of commands.")
 
 
 class ElseCommand(CommandGUI):
@@ -1582,19 +1631,22 @@ class ElseCommand(CommandGUI):
     """
 
     icon      = Paths.command_else
-    tooltip   = "This will run commands if a test evaluates to False"
+
 
     def __init__(self, env, parameters=None):
         super(ElseCommand, self).__init__(parameters)
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This will run commands if a test evaluates to False")
 
 
 class SetVariableCommand(CommandGUI):
-    title     = "Set Variable"
-    tooltip   = "This command can create a variable or set an existing variable to a value or an expression."
     icon      = Paths.command_set_var
 
     def __init__(self, env, parameters=None):
         super(SetVariableCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Set Variable")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This command can create a variable or set an existing variable to a value or an expression.")
 
         if self.parameters is None:
             # Some code to set up default parameters
@@ -1609,8 +1661,8 @@ class SetVariableCommand(CommandGUI):
 
 
         # Set up all the labels for the inputs
-        namLabel = QtWidgets.QLabel('Variable Name ')
-        valLabel = QtWidgets.QLabel('Expression ')
+        namLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Variable Name '))
+        valLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Expression '))
 
         # Fill the textboxes with the default parameters
         prompt.namEdit.setText(str(self.parameters['variable']))
@@ -1637,12 +1689,14 @@ class SetVariableCommand(CommandGUI):
 
 
 class TestVariableCommand(CommandGUI):
-    title     = "Test Value"
-    tooltip   = "This will allow/disallow code to run that is in blocked brackets below it IF the test is true."
+
     icon      = Paths.command_test_var
 
     def __init__(self, env, parameters=None):
         super(TestVariableCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Test Value")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "This will allow/disallow code to run that is in blocked brackets below it IF the test is true.")
 
 
         if self.parameters is None:
@@ -1655,15 +1709,15 @@ class TestVariableCommand(CommandGUI):
         prompt.tstMenu = QtWidgets.QComboBox()
         prompt.valBEdit = QtWidgets.QLineEdit()
 
-        prompt.tstMenu.addItem('Equal To')
-        prompt.tstMenu.addItem('Not Equal To')
-        prompt.tstMenu.addItem('Greater Than')
-        prompt.tstMenu.addItem('Less Than')
+        prompt.tstMenu.addItem(QtCore.QCoreApplication.translate("CommandsGUI",'Equal To'))
+        prompt.tstMenu.addItem(QtCore.QCoreApplication.translate("CommandsGUI",'Not Equal To'))
+        prompt.tstMenu.addItem(QtCore.QCoreApplication.translate("CommandsGUI",'Greater Than'))
+        prompt.tstMenu.addItem(QtCore.QCoreApplication.translate("CommandsGUI",'Less Than'))
 
         # Set up all the labels for the inputs
-        valALabel = QtWidgets.QLabel('Expression ')
-        tstLabel  = QtWidgets.QLabel('Test ')
-        valBLabel = QtWidgets.QLabel('Expression ')
+        valALabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Expression '))
+        tstLabel  = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Test '))
+        valBLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI",'Expression '))
 
         # Fill the textboxes with the default parameters
         prompt.valAEdit.setText(str(self.parameters['expressionA']))
@@ -1686,32 +1740,40 @@ class TestVariableCommand(CommandGUI):
         return self.parameters
 
     def _updateDescription(self):
-        operations = [' equal to', ' not equal to', ' greater than', ' less than']
-        self.description = 'If ' + str(self.parameters['expressionA']) + ' is' + operations[self.parameters['test']] + \
-                           ' ' + self.parameters['expressionB'] + ' then'
+        operations = [
+            QtCore.QCoreApplication.translate("CommandsGUI",' equal to'),
+            QtCore.QCoreApplication.translate("CommandsGUI",' not equal to'),
+            QtCore.QCoreApplication.translate("CommandsGUI",' greater than'),
+            QtCore.QCoreApplication.translate("CommandsGUI",' less than')]
+        self.description = QtCore.QCoreApplication.translate("CommandsGUI",'If ') + str(self.parameters['expressionA']) + \
+                           QtCore.QCoreApplication.translate("CommandsGUI",' is' ) + operations[self.parameters['test']] + \
+                           ' ' + self.parameters['expressionB'] + QtCore.QCoreApplication.translate("CommandsGUI",' then')
 
 
 class LoopCommand(CommandGUI):
-    title     = "Loop While Test Is True"
-    tooltip   = "Repeat this section of commands while a certain test returns true. You can choose what type of test\n"\
-                "will be used. "
+
     icon      = Paths.command_loop
 
     def __init__(self, env, parameters=None):
         super(LoopCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Loop While Test Is True")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    "Repeat this section of commands while a certain test returns true. You can choose what type of test will be used.\n")
         self.env = env
         # If parameters do not exist, then set up the default parameters
         if self.parameters is None:
             # Anything done with env should be done here. Try not to save env as a class variable whenever possible
             self.parameters = {"testType": "",
                                "testParameters": None,
-                               "description": "Loops commands while a chosen test is true"}
+                               "description": QtCore.QCoreApplication.translate("CommandsGUI","Loops commands while a chosen test is true")}
 
     def dressWindow(self, prompt):
         def updateTestParameters():
             clearLayout(prompt.fakePrompt.content)
             currTitle = prompt.testChoices.currentText()
-
+            print("Thing: ", prompt.testChoices)
+            print("text: ", str(prompt.testChoices.currentText()))
+            print(currTitle, prompt.titleTypeHash)
             testType = prompt.titleTypeHash[currTitle]
 
             # print(self.parameters["testType"] == testType, self.parameters["testType"], testType)
@@ -1729,7 +1791,7 @@ class LoopCommand(CommandGUI):
 
 
         # Create a Combobox with the appropriate items
-        choiceLbl = QtWidgets.QLabel("Choose a Test")
+        choiceLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Choose a Test"))
         prompt.testChoices = QtWidgets.QComboBox()
 
         prompt.titleTypeHash = {}
@@ -1737,13 +1799,14 @@ class LoopCommand(CommandGUI):
 
         # Get the title of the currently selected testType when loading
         for testType in testTypes:
-            prompt.titleTypeHash[testType.title] = testType
+            prompt.titleTypeHash[testType.__name__] = testType
 
             if self.parameters["testType"] == testType.__name__:
-                prompt.testChoices.addItem(testType.title)
+                prompt.testChoices.addItem(testType.__name__)
 
 
-        for testType in testTypes: prompt.testChoices.addItem(testType.title)
+        for testType in testTypes:
+            prompt.testChoices.addItem(testType.__name__)
 
 
 
@@ -1763,13 +1826,14 @@ class LoopCommand(CommandGUI):
         prompt.commandObject._updateDescription()
 
         chosenType = type(prompt.commandObject)
+        print("Chosen type: ", type(prompt.commandObject).__name__)
         chosenParams = prompt.commandObject.parameters
         description  = prompt.commandObject.description
 
         # Find the matching type for the currently selected title
-        newParameters = {"testType": chosenType.__name__,
+        newParameters = {"testType":        chosenType.__name__,
                          "testParameters": chosenParams,
-                         "description": description}  # Get the parameters from the 'prompt' GUI elements. Put numbers through self.sanitizeFloat
+                         "description":     description}
 
         self.parameters.update(newParameters)
 
@@ -1780,34 +1844,38 @@ class LoopCommand(CommandGUI):
 
 
 class EndTaskCommand(CommandGUI):
-    title     = "End Task"
-    tooltip   = "When the code reaches this point, the program will end."
+
     icon      = Paths.command_end_script
 
     def __init__(self, env, parameters=None):
         super(EndTaskCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "End Task")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI", "When the code reaches this point, the program will end.")
 
 
 class EndEventCommand(CommandGUI):
-    title     = "Exit Current Event"
-    tooltip   = "When the code reaches this point, the program will not process the rest of this event."
+
     icon      = Paths.command_exit_event
 
     def __init__(self, env, parameters=None):
         super(EndEventCommand, self).__init__(parameters)
+        self.title     = QtCore.QCoreApplication.translate("CommandsGUI","Exit Current Event")
+        self.tooltip   = QtCore.QCoreApplication.translate("CommandsGUI","When the code reaches this point, the program will not process the rest of this event.")
 
 
 
 
 #   FUNCTION COMMANDS
 class ScriptCommand(CommandGUI):
-    title     = "Run Python Code"
-    tooltip   = "This tool will execute a script made by the user.\nDO NOT RUN PROGRAMS WITH SCRIPTS WRITTEN BY OTHER" \
-                "\nUSERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!"
+
     icon      = Paths.command_script
 
     def __init__(self, env, parameters=None):
         super(ScriptCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Run Python Code")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    """This tool will execute a script made by the user.\nDO NOT RUN PROGRAMS WITH SCRIPTS WRITTEN BY OTHER
+                                                    \nUSERS UNLESS YOU HAVE CHECKED THE SCRIPT AND KNOW WHAT YOU ARE DOING!""")
 
         # If parameters do not exist, then set up the default parameters
         if self.parameters is None:
@@ -1819,7 +1887,7 @@ class ScriptCommand(CommandGUI):
         # Do some GUI code setup
         # Put all the objects into horizontal layouts called Rows
         prompt.IDE     = ScriptWidget(self.parameters["script"], prompt)
-        descriptionLbl = QtWidgets.QLabel("Description ")
+        descriptionLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Description "))
 
         prompt.descriptionEdt = QtWidgets.QLineEdit(self.parameters["description"])
 
@@ -1841,16 +1909,17 @@ class ScriptCommand(CommandGUI):
 
 
 class RunTaskCommand(CommandGUI):
-    title     = "Run Task"
-    tooltip   = "This tool will run  another task file and run it inside of this task, until the 'End Task'\n" \
-                "command is called within the task, then it will return to the currently running task.\n" \
-                "All tasks are preloaded when script is launched, so if a child class runs a parent class, an error\n" \
-                "will be returned."
 
     icon      = Paths.command_run_task
 
     def __init__(self, env, parameters=None):
         super(RunTaskCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Run Task")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    """This tool will run  another task file and run it inside of this task, until the 'End Task'\n
+                                                    command is called within the task, then it will return to the currently running task.\n
+                                                    All tasks are preloaded when script is launched, so if a child class runs a parent class, an error\n
+                                                    will be returned.""")
 
         # If parameters do not exist, then set up the default parameters
         if self.parameters is None:
@@ -1869,19 +1938,19 @@ class RunTaskCommand(CommandGUI):
 
         ensurePathExists(Paths.saves_dir)
 
-        explanationLbl = QtWidgets.QLabel("\n\nMake sure the task you run has an\n"
-                                          "'End Task' command in it, to return to\n"
-                                          "this task when its finished")
+        explanationLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","\n\nMake sure the task you run has an\n") +
+                                          QtCore.QCoreApplication.translate("CommandsGUI","'End Task' command in it, to return to\n") +
+                                          QtCore.QCoreApplication.translate("CommandsGUI","this task when its finished"))
 
         # Create the filename label
         prompt.fileLbl = QtWidgets.QLabel(self.parameters["filename"])
         prompt.fileLbl.setWordWrap(True)
         prompt.fileLbl.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
-        fileBtn = QtWidgets.QPushButton("Select Task")
+        fileBtn = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("CommandsGUI","Select Task"))
         fileBtn.clicked.connect(lambda: updateFileLbl(prompt))
 
         # Create the "Share Variables" checkbox
-        shareLbl = QtWidgets.QLabel("Share Current Tasks Variables")
+        shareLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","Share Current Tasks Variables"))
         prompt.shareChk = QtWidgets.QCheckBox()
         prompt.shareChk.setChecked(self.parameters["shareScope"])
 
@@ -1903,19 +1972,21 @@ class RunTaskCommand(CommandGUI):
 
     def _updateDescription(self):
         if len(self.parameters["filename"]) == 0:
-            self.description = "No Task Selected"
+            self.description = QtCore.QCoreApplication.translate("CommandsGUI","No Task Selected")
         else:
-            self.description = "Run " + basename(self.parameters["filename"])
+            self.description = QtCore.QCoreApplication.translate("CommandsGUI","Run ") + basename(self.parameters["filename"])
 
 
 class RunFunctionCommand(CommandGUI):
-    title     = "Run Function"
-    tooltip   = "This will run a custom function that the user defines in the Resources menu. If the function has \n" \
-                "arguments, the user will be prompted to fill out the arguments"
+
     icon      = Paths.command_run_func
 
     def __init__(self, env, parameters=None):
         super(RunFunctionCommand, self).__init__(parameters)
+        self.title = QtCore.QCoreApplication.translate("CommandsGUI", "Run Function")
+        self.tooltip = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                    """This will run a custom function that the user defines in the Resources menu. If the function has \n
+                                                    arguments, the user will be prompted to fill out the arguments""")
         self.objManager = env.getObjectManager()
         self.getObjectList = lambda: self.objManager.getObjectNameList(typeFilter=self.objManager.FUNCTION)
 
@@ -1966,7 +2037,7 @@ class RunFunctionCommand(CommandGUI):
 
 
         # Create a Combobox with Functions made in resources
-        choiceLbl = QtWidgets.QLabel("Choose a Function ")
+        choiceLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI", "Choose a Function "))
         prompt.objChoices = QtWidgets.QComboBox()
         prompt.objChoices.addItem(self.parameters["objectID"])  # Add an empty item at the top
         objectList = self.getObjectList()
@@ -2016,8 +2087,8 @@ class RunFunctionCommand(CommandGUI):
 
     def _updateDescription(self):
         if len(self.parameters["objectID"]) == 0:
-            self.description = "No function selected"
-            self.title = "Run Function"
+            self.description = QtCore.QCoreApplication.translate("CommandsGUI","No function selected")
+            self.title = QtCore.QCoreApplication.translate("CommandsGUI","Run Function")
         else:
             self.description = self.parameters["description"]
             self.title = self.parameters["objectID"]
@@ -2026,18 +2097,20 @@ class RunFunctionCommand(CommandGUI):
 
 #   EXPERIMENTAL COMMANDS
 class VisionMoveXYZCommand(MoveXYZCommand):
-    title     = "Vision Assisted Move XYZ"
-    tooltip   = "This works like the normal Move XYZ command, but uses vision to verify the robots position and\n"\
-                "perform a 'correction' move after an initial move. \n" \
-                "This command requires Camera/Robot Calibrations to be done."
+
     icon      = Paths.command_xyz_vision
 
     def __init__(self, env, parameters=None):
         super(VisionMoveXYZCommand, self).__init__(env, parameters)
+        self.title     = QtCore.QCoreApplication.translate("CommandsGUI","Vision Assisted Move XYZ")
+        self.tooltip   = QtCore.QCoreApplication.translate("CommandsGUI",
+                                                      """This works like the normal Move XYZ command, but uses vision to verify the robots position and\n
+                                                        perform a 'correction' move after an initial move. \n
+                                                        This command requires Camera/Robot Calibrations to be done.""")
 
     def dressWindow(self, prompt):
         super(VisionMoveXYZCommand, self).dressWindow(prompt)
-        warningLbl = QtWidgets.QLabel("This function is experimental. It may not yield more accurate results.")
+        warningLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("CommandsGUI","This function is experimental. It may not yield more accurate results."))
         warningLbl.setWordWrap(True)
 
         self._addRow(prompt, warningLbl)

@@ -65,3 +65,10 @@ Settings.txt
 
 # IntelliJ stuff
 .idea/
+.pioenvs/
+.travis.yml
+platformio.ini
+dist/
+build/
+*.log
+.eggs/

@@ -1,18 +1,21 @@
 # -*- mode: python -*-
 import os
+import platform
 
 # Set up some convenience variables to shorten up the path names
 project_dir  = "."
 resource_dir = "Resources"                         # Resources directory
 icons_dir    = os.path.join(resource_dir, "Icons") # Icons directory in resources
-
+languages_dir= os.path.join(resource_dir, "Languages")
 
 
 # Files that need to be bundled that are in resource_dir
 resourceList   = ["face_cascade.xml",
                   "smile_cascade.xml",
                   "eye_cascade.xml",
-                  "User Manual.pdf"]
+                  "User_Manual.pdf",
+                  "User_Manual_zh_cn.pdf"
+                  ]
 
 # Files that need to be bundled that are in icons_dir
 iconsList = ["cancel.png",
@@ -20,9 +23,16 @@ iconsList = ["cancel.png",
              "record_end.png",
              "button_delete.png",
              "button_create.png",
+             "languages_chinese.png",
+             "languages_english.png",
+             "file_about.png",
+             "file_help.png",
+             "file_homedir.png",
+             "file_layout.png",
              "file_new.png",
              "file_save.png",
              "file_load.png",
+             "help_bugreport.png",
              "forum_link_reddit.png",
              "script_run.png",
              "script_pause.png",
@@ -88,6 +98,9 @@ iconsList = ["cancel.png",
              "help_rob_connect.gif",
              "help_star.png"]
 
+languageList   = ["zh_CN.qm",
+                  ]
+
 # Create a list of all the necessary resources in the format that pyInstaller wants it in
 d = []
 
@@ -99,6 +112,9 @@ for icon in iconsList:
 for resource in resourceList:
     d.append((os.path.join(resource_dir, resource), os.path.join(resource_dir, resource), 'DATA'))
 
+# Add the language from the languages directory
+for language in languageList:
+    d.append((os.path.join(languages_dir, language), os.path.join(languages_dir, language), 'DATA'))
 
 "smile_cascade.xml"
 # Actual spec file here
@@ -122,16 +138,37 @@ pyz = PYZ(a.pure,
           a.zipped_data,
           cipher=block_cipher)
 
+if platform.system() == 'Darwin':
+    app = BUNDLE(EXE(pyz,
+              a.scripts,
+              a.binaries,
+              a.zipfiles,
+              a.datas,   # Add the icons list to the data
+              name='ucs',
+              debug=False,
+              strip=False,
+              console=False,
+              upx=True,
+               ),
+             name='uArmCreatorStudio.app',
+             icon=os.path.join(icons_dir, "exe_icon.icns"),
+             bundle_identifier='ucs',
+             info_plist={
+                'NSHighResolutionCapable': 'True'
+                },
+             )
+else:
+    exe = EXE(pyz,
+              a.scripts,
+              a.binaries,
+              a.zipfiles,
+              a.datas + d,   # Add the icons list to the data
+              name='uArmCreatorStudio',
+              debug=False,
+              strip=False,
+              console=False,
+              upx=True,
+              icon=os.path.join(icons_dir, "exe_icon.ico"))
 
-exe = EXE(pyz,
-          a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas + d,   # Add the icons list to the data
-          name='uArmCreatorStudio',
-          debug=False,
-          strip=False,
-          console=False,
-          upx=True,
-          icon=os.path.join(icons_dir, "exe_icon.ico"))
+
 

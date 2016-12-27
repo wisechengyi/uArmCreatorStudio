@@ -38,8 +38,12 @@ __author__ = "Alexander Thiel"
 def getConnectedRobots():
     # Returns any arduino serial ports in a list [port, port, port]
     # This is used to let the user choose the correct port that is their robot
-    ports = list(serial.tools.list_ports.comports())
-    return ports
+    UARM_HWID_KEYWORD = "USB VID:PID=0403:6001"
+    uarm_ports = []
+    for i in serial.tools.list_ports.comports():
+        if i.hwid[0:len(UARM_HWID_KEYWORD)] == UARM_HWID_KEYWORD:
+            uarm_ports.append(i)
+    return uarm_ports
 
 
 class Robot:
@@ -360,6 +364,7 @@ class Robot:
             with self.__lock:
                 self.gripperStatus  = status
                 self.__uArm.setPump(self.gripperStatus)
+                self.__uArm.setGripper(self.gripperStatus)
 
     def setBuzzer(self, frequency, duration):
         """
@@ -398,6 +403,14 @@ class Robot:
         if not self.__uArm.connected(): return False  # If the Serial is not connected
         if self.__threadRunning:        return False  # If the setupThread is running
         return True
+
+    def disconnect(self):
+        """
+        disconnect Robot release port resource
+        :return:
+        """
+        if self.__uArm is not None:
+            self.__uArm.disconnect()
 
     def getErrorsToDisplay(self):
         if self.__uArm is not None:

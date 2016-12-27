@@ -27,7 +27,10 @@ License:
 """
 import os
 import errno
+import platform
 from time import time, sleep
+import logging
+
 __author__ = "Alexander Thiel"
 
 """
@@ -36,6 +39,14 @@ Global is a set of functions that are used in many places around the project and
 It also holds the actual global variable "keysPressed", and "printRedirectFunc". More documentation below.
 """
 
+# OS TYPE
+WINDOWS = 0
+MACOSX  = 1
+LINUX   = 2
+
+# Language Country code
+ZH_CN = 'zh_CN'
+EN_US = 'en_US'
 
 # Special 'sleep' commands that can exit immediately if 'exitFunc()' returns false
 def wait(waitTime, exitFunc):
@@ -131,7 +142,6 @@ printRedirectFunc = lambda classString, string: None
 def init():
     global keysPressed
     global printRedirectFunc
-    global exitScriptFlag
 
     """
       Used in keyboardEvent. Updated through Main.Application.notify() Format: ['a', 'b', '5', 'z']
@@ -145,9 +155,6 @@ def init():
       The use case is for the Console widget. If printRedirectFunc = Console.write, then all prints will print on there
     """
     printRedirectFunc  = lambda classString, string: None  # print(classString + " "*(30 - len(classString)) + string)
-
-
-
 
 
 def printf(*args):
@@ -189,7 +196,7 @@ def printf(*args):
 
     # Filter out any serial communication since it clutters up the console
 
-    print(header + " " * (15 - len(header)) + content)
+    logging.getLogger('application').info(header + " " * (15 - len(header)) + content)
 
 
 
@@ -201,7 +208,6 @@ def ensurePathExists(path):
     """
     try:
         path = os.path.join(path, "")  # Make it a file
-        print(path)
         directory = os.path.dirname(path)
         os.makedirs(directory)
     except OSError as exception:
@@ -218,7 +224,27 @@ def getModuleClasses(module):
     """
     return dict([(name, cls) for name, cls in module.__dict__.items() if isinstance(cls, type)])
 
+def getOSType():
+    if platform.system() == 'Darwin':
+        return MACOSX
+    elif platform.system() == 'Windows':
+        return WINDOWS
+    elif platform.system() == 'Linux':
+        return LINUX
 
+
+def openFile(path):
+    """
+    This will open a pdf file, but different system will be different.
+    :param path: PDF File Path
+    :return:
+    """
+    if getOSType() == MACOSX:
+        os.system("open "+path)
+    elif getOSType() == WINDOWS:
+        os.startfile(path)
+    elif getOSType() == LINUX:
+        os.system('xdg-open '+path)
 
 
 """  Deprecated function for finding who called the current function (DO NOT USE IN PRODUCTION)

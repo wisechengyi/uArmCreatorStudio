@@ -25,19 +25,34 @@ License:
     You should have received a copy of the GNU General Public License
     along with uArmCreatorStudio.  If not, see <http://www.gnu.org/licenses/>.
 """
+__author__ = "Alexander Thiel"
 import os
 import sys
-__author__ = "Alexander Thiel"
+from os.path import expanduser
+from Logic import Global
+import logging
+from __init__ import version
+
+if getattr(sys, 'frozen', False):
+    APPLICATION_PATH = os.path.dirname(sys.executable)
+elif __file__:
+    APPLICATION_PATH = os.path.dirname(__file__)
+
 
 #TODO: Make it possible to check if this is being run from within a package manager, and load icons from a diff dir.
 
-################        PATHS FOR ALL       ################
-resourcesLoc = "Resources"
-settings_txt = os.path.join(resourcesLoc, "Settings.txt")
-objects_dir  = os.path.join(resourcesLoc, "Objects", "")
-saves_dir    = os.path.join(resourcesLoc, "Save Files", "")
 
+################        PROGRAM RESOUCES    ################
 
+## Check OS type
+if Global.getOSType() == Global.MACOSX and getattr(sys, 'frozen', False): # Mac os x frozen app
+    resourcesLoc = os.path.join(APPLICATION_PATH, "..", "Resources")
+elif Global.getOSType() == Global.MACOSX and __file__: # Mac os x run in scripts
+    resourcesLoc = os.path.join(APPLICATION_PATH, "Resources")
+elif Global.getOSType() == Global.WINDOWS:
+    resourcesLoc = os.path.join('.', "Resources")
+elif Global.getOSType() == Global.LINUX:
+    resourcesLoc = os.path.join('.', "Resources")
 
 
 def resourcePath(relative_path):
@@ -48,9 +63,13 @@ def resourcePath(relative_path):
 
 exeResourcesPath = resourcePath(resourcesLoc)
 
+# Used by translation
+languageLoc = resourcePath(os.path.join(resourcesLoc, "Languages"))
+
 # Used by Vision
-cascade_dir  = exeResourcesPath
-user_manual  = os.path.join(exeResourcesPath, "User Manual.pdf")
+cascade_dir = exeResourcesPath
+
+
 
 
 ################        GUI PATHS         ################
@@ -61,10 +80,15 @@ delete              = os.path.join(imageLoc, "button_delete.png")
 
 
 # "File" Menu
+file_about          = os.path.join(imageLoc, "file_about.png")
+file_help           = os.path.join(imageLoc, "file_help.png")
+file_homedir        = os.path.join(imageLoc, "file_homedir.png")
 file_new            = os.path.join(imageLoc, "file_new.png")
 file_save           = os.path.join(imageLoc, "file_save.png")
 file_load           = os.path.join(imageLoc, "file_load.png")
+file_layout         = os.path.join(imageLoc, "file_layout.png")
 reddit_link         = os.path.join(imageLoc, "forum_link_reddit.png")
+help_bugreport      = os.path.join(imageLoc, "help_bugreport.png")
 
 
 # Toolbar
@@ -85,6 +109,10 @@ devices_robot       = os.path.join(imageLoc, "window_devices_robot.png")
 devices_camera      = os.path.join(imageLoc, "window_devices_camera.png")
 devices_both        = os.path.join(imageLoc, "window_devices_both.png")
 devices_neither     = os.path.join(imageLoc, "window_devices_neither.png")
+
+# Languages
+languages_chinese    = os.path.join(imageLoc, "languages_chinese.png")
+languages_english    = os.path.join(imageLoc, "languages_english.png")
 
 
 # Events
@@ -144,3 +172,58 @@ help_connect_camera = os.path.join(imageLoc, "help_connect_camera.gif")
 help_rob_connect    = os.path.join(imageLoc, "help_rob_connect.gif")
 
 
+################        USERS RESOUCES    ################
+ucs_home_dir = os.path.join(expanduser("~"), "uArmCreatorStudio", "") # uArmCreatorStudio home dir
+log_dir      = os.path.join(ucs_home_dir, "log", "")
+bugreport_dir= os.path.join(ucs_home_dir, "bugreport", "")
+
+Global.ensurePathExists(ucs_home_dir)
+Global.ensurePathExists(log_dir)
+Global.ensurePathExists(bugreport_dir)
+
+error_log    = os.path.join(log_dir, "error.log")
+ucs_log      = os.path.join(log_dir, "ucs.log")
+bugreport_zipfile = os.path.join(bugreport_dir, "log.zip")
+user_manual     = os.path.join(exeResourcesPath, "User_Manual.pdf")
+survey_link = "https://goo.gl/forms/ZWN6xKvBssyRWqVI3"
+bugreport_link = "https://form.jotform.me/63162320754450"
+
+settings_txt = os.path.join(ucs_home_dir, "Settings.txt")
+objects_dir  = os.path.join(ucs_home_dir, "Objects", "")
+saves_dir    = os.path.join(ucs_home_dir, "Save Files", "")
+
+## Language Init Path
+def loadLanguagePath(language_code):
+    global user_manual,language_pack,survey_link,bugreport_link
+    if language_code == Global.EN_US:
+        user_manual = os.path.join(exeResourcesPath, "User_Manual.pdf")
+        survey_link = "https://goo.gl/forms/ZWN6xKvBssyRWqVI3"
+        bugreport_link = "https://form.jotform.me/63162320754450"
+    elif language_code == Global.ZH_CN:
+        user_manual = os.path.join(exeResourcesPath, "User_Manual_{}.pdf".format(language_code))
+        language_pack = os.path.join(languageLoc, "{}.qm".format(language_code))
+        survey_link = "http://form.mikecrm.com/Az9pM8"
+        bugreport_link = "http://form.mikecrm.com/jlq5Uv"
+
+
+## Init Logger
+def initLogger(consoleSettings):
+    logger = logging.getLogger('application')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    if consoleSettings['saveToFile']:
+        if consoleSettings['logFileName'] is None:
+            log_file = os.path.join(ucs_home_dir, ucs_log)
+        else:
+            log_file = os.path.join(ucs_home_dir, consoleSettings['logFileName'])
+        fh = logging.FileHandler(log_file)
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    logger.info('---------------------------Logging Start------------------------------------------')
+    logger.info('Version: ' + version)

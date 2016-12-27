@@ -60,6 +60,7 @@ class VideoStream:
     """
 
     def __init__(self, fps=24):
+        self.__connected = False
         self.frameLock   = RLock()  # Lock for any frame get/copy/read operations
         self.filterLock  = RLock()  # Lock for any filtering operations, added under self.addFilter()
         self.workLock    = RLock()  # Lock for any "Work" functions, added under self.addWork()
@@ -93,13 +94,13 @@ class VideoStream:
         if self.setCamera is None:
             self.startThread()
             self.setCamera = cameraID
+            self.__connected = True
         else:
             printf("Video| ERROR: Tried to set camera while camera was already being set! cameraID ", self.setCamera)
 
     def connected(self):
         # Returns True or False if there is a camera successfully connected
-        if self.cap is None:        return False
-        return True
+        return self.__connected
 
     def setFPS(self, fps):
         # Sets how often the main function grabs frames (Default: 24)
@@ -116,6 +117,7 @@ class VideoStream:
 
     def endThread(self):
         self.running = False
+        self.__connected = False
 
 
 
@@ -192,8 +194,8 @@ class VideoStream:
             else:
                 self.filterFrame = self.frame
 
-        if self.cap is not None:
-            self.cap.release()
+        # if self.cap is not None:
+        #     self.cap.release()
         self.mainThread = None
 
 

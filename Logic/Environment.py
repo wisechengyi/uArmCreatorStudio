@@ -100,7 +100,6 @@ class Environment:
             self.__transform = Transform(ptPairs)
 
 
-
     # Getting System Objects
     def getRobot(self):
         return self.__robot
@@ -190,11 +189,15 @@ class Environment:
                                                     "script":              True,
                                                     "gui":                False,
                                                     "other":               True,
+                                                    "saveToFile":          True,
+                                                    "logFileName":         None,
                                                   },
 
                             "windowGeometry":       None,  # The size and shape of the main window
                             "windowState":          None,  # Location and size of dockWidgets on the mainWindow
-                            "lastOpenedFile":       None   # So the GUI can open the last file you had
+                            "lastOpenedFile":       None,   # So the GUI can open the last file you had
+                            "language":             None,   # So the GUI can detect the language
+
                           }
 
         # Load the settings config and set them
@@ -240,8 +243,17 @@ class Environment:
     # Close system objects
     def close(self):
         # This will try to safely shut down any objects that are capable of running threads.
+        self.closeRobot()
+        self.closeVideo()
+
+    def closeRobot(self):
+        self.__robot.disconnect()
         self.__robot.setExiting(True)
+
+    def closeVideo(self):
         self.__vision.setExiting(True)
         self.__vStream.endThread()
-
+        # self.__vStream.frame = None
+        # self.__vStream.cap = None
+        # self.__vStream.setCamera = None
 

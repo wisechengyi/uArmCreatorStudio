@@ -46,18 +46,20 @@ from ObjectManagerGUI  import MakeGroupWindow           # For creating various r
 from ObjectManagerGUI  import MakeRecordingWindow
 from ObjectManagerGUI  import MakeFunctionWindow
 from ObjectManagerGUI  import MakeObjectWindow
+from zipfile import ZipFile
+from __init__ import version
+from Logic.CommunicationProtocol import PROTOCOL_VERSION
 __author__ = "Alexander Thiel"
 
 
 ########## MAIN WINDOW ##########
 class MainWindow(QtWidgets.QMainWindow):
-    # For debugging object count, use: print("CHILDREN: ", len(self.findChildren(QtCore.QObject)))
-    def __init__(self):
+    EXIT_CODE_REBOOT = -983242194
+
+    def __init__(self, environment):
         super(MainWindow, self).__init__()
 
-
-        # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
-        self.env         = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)
+        self.env         = environment
         self.interpreter = Interpreter(self.env)
 
 
@@ -71,13 +73,14 @@ class MainWindow(QtWidgets.QMainWindow):
         # Create GUI related class variables
         self.fileName        = None
         self.loadData        = []  #Set when file is loaded. Used to check if the user has changed anything when closing
-        self.programTitle    = 'uArm Creator Studio'
-        self.scriptToggleBtn = QtWidgets.QAction(QtGui.QIcon(Paths.run_script), 'Run', self)
-        self.devicesBtn      = QtWidgets.QAction(QtGui.QIcon(Paths.devices_neither), 'Devices', self)
+        self.programTitle    = self.tr('uArm Creator Studio')
+        self.scriptToggleBtn = QtWidgets.QAction(     QtGui.QIcon(Paths.run_script),     self.tr('Run'), self)
+        self.devicesBtn      = QtWidgets.QAction(QtGui.QIcon(Paths.devices_neither), self.tr('Devices'), self)
         self.centralWidget   = QtWidgets.QStackedWidget()
         self.controlPanel    = ControlPanelGUI.ControlPanel(self.env, parent=self)
         self.cameraWidget    = CameraWidget(self.env.getVStream(), parent=self)
         self.floatingHint    = QtWidgets.QLabel()  # Used to display floating banners to inform the user of something
+        self.resetLayoutFlag = False # If True, Program will resetore the default layout
 
 
         # Create Menu items and set up the GUI
@@ -114,43 +117,49 @@ class MainWindow(QtWidgets.QMainWindow):
         self.refreshTimer.timeout.connect(self.refreshDevicesIcon)
         self.refreshTimer.start(5000)  # Once every five seconds
 
-
     def initUI(self):
         # Create "File" Menu
         menuBar       = self.menuBar()
+        menuBar.setNativeMenuBar(False)
 
         # Connect any slots that need connecting
         self.consoleWidget.settingsChanged.connect(lambda: self.env.updateSettings("consoleSettings",
                                                                                    self.consoleWidget.settings))
 
         # Create File Menu and actions
-        fileMenu      = menuBar.addMenu('File')
-        newAction     = QtWidgets.QAction(QtGui.QIcon(Paths.file_new), "New Task", self)
-        saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), "Save Task", self)
-        saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), "Save Task As", self)
-        loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load), "Load Task", self)
+        fileMenu      = menuBar.addMenu(self.tr('File'))
+        newAction     = QtWidgets.QAction( QtGui.QIcon(Paths.file_new),     self.tr('New Task'), self)
+        saveAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_save),    self.tr('Save Task'), self)
+        saveAsAction  = QtWidgets.QAction(QtGui.QIcon(Paths.file_save), self.tr('Save Task As'), self)
+        loadAction    = QtWidgets.QAction(QtGui.QIcon(Paths.file_load),    self.tr('Load Task'), self)
+        homeDirAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_homedir), self.tr('Open Home Folder'), self)
 
+
+
+        aboutMessage = lambda: QtWidgets.QMessageBox.information(self, self.tr("About"),
+                                                                 self.tr("Version: ") +
+                                                                 version + "\n\n" + self.tr("Protocol Version: ") + PROTOCOL_VERSION)
         saveAction.setShortcut("Ctrl+S")
-
         newAction.triggered.connect(    lambda: self.newTask(promptSave=True))
         saveAction.triggered.connect(   self.saveTask)
         saveAsAction.triggered.connect( lambda: self.saveTask(True))
-        loadAction.triggered.connect(   self.loadTask)
+        homeDirAction.triggered.connect(lambda: Global.openFile(Paths.ucs_home_dir))
 
 
         fileMenu.addAction(newAction)
         fileMenu.addAction(saveAction)
         fileMenu.addAction(saveAsAction)
         fileMenu.addAction(loadAction)
+        fileMenu.addAction(homeDirAction)
 
 
 
         # Create Community Menu
-        communityMenu = menuBar.addMenu('Community')
-        forumAction   = QtWidgets.QAction(QtGui.QIcon(Paths.taskbar), "Visit the forum!", self)
-        redditAction  = QtWidgets.QAction(QtGui.QIcon(Paths.reddit_link), "Visit our subreddit!", self)
+        communityMenu = menuBar.addMenu(self.tr('Community'))
+        forumAction   = QtWidgets.QAction(    QtGui.QIcon(Paths.taskbar),     self.tr('Visit the forum!'), self)
+        redditAction  = QtWidgets.QAction(QtGui.QIcon(Paths.reddit_link), self.tr('Visit our subreddit!'), self)
 
-        forumAction.triggered.connect(  lambda: webbrowser.open("https://forum.ufactory.cc/", new=0, autoraise=True))
+        forumAction.triggered.connect(     lambda: webbrowser.open("https://forum.ufactory.cc/", new=0, autoraise=True))
         redditAction.triggered.connect(lambda: webbrowser.open("https://www.reddit.com/r/uArm/", new=0, autoraise=True))
 
         communityMenu.addAction(forumAction)
@@ -158,44 +167,88 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # Create Resources Menu
-        resourceMenu = menuBar.addMenu('New Resource')
-        visAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize), "Vision Object", self)
-        grpAction  = QtWidgets.QAction(QtGui.QIcon(Paths.event_recognize), "Vision Group", self)
-        recAction  = QtWidgets.QAction(QtGui.QIcon(Paths.record_start), "Movement Recording", self)
-        fncAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func), "Function", self)
+        resourceMenu = menuBar.addMenu(self.tr('New Resource'))
+        visAction  = QtWidgets.QAction( QtGui.QIcon(Paths.event_recognize),          self.tr('Vision Object'), self)
+        grpAction  = QtWidgets.QAction( QtGui.QIcon(Paths.event_recognize),           self.tr('Vision Group'), self)
+        recAction  = QtWidgets.QAction(    QtGui.QIcon(Paths.record_start),     self.tr('Movement Recording'), self)
+        fncAction  = QtWidgets.QAction(QtGui.QIcon(Paths.command_run_func),               self.tr('Function'), self)
 
 
-        visAction.triggered.connect(  lambda: MakeObjectWindow(   None, self.env, parent=self))
-        grpAction.triggered.connect(  lambda: MakeGroupWindow(    None, self.env, parent=self))
-        recAction.triggered.connect(  lambda: MakeRecordingWindow(None, self.env, parent=self))
-        fncAction.triggered.connect(  lambda: MakeFunctionWindow( None, self.env, parent=self))
+        visAction.triggered.connect(lambda: MakeObjectWindow(   None, self.env, parent=self))
+        grpAction.triggered.connect(lambda: MakeGroupWindow(    None, self.env, parent=self))
+        recAction.triggered.connect(lambda: MakeRecordingWindow(None, self.env, parent=self))
+        fncAction.triggered.connect(lambda: MakeFunctionWindow( None, self.env, parent=self))
 
         resourceMenu.addAction(visAction)
         resourceMenu.addAction(grpAction)
         resourceMenu.addAction(recAction)
         resourceMenu.addAction(fncAction)
 
+        # Settings Menug
+        settingsMenu = menuBar.addMenu(self.tr('Settings'))
+        resetLayoutAction = QtWidgets.QAction(QtGui.QIcon(Paths.file_layout), self.tr('Reset Layout'), self)
+        resetLayoutAction.triggered.connect(self.resetLayoutState)
+        settingsMenu.addAction(resetLayoutAction)
 
+
+        # Create Languages Menu
+        languageMenu = settingsMenu.addMenu(self.tr('Languages'))
+        enLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_english), self.tr('English'), self)
+        cnLanAction  = QtWidgets.QAction(QtGui.QIcon(Paths.languages_chinese), self.tr('Chinese'), self)
+        cnLanAction.triggered.connect(lambda: self.updateLanguageSetting(Global.ZH_CN))
+        enLanAction.triggered.connect(lambda: self.updateLanguageSetting(Global.EN_US))
+
+
+        languageMenu.addAction(enLanAction)
+        languageMenu.addAction(cnLanAction)
+
+
+        # Create survey Action
+        surveyMenu = menuBar.addMenu(self.tr('Win A Gift!'))
+        surveyMenu.setObjectName('surveyMenu')
+        # surveyMenu.setStyleSheet('QMenu::item {color: Red; }')
+        surveyLinkAction = QtWidgets.QAction(self.tr('Win A Gift!'), self)
+        surveyLinkAction.triggered.connect(lambda: webbrowser.open_new(Paths.survey_link))
+
+        surveyMenu.addAction(surveyLinkAction)
+
+        # Create Help Menu
+        helpMenu        = menuBar.addMenu(self.tr('Help'))
+        bugReportAction = QtWidgets.QAction(QtGui.QIcon(Paths.help_bugreport), self.tr('Bug Report'), self)
+        aboutAction = QtWidgets.QAction( QtGui.QIcon(Paths.file_about),        self.tr('About'), self)
+        helpAction = QtWidgets.QAction(   QtGui.QIcon(Paths.file_help),         self.tr('User Manual'), self)
+
+        loadAction.triggered.connect(   self.loadTask)
+        aboutAction.triggered.connect(  aboutMessage)
+        helpAction.triggered.connect(   lambda: Global.openFile(Paths.user_manual))
+        bugReportAction.triggered.connect(self.bugReport)
+
+        helpMenu.addAction(bugReportAction)
+        helpMenu.addAction(aboutAction)
+        helpMenu.addAction(helpAction)
 
         # Add menus to menuBar
         menuBar.addMenu(fileMenu)
         menuBar.addMenu(communityMenu)
         menuBar.addMenu(resourceMenu)
+        menuBar.addMenu(settingsMenu)
+        menuBar.addMenu(helpMenu)
+        menuBar.addMenu(surveyMenu)
 
 
         # Create Toolbar
-        toolbar = self.addToolBar("MainToolbar")
+        toolbar = self.addToolBar(self.tr("MainToolbar"))
         toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 
-        calibrateBtn = QtWidgets.QAction(QtGui.QIcon(Paths.calibrate), 'Calibrate', self)
-        objMngrBtn   = QtWidgets.QAction(QtGui.QIcon(Paths.objectManager), 'Resources', self)
+        calibrateBtn = QtWidgets.QAction(QtGui.QIcon(Paths.calibrate),     self.tr('Calibrate'), self)
+        objMngrBtn   = QtWidgets.QAction(QtGui.QIcon(Paths.objectManager), self.tr('Resources'), self)
 
-        self.scriptToggleBtn.setToolTip('Run/Pause the command script (Ctrl+R)')
-        self.devicesBtn.setToolTip('Open Camera and Robot settings',)
-        calibrateBtn.setToolTip('Open Robot and Camera Calibration Center')
-        objMngrBtn.setToolTip('Open Resource Manager')
+        self.scriptToggleBtn.setToolTip(self.tr('Run/Pause the command script (Ctrl+R)'))
+        self.devicesBtn.setToolTip(     self.tr('Open Camera and Robot settings'))
+        calibrateBtn.setToolTip(        self.tr('Open Robot and Camera Calibration Center'))
+        objMngrBtn.setToolTip(          self.tr('Open Resource Manager'))
 
-        self.scriptToggleBtn.setShortcut('Ctrl+R')
+        self.scriptToggleBtn.setShortcut(self.tr('Ctrl+R'))
 
 
         self.scriptToggleBtn.triggered.connect(self.toggleScript)
@@ -230,8 +283,8 @@ class MainWindow(QtWidgets.QMainWindow):
             # dockWidget.setTitleBarWidget(titleBarWidget)
             return dockWidget
 
-        cameraDock = createDockWidget(self.cameraWidget, "Camera")
-        consoleDock = createDockWidget(self.consoleWidget, "Console")
+        cameraDock = createDockWidget(  self.cameraWidget,  self.tr('Camera'))
+        consoleDock = createDockWidget(self.consoleWidget, self.tr('Console'))
 
 
         # Add the consoleWidgets to the window, and tabify them
@@ -320,13 +373,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
             # Generate a message for the user to explain what parameters are missing
-            errorStr = 'Certain Events and Commands are missing the following requirements to work properly: \n\n' + \
-                       ''.join(errorText) + \
-                       '\nWould you like to continue anyways? Events and commands with errors will not activate.'
+            errorStr = self.tr('Certain Events and Commands are missing the following requirements to work properly: '
+                       '\n\n') + ''.join(errorText) + self.tr('\nWould you like to continue anyways? '
+                       'Events and commands with errors will not activate.')
 
 
             # Warn the user
-            reply = QtWidgets.QMessageBox.question(self, 'Warning', errorStr,
+            reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'), self.tr(errorStr),
                                 QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.Cancel)
 
 
@@ -349,7 +402,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Make sure the UI matches the state of the script
         self.scriptToggleBtn.setIcon(QtGui.QIcon(Paths.pause_script))
-        self.scriptToggleBtn.setText("Stop")
+        self.scriptToggleBtn.setText(self.tr("Stop"))
 
     def endScript(self):
         # Tell the interpreter to exit the thread, then wait
@@ -361,10 +414,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # Check to make sure the thread closed correctly
         if self.interpreter.threadRunning():
             # Generate a message for the user to explain what parameters are missing
-            errorStr = 'The script was unable to end.\n' \
+            errorStr = self.tr('The script was unable to end.\n' \
                        'This may mean the script crashed, or it is taking time finishing.\n\n' \
                        'If you are running Python code inside of this script, make sure you check isExiting() during' \
-                       ' loops, to exit code quickly when the stop button is pressed.'
+                       ' loops, to exit code quickly when the stop button is pressed.')
 
             # Warn the user
             reply = QtWidgets.QMessageBox.question(self, 'Error', errorStr, QtWidgets.QMessageBox.Ok)
@@ -388,7 +441,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         self.scriptToggleBtn.setIcon(QtGui.QIcon(Paths.run_script))
-        self.scriptToggleBtn.setText("Start")
+        self.scriptToggleBtn.setText(self.tr("Start"))
 
 
     def refreshDevicesIcon(self):
@@ -405,13 +458,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         robotErrors = robot.getErrorsToDisplay()
         if len(robotErrors) > 0:
-            reply = QtWidgets.QMessageBox.question(self, 'Communication Errors', "The following errors have occured "
+            reply = QtWidgets.QMessageBox.question(self, self.tr('Communication Errors'), self.tr("The following errors have occured "
                             "communicating with your robot.\nTry reconnecting under the Devices menu."
-                            "\n\nERROR:\n" + "\n".join(robotErrors), QtWidgets.QMessageBox.Ok)
+                            "\n\nERROR:\n") + "\n".join(robotErrors), QtWidgets.QMessageBox.Ok)
             self.env.updateSettings("robotID", None)
 
         robCon = robot.connected()
-        camCon = camera.connected() and camera.running
+        camCon = camera.connected()
 
         icon = ""
 
@@ -422,6 +475,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.devicesBtn.setIcon(QtGui.QIcon(icon))
 
+
     def openDevices(self):
         # This handles the opening and closing of the Settings window.
         printf("GUI| Opening Devices Window")
@@ -429,11 +483,17 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.interpreter.threadRunning(): self.endScript()
 
         self.cameraWidget.pause()
-
-        deviceWindow = DeviceWindow(parent=self)
+        # Detect If CameraID or RobotID exisit
+        cameraID = None
+        robotID = None
+        if self.env.getSetting('cameraID') is not None:
+            cameraID = self.env.getSetting('cameraID')
+        if self.env.getSetting('robotID') is not None:
+            robotID = self.env.getSetting('robotID')
+            # printf("GUI| cameraID: "+ str(cameraID))
+        deviceWindow = DeviceWindow(parent=self, cameraID=cameraID, robotID=robotID)
         accepted     = deviceWindow.exec_()
 
-        self.cameraWidget.play()
         if not accepted:
             printf("GUI| Cancel clicked, no settings applied.")
             return
@@ -441,27 +501,28 @@ class MainWindow(QtWidgets.QMainWindow):
         printf("GUI| Apply clicked, applying settings...")
         if deviceWindow.getRobotSetting() is not None:
             self.env.updateSettings("robotID", deviceWindow.getRobotSetting())
-
-        currentCamera = self.env.getSetting("cameraID")
+            # If the robots not connected, attempt to reestablish connection
+            robot   = self.env.getRobot()
+            if not robot.connected():
+                robot.setUArm(self.env.getSetting('robotID'))
+        else:
+            self.env.updateSettings("robotID", None) # Disconnect Robot
+            self.env.closeRobot()
 
         if deviceWindow.getCameraSetting() is not None:
             self.env.updateSettings("cameraID", deviceWindow.getCameraSetting())
-
-
-        # If the camera has changed, update the cameraID
-        if currentCamera != self.env.getSetting("cameraID"):
             vStream = self.env.getVStream()
             vStream.setNewCamera(self.env.getSetting('cameraID'))
+            self.cameraWidget.play()
+        else:
+            self.env.updateSettings("cameraID", None) # Disconnect Camera
+            printf("GUI| cameraID save None")
+            # self.cameraWidget.pause()
+            printf("GUI| cameraWidget pause")
+            self.env.closeVideo()
+            printf("GUI| closeVideo")
+            self.cameraWidget.initUI()
 
-
-        # If the robots not connected, attempt to reestablish connection
-        robot   = self.env.getRobot()
-        if not robot.connected():
-            robot.setUArm(self.env.getSetting('robotID'))
-
-
-
-        self.cameraWidget.play()
 
     def openCalibrations(self):
         # This handles the opening and closing of the Calibrations window
@@ -584,7 +645,6 @@ class MainWindow(QtWidgets.QMainWindow):
             return
 
 
-
         # Load the data- BUT MAKE SURE TO DEEPCOPY otherwise any change in the program will change in self.loadData
         try:
 
@@ -596,10 +656,18 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             printf("GUI| ERROR: Could not load task: ", e)
             self.newTask(promptSave=False)
-            QtWidgets.QMessageBox.question(self, 'Warning', "The program was unable to load the following script:\n" +
-                                    filename + "\n\n The following error occured: " + type(e).__name__ + ": " + str(e),
-                                           QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, self.tr('Warning'),
+                                self.tr("The program was unable to load the following script:\n") +
+                                str(filename) + self.tr("\n\n The following error occured: ") + type(e).__name__ + ": "
+                                + str(e))
 
+    def bugReport(self):
+        # Open the bug report link & zip the log files prompt the log.zip folder
+        webbrowser.open_new(Paths.bugreport_link)
+        with ZipFile(Paths.bugreport_zipfile, 'w') as logzip:
+            logzip.write(Paths.ucs_log)
+            logzip.write(Paths.error_log)
+        Global.openFile(Paths.bugreport_dir)
 
 
     def promptSave(self):
@@ -609,15 +677,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if not self.loadData == self.controlPanel.getSaveData():
             printf("GUI| Prompting user to save changes")
-            reply = QtWidgets.QMessageBox.question(self, 'Warning',
-                                    "You have unsaved changes. Would you like to save before continuing?",
+            reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
+                                    self.tr("You have unsaved changes. Would you like to save before continuing?"),
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel,
                                     QtWidgets.QMessageBox.Yes)
 
             if reply == QtWidgets.QMessageBox.Yes:
                 printf("GUI| Saving changes")
-                success = self.saveTask(False)
-                return not success
+                self.saveTask(None)
 
             if reply == QtWidgets.QMessageBox.No:
                 printf("GUI| Not saving changes")
@@ -625,6 +692,36 @@ class MainWindow(QtWidgets.QMainWindow):
             if reply == QtWidgets.QMessageBox.Cancel:
                 printf("GUI| User canceled- aborting close!")
                 return True
+
+    def resetLayoutState(self):
+        reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
+                                      self.tr("Layout Reset need restart to apply, Would you like to continue?"),
+                                      QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel,
+                                      QtWidgets.QMessageBox.Yes)
+
+        if reply == QtWidgets.QMessageBox.Yes:
+            printf("GUI| Restarting")
+            self.resetLayoutFlag = True
+            self.close()
+            QtCore.QCoreApplication.exit(MainWindow.EXIT_CODE_REBOOT)
+
+        if reply == QtWidgets.QMessageBox.Cancel:
+            return
+
+    def saveLayoutState(self):
+        if not self.resetLayoutFlag:
+            # Save the window geometry as a string representation of a hex number
+            saveGeometry = ''.join([str(char) for char in self.saveGeometry().toHex()])
+            self.env.updateSettings("windowGeometry", saveGeometry)
+
+
+            # Save the dockWidget positions/states as a string representation of a hex number
+            saveState    = ''.join([str(char) for char in self.saveState().toHex()])
+            self.env.updateSettings("windowState", saveState)
+        else:
+            self.env.updateSettings("windowGeometry", None)
+            self.env.updateSettings("windowState", None)
+
 
     def closeEvent(self, event):
         """
@@ -638,16 +735,7 @@ class MainWindow(QtWidgets.QMainWindow):
             event.ignore()
             return
 
-
-        # Save the window geometry as a string representation of a hex number
-        saveGeometry = ''.join([str(char) for char in self.saveGeometry().toHex()])
-        self.env.updateSettings("windowGeometry", saveGeometry)
-
-
-        # Save the dockWidget positions/states as a string representation of a hex number
-        saveState    = ''.join([str(char) for char in self.saveState().toHex()])
-        self.env.updateSettings("windowState", saveState)
-
+        self.saveLayoutState()
 
         # Deactivate the robots servos
         robot = self.env.getRobot()
@@ -657,7 +745,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # End the script *after* prompting for save and deactivating servos on the robot. Script thread is a Daemon
         self.interpreter.setExiting(True)
 
-
         # Close and delete GUI objects, to stop their events from running
         self.refreshTimer.stop()
         self.cameraWidget.close()
@@ -665,11 +752,37 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget.close()
         self.centralWidget.deleteLater()
 
+        # Delete all child Widget
+        for widget in self.findChildren(QtWidgets.QWidget):
+            widget.deleteLater()
+            widget = None
 
         # Close threads
         self.env.close()
 
         printf("GUI| Done closing all objects and threads.")
+        app.exit(0)
+
+    def updateLanguageSetting(self, language):
+        """
+        This function will switch whole Program language
+        :param language:
+        :return:
+        """
+        reply = QtWidgets.QMessageBox.question(self, self.tr('Warning'),
+                                      self.tr("Language switching need restart to apply, Would you like to continue?"),
+                                      QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel,
+                                      QtWidgets.QMessageBox.Yes)
+
+        if reply == QtWidgets.QMessageBox.Yes:
+            printf("GUI| Restarting")
+            self.env.updateSettings("language", language)
+            self.close()
+            QtCore.QCoreApplication.exit(MainWindow.EXIT_CODE_REBOOT)
+
+        if reply == QtWidgets.QMessageBox.Cancel:
+            self.env.updateSettings("language", language)
+
 
 
 
@@ -680,11 +793,13 @@ class DeviceWindow(QtWidgets.QDialog):
     The Apply/Cancel buttons are connected in the MainWindow class, which is why they are 'self' variables
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent, cameraID, robotID):
         super(DeviceWindow, self).__init__(parent)
         self.robSetting = None  # New robotID
         self.camSetting = None  # New cameraID
-
+        self.cameraID = cameraID
+        self.robotID = robotID
+        self.env = env
         # Init UI Globals
         self.cameraButtonGroup = None  # Radio buttons require a "group"
         self.robotButtonGroup  = None
@@ -694,52 +809,70 @@ class DeviceWindow(QtWidgets.QDialog):
         self.initUI()
 
     def initUI(self):
+        cameraConnectDescText = self.tr('Please select the camera you will be using:')
+        cameraConnectBtnText = self.tr("Scan for Cameras")
+        robotConnectDescText = self.tr('Please select the robot you will be using:')
+        robotConnectBtnText  = self.tr("Scan for Robots")
+        robotDisconnectDescText = self.tr("Connected to Robot:")
+        disconnectBtnText  = self.tr("Disconnect")
+        cameraDisconnectDescText = self.tr("Connected to Camera:")
 
-        # Create Text
-        selectRobotTxt  = QtWidgets.QLabel('Please select the robot you will be using:')
-        selectCameraTxt = QtWidgets.QLabel('Please select the camera you will be using:')
-
-
+        self.robotScanBtn = QtWidgets.QPushButton(robotConnectBtnText)
+        self.selectRobotTxt = QtWidgets.QLabel(robotConnectDescText)
+        self.cameraScanBtn = QtWidgets.QPushButton(cameraConnectBtnText)
+        self.selectCameraTxt = QtWidgets.QLabel(cameraConnectDescText)
         # CREATE BUTTONS
-        robotScanBtn  = QtWidgets.QPushButton("Scan for Robots")
-        cameraScanBtn = QtWidgets.QPushButton("Scan for Cameras")
-        self.cameraToggleBtn = QtWidgets.QPushButton(self._getToggleButtonText(self.parent().env.getVStream()))
-        applyBtn      = QtWidgets.QPushButton("Apply")
-        cancelBtn     = QtWidgets.QPushButton("Cancel")
+        if self.robotID is None: # If Robot ID Exist Show Scan
+            self.robotScanBtn.setText(robotConnectBtnText)
+            self.selectRobotTxt.setText(robotConnectDescText)
+            self.robotScanBtn.clicked.connect(self.scanForRobotsClicked)
+        else:
+            self.robotScanBtn.setText(disconnectBtnText)
+            self.selectRobotTxt.setText(robotDisconnectDescText + str(self.robotID))
+            self.robSetting = self.robotID
+            self.robotScanBtn.clicked.connect(self.disconnectForRobotClicked)
+
+        if self.cameraID is None: # IF Camera ID Exist Show Disconnect
+            self.cameraScanBtn.setText(cameraConnectBtnText)
+            self.selectCameraTxt.setText(cameraConnectDescText)
+            self.cameraScanBtn.clicked.connect(self.scanForCamerasClicked)
+        else:
+            self.cameraScanBtn = QtWidgets.QPushButton(disconnectBtnText)
+            self.selectCameraTxt = QtWidgets.QLabel(cameraDisconnectDescText + str(self.cameraID))
+            self.camSetting = self.cameraID
+            self.cameraScanBtn.clicked.connect(self.disconnectForCameraClicked)
+
+        applyBtn      = QtWidgets.QPushButton(self.tr("Apply"))
+        cancelBtn     = QtWidgets.QPushButton(self.tr("Cancel"))
 
         # Connect Buttons
-        robotScanBtn.clicked.connect(self.scanForRobotsClicked)
-        cameraScanBtn.clicked.connect(self.scanForCamerasClicked)
-        self.cameraToggleBtn.clicked.connect(self.toggleCameraClicked)
         applyBtn.clicked.connect(self.accept)
         cancelBtn.clicked.connect(self.reject)
 
 
         # Set max widths of buttons
         maxWidth = 130
-        robotScanBtn.setFixedWidth(maxWidth)
-        cameraScanBtn.setFixedWidth(maxWidth)
+        self.robotScanBtn.setFixedWidth(maxWidth)
+        self.cameraScanBtn.setFixedWidth(maxWidth)
         applyBtn.setFixedWidth(maxWidth)
         cancelBtn.setFixedWidth(maxWidth)
 
 
         # Create the rows and fill them up
         row1 = QtWidgets.QHBoxLayout()
-        row1.addWidget(selectRobotTxt, QtCore.Qt.AlignLeft)
-        row1.addWidget(robotScanBtn, QtCore.Qt.AlignRight)
+        row1.addWidget(self.selectRobotTxt, QtCore.Qt.AlignLeft)
+        row1.addWidget(self.robotScanBtn, QtCore.Qt.AlignRight)
 
         row2 = QtWidgets.QHBoxLayout()
         row2.addLayout(self.robVBox, QtCore.Qt.AlignLeft)
 
         row3 = QtWidgets.QHBoxLayout()
-        row3.addWidget(selectCameraTxt, QtCore.Qt.AlignLeft)
-        row3.addWidget(cameraScanBtn, QtCore.Qt.AlignRight)
+        row3.addWidget(self.selectCameraTxt, QtCore.Qt.AlignLeft)
+        row3.addWidget(self.cameraScanBtn, QtCore.Qt.AlignRight)
 
         row4 = QtWidgets.QHBoxLayout()
         row4.addLayout(self.camVBox)
 
-        row5 = QtWidgets.QHBoxLayout()
-        row5.addWidget(self.cameraToggleBtn, QtCore.Qt.AlignRight)
 
         # Place the rows ito the middleVLayout
         middleVLayout = QtWidgets.QVBoxLayout()
@@ -747,7 +880,6 @@ class DeviceWindow(QtWidgets.QDialog):
         middleVLayout.addLayout(row2)
         middleVLayout.addLayout(row3)
         middleVLayout.addLayout(row4)
-        middleVLayout.addLayout(row5)
         middleVLayout.addStretch(1)
 
 
@@ -770,7 +902,7 @@ class DeviceWindow(QtWidgets.QDialog):
 
         self.setLayout(mainHLayout)
         self.setMinimumHeight(400)
-        self.setWindowTitle('Devices')
+        self.setWindowTitle(self.tr('Devices'))
         self.setWindowIcon(QtGui.QIcon(Paths.settings))
 
 
@@ -789,7 +921,7 @@ class DeviceWindow(QtWidgets.QDialog):
 
 
         if len(connectedDevices) == 0:
-            notFoundTxt = QtWidgets.QLabel('No devices were found.')
+            notFoundTxt = QtWidgets.QLabel(self.tr('No devices were found.'))
             self.robVBox.addWidget(notFoundTxt)
 
     def scanForCamerasClicked(self):
@@ -802,33 +934,25 @@ class DeviceWindow(QtWidgets.QDialog):
         # Update the list of found cameras
         self.clearLayout(self.camVBox)  #  Clear camera list
         for i in range(len(connectedCameras)):
-            newButton = QtWidgets.QRadioButton("Camera " + str(i))
+            newButton = QtWidgets.QRadioButton(self.tr("Camera ") + str(i))
             self.camVBox.addWidget(newButton)                  # Add the button to the button layout
             self.cameraButtonGroup.addButton(newButton, i)     # Add the button to a group, with an ID of i
             newButton.clicked.connect(self.camButtonClicked)   # Connect each radio button to a method
 
 
         if len(connectedCameras) == 0:
-            notFoundTxt = QtWidgets.QLabel('No cameras were found.')
+            notFoundTxt = QtWidgets.QLabel(self.tr('No cameras were found.'))
             self.camVBox.addWidget(notFoundTxt)
 
-    @staticmethod
-    def _getToggleButtonText(stream):
-        if stream.cameraID is None:
-            return 'No camera configured'
-        state = ['Enable Camera', 'Disable Camera']
-        return state[stream.running]
+    def disconnectForCameraClicked(self):
+        # Disconnect Camera
+        self.camSetting = None
+        self.cameraScanBtn.setEnabled(False)
 
-    def toggleCameraClicked(self):
-        vStream = self.parent().env.getVStream()
+    def disconnectForRobotClicked(self):
+        self.robSetting = None
+        self.robotScanBtn.setEnabled(False)
 
-        if vStream.running:
-            vStream.endThread()
-        else:
-            vStream.startThread()
-
-        self.cameraToggleBtn.setText(self._getToggleButtonText(vStream))
-        self.parent().refreshDevicesIcon()
 
     def camButtonClicked(self):
         self.camSetting = self.cameraButtonGroup.checkedId()
@@ -878,43 +1002,78 @@ class Application(QtWidgets.QApplication):
         return super(Application, self).notify(receiver, event)
 
 
-
-
-
 if __name__ == '__main__':
-    # Install a global exception hook to catch pyQt errors that fall through (helps with debugging a ton) #TODO: Remove for builds
-    sys.__excepthook = sys.excepthook
-    sys._excepthook  = sys.excepthook
-    def exception_hook(exctype, value, traceback):
-        sys._excepthook(exctype, value, traceback)
-        sys.exit(1)
-    sys.excepthook   = exception_hook
+    import os
+    import logging
+
+    # Set up a global logger for error logging
+
+    errorLogger = logging.getLogger('error')
+    errorLogger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logFile   = os.path.join(Paths.ucs_home_dir, Paths.error_log)
+    fHandler  = logging.FileHandler(logFile)
+    fHandler.setLevel(logging.INFO)
+    fHandler.setFormatter(formatter)
+    errorLogger.addHandler(fHandler)
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        errorLogger.info('---------------------------Logging Start---------------------------')
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+            return
+
+        errorLogger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+        errorLogger.info('----------------------------Logging End----------------------------')
+    sys.excepthook = handle_exception
 
 
-    # Initialize global variables
-    Global.init()
+    # Set up global variables
+    # Global.init()
+
+    # Initialize the environment. Robot, camera, and objects will be loaded into the "logic" side of things
+    env = Environment(Paths.settings_txt, Paths.objects_dir, Paths.cascade_dir)  # load environment
+    Paths.initLogger(env.getSetting('consoleSettings'))
 
 
-    # Create the Application base
-    app = Application(sys.argv)
+    # Create an exit code to track whether or not to reboot the GUI, or close it for good (for language changes)
+    currentExitCode = MainWindow.EXIT_CODE_REBOOT
+    while currentExitCode == MainWindow.EXIT_CODE_REBOOT:
+        # Create the Application base
+        app = Application(sys.argv)
 
+        # Set Application Font
+        font = QtGui.QFont()
+        font.setFamily("Verdana")
+        font.setPixelSize(12)
+        app.setFont(font)
 
-    # Apply a stylesheet (theme) of choice here
-    # app.setStyleSheet(fancyqt.firefox.style)
+        # Create Language pack installer
+        trans = QtCore.QTranslator()
 
+        # Get the language settings from settings.txt, or the local area
+        language_code = env.getSetting("language")
+        if language_code is None:
+            try:
+                import locale
+                printf("GUI| Detect System locale: {}".format(locale.getdefaultlocale()[0]))
+                if locale.getdefaultlocale()[0] == Global.ZH_CN:
+                    language_code = Global.ZH_CN
+            except ValueError:
+                printf("GUI| Error - Can not detect system locale")
+        env.updateSettings("language", language_code)
+        # Load the appropriate language pack, if there is need for one
+        if language_code is None: language_code = Global.EN_US
+        Paths.loadLanguagePath(language_code)
+        if language_code == Global.EN_US:
+            pass
+        else:
+            trans.load(Paths.language_pack)
+        app.installTranslator(trans)
 
-    # Set Application Font
-    font = QtGui.QFont()
-    font.setFamily("Verdana")
-    font.setPixelSize(12)
-    app.setFont(font)
-
-
-    # Actually start the program
-    mainWindow = MainWindow()
-    sys.exit(app.exec_())
-
-
-
-
-
+        w = MainWindow(env)
+        w.show()
+        currentExitCode = app.exec_()
+        logging.getLogger("application").info("System Exit - Exit Code" + str(currentExitCode))
+        app = None  # Clear the App

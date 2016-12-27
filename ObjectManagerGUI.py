@@ -35,7 +35,7 @@ from CameraGUI           import CameraWidget, CameraSelector, cvToPixFrame
 from CommandsGUI         import CommandMenuWidget
 from CommonGUI           import centerScreen
 from ControlPanelGUI     import CommandList
-from Logic.Global        import printf
+from Logic.Global        import printf,getOSType,WINDOWS,MACOSX,LINUX
 from Logic.Resources     import TrackableObject, MotionPath, Function
 from Logic.RobotVision   import MIN_POINTS_TO_LEARN_OBJECT
 __author__ = "Alexander Thiel"
@@ -71,10 +71,16 @@ class ObjectManagerWindow(QtWidgets.QDialog):
 
 
         # CREATE OBJECTS AND LAYOUTS FOR ROW 1 COLUMN (ALL)
-        newObjBtn    = QtWidgets.QPushButton("New Vision Object")
-        newGrpBtn    = QtWidgets.QPushButton("New Vision Group")
-        newRecBtn    = QtWidgets.QPushButton("New Move Recording")
-        newFncBtn    = QtWidgets.QPushButton("New Function")
+        newObjBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","New Vision Object"))
+        newGrpBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","New Vision Group"))
+        newRecBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","New Move Recording"))
+        newFncBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","New Function"))
+        # Fix Button font color
+        if getOSType() == MACOSX:
+            newObjBtn.setStyleSheet('QPushButton { color: Black;}')
+            newGrpBtn.setStyleSheet('QPushButton { color: Black;}')
+            newRecBtn.setStyleSheet('QPushButton { color: Black;}')
+            newFncBtn.setStyleSheet('QPushButton { color: Black;}')
 
         # Set the icons for the buttons
         newObjBtn.setIcon(QtGui.QIcon(Paths.event_recognize))
@@ -104,14 +110,14 @@ class ObjectManagerWindow(QtWidgets.QDialog):
 
 
         # CREATE OBJECTS AND LAYOUTS FOR COLUMN 1
-        listGBox     = QtWidgets.QGroupBox("Loaded Objects")
+        listGBox     = QtWidgets.QGroupBox(QtCore.QCoreApplication.translate("ObjectManagerGUI","Loaded Objects"))
         listVLayout  = QtWidgets.QVBoxLayout()
         listVLayout.addWidget(self.objTree)
         listGBox.setLayout(listVLayout)
         listGBox.setFixedWidth(325)
 
         # CREATE OBJECTS AND LAYOUTS FOR COLUMN 2
-        selectedGBox   = QtWidgets.QGroupBox("Selected Resource")
+        selectedGBox   = QtWidgets.QGroupBox(QtCore.QCoreApplication.translate("ObjectManagerGUI","Selected Resource"))
         selectedGBox.setLayout(self.selLayout)
 
 
@@ -147,7 +153,7 @@ class ObjectManagerWindow(QtWidgets.QDialog):
 
         # Set the layout and customize the window
         self.setLayout(mainVLayout)
-        self.setWindowTitle('Resource Manager')
+        self.setWindowTitle(QtCore.QCoreApplication.translate("ObjectManagerGUI",'Resource Manager'))
         self.setWindowIcon(QtGui.QIcon(Paths.objectManager))
         self.setMinimumHeight(700)
 
@@ -178,10 +184,10 @@ class ObjectManagerWindow(QtWidgets.QDialog):
         fncObjs = self.objManager.getObjectNameList(self.objManager.FUNCTION)
         fncObjs.sort()
 
-        tree = [[     "Vision Objects", visObjs],
-                [      "Vision Groups", grpObjs],
-                ["Movement Recordings", rcdObjs],
-                [          "Functions", fncObjs]]
+        tree = [[     QtCore.QCoreApplication.translate("ObjectManagerGUI","Vision Objects"), visObjs],
+                [      QtCore.QCoreApplication.translate("ObjectManagerGUI","Vision Groups"), grpObjs],
+                [QtCore.QCoreApplication.translate("ObjectManagerGUI","Movement Recordings"), rcdObjs],
+                [          QtCore.QCoreApplication.translate("ObjectManagerGUI","Functions"), fncObjs]]
 
 
         for section in tree:
@@ -249,8 +255,8 @@ class ObjectManagerWindow(QtWidgets.QDialog):
 
         selDescLbl         = QtWidgets.QLabel("")   # Description of selected object
         selImgLbl          = QtWidgets.QLabel("")   # A small picture of the object
-        deleteBtn          = QtWidgets.QPushButton("Delete")
-        addOrientationBtn  = QtWidgets.QPushButton("Add Orientation")
+        deleteBtn          = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Delete"))
+        addOrientationBtn  = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Add Orientation"))
 
 
         # Connect any buttons
@@ -272,11 +278,11 @@ class ObjectManagerWindow(QtWidgets.QDialog):
 
 
         # Create and set the description for this object
-        selDescLbl.setText("Name: \n"             + trackableObj.name + "\n\n"
-                           "Detail Points: \n"    + str(avgPoints)    + "\n\n"
-                           "Orientations: \n"     + str(len(views))   + "\n\n"
-                           "Belongs To Groups:\n" + ''.join(['-' + tag + '\n' for tag in trackableObj.getTags()]) + "\n"
-                           "Image:")
+        selDescLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Name: \n")             + trackableObj.name + "\n\n" +
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Detail Points: \n")    + str(avgPoints)    + "\n\n" +
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Orientations: \n")     + str(len(views))   + "\n\n" +
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Belongs To Groups:\n") + ''.join(['-' + tag + '\n' for tag in trackableObj.getTags()]) + "\n" +
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Image:"))
 
         self.selLayout.addWidget(selDescLbl)
         self.selLayout.addWidget(selImgLbl)
@@ -286,8 +292,8 @@ class ObjectManagerWindow(QtWidgets.QDialog):
 
     def setSelectionGroup(self, trackableGrp):
         selDescLbl = QtWidgets.QLabel("")   # Description of selected object
-        deleteBtn  = QtWidgets.QPushButton("Delete")
-        editBtn    = QtWidgets.QPushButton("Edit Group")
+        deleteBtn  = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Delete"))
+        editBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Edit Group"))
 
         # Connect any buttons
         deleteBtn.clicked.connect(self.deleteSelected)
@@ -296,8 +302,8 @@ class ObjectManagerWindow(QtWidgets.QDialog):
 
         # Create the appropriate description
         groupMembers = ['-' + obj.name + '\n' for obj in trackableGrp.getMembers()]
-        selDescLbl.setText("Name: \n"          + trackableGrp.name     + "\n\n"
-                           "Group Members: \n" + ''.join(groupMembers) + "\n")
+        selDescLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Name: \n")          + trackableGrp.name     + "\n\n" +
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Group Members: \n") + ''.join(groupMembers) + "\n")
 
 
         self.selLayout.addWidget(selDescLbl)
@@ -308,8 +314,8 @@ class ObjectManagerWindow(QtWidgets.QDialog):
     def setSelectionPath(self, pathObj):
 
         selDescLbl = QtWidgets.QLabel("")   # Description of selected object
-        deleteBtn  = QtWidgets.QPushButton("Delete")
-        editBtn    = QtWidgets.QPushButton("Edit Recording")
+        deleteBtn  = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Delete"))
+        editBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Edit Recording"))
 
         # Connect any buttons
         deleteBtn.clicked.connect(self.deleteSelected)
@@ -320,10 +326,10 @@ class ObjectManagerWindow(QtWidgets.QDialog):
         motionPath = pathObj.getMotionPath()
         totalTime  = round(motionPath[-1][0], 1)
         if len(motionPath) == 0: return  # That would be weird, but you never know...
-        selDescLbl.setText("Name: \n"        + pathObj.name + "\n\n"
-                           "Move Count: \n"  + str(len(motionPath)) + "\n\n"
-                           "Length: \n"      + str(totalTime) + " seconds\n\n"
-                           "Moves/Second:\n"  + str(round(len(motionPath) / totalTime, 1)))
+        selDescLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Name: \n")        + pathObj.name + "\n\n"+
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Move Count: \n")  + str(len(motionPath)) + "\n\n"+
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Length: \n")      + str(totalTime) + " seconds\n\n"+
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Moves/Second:\n")  + str(round(len(motionPath) / totalTime, 1)))
 
 
         self.selLayout.addWidget(selDescLbl)
@@ -334,8 +340,8 @@ class ObjectManagerWindow(QtWidgets.QDialog):
     def setSelectionFunction(self, funcObj):
 
         selDescLbl = QtWidgets.QLabel("")   # Description of selected object
-        deleteBtn  = QtWidgets.QPushButton("Delete")
-        editBtn    = QtWidgets.QPushButton("Edit Function")
+        deleteBtn  = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Delete"))
+        editBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Edit Function"))
 
         selDescLbl.setWordWrap(True)
 
@@ -349,10 +355,10 @@ class ObjectManagerWindow(QtWidgets.QDialog):
         description = funcObj.getDescription()
         arguments   = funcObj.getArguments()
 
-        selDescLbl.setText("Name: \n"                + funcObj.name + "\n\n"
-                           "Description: \n"         + description + "\n\n"
-                           "Length: \n"  + str(len(commandList)) + " Commands\n\n"
-                           "Arguments:\n" + ''.join(['-' + arg + '\n' for arg in arguments]) + "\n")
+        selDescLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Name: \n")                + funcObj.name + "\n\n"+
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Description: \n")         + description + "\n\n"+
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Length: \n")  + str(len(commandList)) + QtCore.QCoreApplication.translate("ObjectManagerGUI"," Commands\n\n")+
+                           QtCore.QCoreApplication.translate("ObjectManagerGUI","Arguments:\n") + ''.join(['-' + arg + '\n' for arg in arguments]) + "\n")
 
 
 
@@ -383,9 +389,9 @@ class ObjectManagerWindow(QtWidgets.QDialog):
         if selObject is None: return
 
         # Warn the user of the consequences of continuing
-        reply = QtWidgets.QMessageBox.question(self, 'Warning',
-                                       "Deleting this object will delete it permanently.\n"
-                                       "Do you want to continue?",
+        reply = QtWidgets.QMessageBox.question(self, QtCore.QCoreApplication.translate("ObjectManagerGUI",'Warning'),
+                                       QtCore.QCoreApplication.translate("ObjectManagerGUI","Deleting this object will delete it permanently.\n") +
+                                       QtCore.QCoreApplication.translate("ObjectManagerGUI","Do you want to continue?"),
                                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
 
         if reply == QtWidgets.QMessageBox.Yes:
@@ -447,7 +453,7 @@ class MakeGroupWindow(QtWidgets.QDialog):
 
         self.nameEdit   = QtWidgets.QLineEdit()
         self.objList    = QtWidgets.QListWidget()
-        self.applyBtn   = QtWidgets.QPushButton("Apply", self)
+        self.applyBtn   = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Apply"), self)
         self.hintLbl    = QtWidgets.QLabel("")
 
         # Add trackablObjs to the objList
@@ -488,8 +494,8 @@ class MakeGroupWindow(QtWidgets.QDialog):
 
 
 
-        nameLbl   = QtWidgets.QLabel("Group Name: ")
-        cancelBtn = QtWidgets.QPushButton("Cancel", self)
+        nameLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Group Name: "))
+        cancelBtn = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Cancel"), self)
 
         # Set up slots to check if the "Apply" button should be enabled or disabled
         self.objList.itemSelectionChanged.connect(self.isComplete)
@@ -528,7 +534,7 @@ class MakeGroupWindow(QtWidgets.QDialog):
 
         self.setLayout(mainVLayout)
         self.setMinimumHeight(400)
-        self.setWindowTitle('Add Objects to Group')
+        self.setWindowTitle(QtCore.QCoreApplication.translate("ObjectManagerGUI",'Add Objects to Group'))
 
     def createNewObject(self):
         name = self.nameEdit.text()
@@ -559,7 +565,7 @@ class MakeGroupWindow(QtWidgets.QDialog):
             self.nameEdit.setText(newName)
 
         if len(self.objList.selectedItems()) == 0:
-            newHintText = "You must select at least one object"
+            newHintText = QtCore.QCoreApplication.translate("ObjectManagerGUI","You must select at least one object")
 
         self.hintLbl.setText(newHintText)
 
@@ -596,8 +602,8 @@ class MakeRecordingWindow(QtWidgets.QDialog):
         self.timer       = QtCore.QTimer()
         self.nameEdit    = QtWidgets.QLineEdit()
         self.motionTbl   = QtWidgets.QTableWidget()
-        self.recordBtn   = QtWidgets.QPushButton("Record")
-        self.applyBtn    = QtWidgets.QPushButton("Apply", self)
+        self.recordBtn   = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Record"))
+        self.applyBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Apply"), self)
         self.hintLbl     = QtWidgets.QLabel("")
 
 
@@ -622,8 +628,8 @@ class MakeRecordingWindow(QtWidgets.QDialog):
         # Check if the robot is connected before running
         robot          = env.getRobot()
         if not robot.connected():
-            message = "A robot must be connected to do movement recording."
-            QtWidgets.QMessageBox.question(self, 'Error', message, QtWidgets.QMessageBox.Ok)
+            message = QtCore.QCoreApplication.translate("ObjectManagerGUI","A robot must be connected to do movement recording.")
+            QtWidgets.QMessageBox.question(self, QtCore.QCoreApplication.translate("ObjectManagerGUI",'Error'), message, QtWidgets.QMessageBox.Ok)
             return
         # Execute window and garbage collect afterwards
         finished = self.exec_()
@@ -642,20 +648,20 @@ class MakeRecordingWindow(QtWidgets.QDialog):
         monospace.setStyleHint(QtGui.QFont.TypeWriter)
         self.motionTbl.setFont(monospace)
         self.motionTbl.setColumnCount(3)
-        self.motionTbl.setHorizontalHeaderLabels(("Time", "Servo Angles", "Gripper Action"))
+        self.motionTbl.setHorizontalHeaderLabels((QtCore.QCoreApplication.translate("ObjectManagerGUI","Time"), QtCore.QCoreApplication.translate("ObjectManagerGUI","Servo Angles"), QtCore.QCoreApplication.translate("ObjectManagerGUI","Gripper Action")))
         self.motionTbl.verticalHeader().hide()
 
 
 
         # Create non global UI variables
-        nameLbl   = QtWidgets.QLabel("Recording Name: ")
-        pathLbl   = QtWidgets.QLabel("Recorded Path")
-        hint2Lbl  = QtWidgets.QLabel("Press 'Record' to start recording robot movements.\n"
-                                     "While recording, press the robots suction cup to activate the pump.\n"
-                                     "When you press Apply, areas of no movement at the start and end\n"
-                                     "will be trimmed out.")
+        nameLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Recording Name: "))
+        pathLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Recorded Path"))
+        hint2Lbl  = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Press 'Record' to start recording robot movements.\n") +
+                                     QtCore.QCoreApplication.translate("ObjectManagerGUI","While recording, press the robots suction cup to activate the pump.\n") +
+                                     QtCore.QCoreApplication.translate("ObjectManagerGUI","When you press Apply, areas of no movement at the start and end\n") +
+                                     QtCore.QCoreApplication.translate("ObjectManagerGUI","will be trimmed out."))
 
-        cancelBtn = QtWidgets.QPushButton("Cancel", self)
+        cancelBtn = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Cancel"), self)
 
 
         # Connect everything
@@ -713,7 +719,7 @@ class MakeRecordingWindow(QtWidgets.QDialog):
         self.setLayout(mainVLayout)
         self.setMinimumHeight(550)
         self.setMinimumWidth(500)
-        self.setWindowTitle('Create a Movement Recording')
+        self.setWindowTitle(QtCore.QCoreApplication.translate("ObjectManagerGUI",'Create a Movement Recording'))
 
     # Table events
     def resizeEvent(self, event):
@@ -765,9 +771,9 @@ class MakeRecordingWindow(QtWidgets.QDialog):
         self.lastTime = time()
         if self.recording:
             self.robot.setPump(False)
-            self.recordBtn.setText("Record")
+            self.recordBtn.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Record"))
             if len(self.motionPath):
-                self.recordBtn.setText("Continue Recording")
+                self.recordBtn.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Continue Recording"))
             self.timer.stop()
             self.recordBtn.setIcon(QtGui.QIcon(Paths.record_start))
 
@@ -781,7 +787,7 @@ class MakeRecordingWindow(QtWidgets.QDialog):
 
             self.timer.start()
 
-            self.recordBtn.setText("Stop Recording")
+            self.recordBtn.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Stop Recording"))
             self.recordBtn.setIcon(QtGui.QIcon(Paths.record_end))
             self.robot.setActiveServos(all=False)
 
@@ -949,7 +955,7 @@ class MakeRecordingWindow(QtWidgets.QDialog):
         self.hintLbl.setText(newHintText)
 
         if len(self.motionPath) <= 20:
-            self.hintLbl.setText("Recording must be longer than 20 points of data")
+            self.hintLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Recording must be longer than 20 points of data"))
 
         # Set the apply button enabled if everything is filled out correctly
         setEnabled = len(newHintText) == 0 and len(self.motionPath) > 20 and not self.recording
@@ -996,7 +1002,7 @@ class MakeFunctionWindow(QtWidgets.QDialog):
             self.layout().setContentsMargins(0, 0, 0, 0)
 
         def addArgument(self):
-            var, accepted = QtWidgets.QInputDialog.getText(self, 'Add Argument', 'Variable Name: ')
+            var, accepted = QtWidgets.QInputDialog.getText(self, QtCore.QCoreApplication.translate("ObjectManagerGUI",'Add Argument'), QtCore.QCoreApplication.translate("ObjectManagerGUI",'Variable Name: '))
 
             # If the user canceled, don't do anything
             if not accepted: return
@@ -1009,9 +1015,9 @@ class MakeFunctionWindow(QtWidgets.QDialog):
 
             # If the variable is invalid, then warn and re-prompt the user
             if not possibleVariable == var:
-                QtWidgets.QMessageBox.question(self, 'Invalid Variable Name',
-                                               'The argument must be a valid python variable. This means no numbers '
-                                               'in the beginning, no spaces, and only numbers and letters',
+                QtWidgets.QMessageBox.question(self, QtCore.QCoreApplication.translate("ObjectManagerGUI",'Invalid Variable Name'),
+                                               QtCore.QCoreApplication.translate("ObjectManagerGUI",'The argument must be a valid python variable. This means no numbers ')+
+                                               QtCore.QCoreApplication.translate("ObjectManagerGUI",'in the beginning, no spaces, and only numbers and letters'),
                                                QtWidgets.QMessageBox.Ok)
                 self.addArgument()
                 return
@@ -1057,11 +1063,11 @@ class MakeFunctionWindow(QtWidgets.QDialog):
 
         # Initialize UI variables
         self.commandList = CommandList(environment, parent=self)
-        self.commandMenu = CommandMenuWidget(parent=self)
+        self.commandMenu = CommandMenuWidget(parent=self,env=environment)
         self.argList     = self.ArgumentsList(parent=self)
         self.nameEdit    = QtWidgets.QLineEdit()
         self.descEdit    = QtWidgets.QLineEdit()
-        self.applyBtn    = QtWidgets.QPushButton("Apply", self)
+        self.applyBtn    = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Apply"), self)
         self.hintLbl     = QtWidgets.QLabel()
 
 
@@ -1091,11 +1097,11 @@ class MakeFunctionWindow(QtWidgets.QDialog):
         self.nameEdit.textChanged.connect(self.isComplete)
 
         # Create non global UI variables
-        nameLbl   = QtWidgets.QLabel("Function Name ")
-        descLbl   = QtWidgets.QLabel("Function Description ")
-        argLbl    = QtWidgets.QLabel("Arguments (optional)")
-        hint2Lbl  = QtWidgets.QLabel("Drag commands into the list to create a function")
-        cancelBtn = QtWidgets.QPushButton("Cancel", self)
+        nameLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Function Name "))
+        descLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Function Description "))
+        argLbl    = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Arguments (optional)"))
+        hint2Lbl  = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Drag commands into the list to create a function"))
+        cancelBtn = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("ObjectManagerGUI","Cancel"), self)
 
 
         # Connect everything
@@ -1162,7 +1168,7 @@ class MakeFunctionWindow(QtWidgets.QDialog):
         self.setLayout(mainVLayout)
         self.setMinimumHeight(550)
         self.setMinimumWidth(500)
-        self.setWindowTitle('Create a Function')
+        self.setWindowTitle(QtCore.QCoreApplication.translate("ObjectManagerGUI",'Create a Function'))
 
     def createNewObject(self):
         # Create an actual TrackableObject with this information
@@ -1201,6 +1207,7 @@ class MakeObjectWindow(QtWidgets.QWizard):
     def __init__(self, currentObj, env, parent):
         print("GOT CURRENT OBJECT ", currentObj)
         super(MakeObjectWindow, self).__init__(parent)
+        self.setWizardStyle(QtWidgets.QWizard.ModernStyle)
         # If objToModifyName is None, then this will not ask the user for the name of the object
         self.newObject = currentObj
 
@@ -1215,17 +1222,19 @@ class MakeObjectWindow(QtWidgets.QWizard):
             self.page1 = OWPage1(self.objManager.getForbiddenNames(), parent=self)
             self.addPage(self.page1)
 
-        self.page2 = OWPage2(env, parent=self)
-        self.page3 = OWPage3(parent=self)
-        self.page4 = OWPage4(env, parent=self)
+        self.page2 = OWPage2(parent=self)
+        self.page3 = OWPage3(env, parent=self)
+        self.page4 = OWPage4(parent=self)
+        self.page5 = OWPage5(env, parent=self)
 
         self.addPage(self.page2)
         self.addPage(self.page3)
         self.addPage(self.page4)
+        self.addPage(self.page5)
 
 
-        self.page2.newObject.connect(lambda: self.page4.setObject(self.page2.object))  # Link page3 to page2's object
-        self.setWindowTitle("Object Wizard")
+        self.page3.newObject.connect(lambda: self.page5.setObject(self.page3.object))  # Link page3 to page2's object
+        self.setWindowTitle(QtCore.QCoreApplication.translate("ObjectManagerGUI","Object Wizard"))
         self.setWindowIcon(QtGui.QIcon(Paths.objectWizard))
 
         # Center the window after building it
@@ -1235,7 +1244,7 @@ class MakeObjectWindow(QtWidgets.QWizard):
         # Check if the camera is connected before running
         vStream = env.getVStream()
         if not vStream.connected():
-            message = "A camera must be connected to add new objects"
+            message = QtCore.QCoreApplication.translate("ObjectManagerGUI","A camera must be connected to add new objects")
             QtWidgets.QMessageBox.question(self, 'Error', message, QtWidgets.QMessageBox.Ok)
             return
         # Execute Window and garbage collect it after
@@ -1247,10 +1256,10 @@ class MakeObjectWindow(QtWidgets.QWizard):
             self.createNewObject()
 
     def createNewObject(self):
-        image       = self.page2.object.view.image.copy()
-        rect        = self.page2.object.view.rect
-        pickupRect  = self.page4.pickupRect
-        height      = float(self.page3.heightTxt.text())
+        image       = self.page3.object.view.image.copy()
+        rect        = self.page3.object.view.rect
+        pickupRect  = self.page5.pickupRect
+        height      = float(self.page4.heightTxt.text())
 
         # Create an actual TrackableObject with this information
         if self.newObject is not None:
@@ -1278,6 +1287,7 @@ class MakeObjectWindow(QtWidgets.QWizard):
         self.page2.close()
         self.page3.close()
         self.page4.close()
+        self.page5.close()
 
 class OWPage1(QtWidgets.QWizardPage):
     """
@@ -1299,10 +1309,10 @@ class OWPage1(QtWidgets.QWizardPage):
     def initUI(self):
         self.nameEdit.setMaximumWidth(260)
 
-        welcomeLbl = QtWidgets.QLabel("Welcome to the Object Wizard!\n")
-        introLbl   = QtWidgets.QLabel("This will walk you through teaching the software how to recognize a new object.")
-        step1Lbl   = QtWidgets.QLabel("\n\nStep 1: Naming")
-        promptLbl  = QtWidgets.QLabel("Please enter a unique name for this object.")
+        welcomeLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Welcome to the Object Wizard!\n"))
+        introLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","This will walk you through teaching the software how to recognize a new object."))
+        step1Lbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","\n\nStep 1: Naming"))
+        promptLbl  = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Please enter a unique name for this object."))
 
 
         # Set titles bold
@@ -1329,8 +1339,8 @@ class OWPage1(QtWidgets.QWizardPage):
         mainHLayout = QtWidgets.QHBoxLayout()
         mainHLayout.addLayout(col1)
 
-        self.setMinimumHeight(750)
-        self.setMinimumWidth(900)
+        self.setMinimumHeight(450)
+        self.setMinimumWidth(600)
         self.setLayout(mainHLayout)
 
     def isComplete(self):
@@ -1342,13 +1352,84 @@ class OWPage1(QtWidgets.QWizardPage):
 
 class OWPage2(QtWidgets.QWizardPage):
     """
+    Get the name of the object
+    """
+
+    def __init__(self, parent):
+        super(OWPage2, self).__init__(parent)
+
+        # Create GUI objects
+        # The instructions are set in self.setStep(step) function, and are changed as needed
+        self.stepLbl      = QtWidgets.QLabel("")
+        self.howToLbl     = QtWidgets.QTextEdit("")
+        self.hintLbl      = QtWidgets.QLabel("")  # This will tell the user if the object is good or bad
+
+        self.initUI()
+        self.setStep(1)
+
+    def initUI(self):
+        # Set titles bold
+        bold = QtGui.QFont()
+        bold.setBold(True)
+        self.stepLbl.setFont(bold)
+        self.howToLbl.setReadOnly(True)
+        self.howToLbl.setLineWrapMode(QtWidgets.QTextEdit.WidgetWidth)
+        self.howToLbl.setFrameStyle(QtWidgets.QFrame.NoFrame)
+
+        # Create a tutorial gif that will be next to the video
+        movieLbl   = QtWidgets.QLabel("")
+        movie = QtGui.QMovie(Paths.help_sel_obj)
+        movieLbl.setMovie(movie)
+        movie.start()
+        movie.setScaledSize(QtCore.QSize(480,320))
+        # Create a special row for the camera that will force it to remain in the center, regardless of size changes
+
+        # camRow = QtWidgets.QHBoxLayout()
+        # camRow.addWidget(movieLbl)
+        # camRow.addStretch(1)
+
+        # Place the GUI objects vertically
+        col1 = QtWidgets.QVBoxLayout()
+
+        col1.addWidget(self.howToLbl)
+        col1.addWidget(self.hintLbl)
+        col1.addWidget(movieLbl)
+
+        mainHLayout = QtWidgets.QVBoxLayout()
+        mainHLayout.addWidget(self.stepLbl)
+        mainHLayout.addLayout(col1)
+
+
+        self.setLayout(mainHLayout)
+
+
+    def setStep(self, step):
+        if step == 1:
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI", "\nStep 2: Select the Object")
+            h = QtCore.QCoreApplication.translate("ObjectManagerGUI",
+                                                  """1. Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.
+1）Make sure the background is consistent and there is nothing on the screen except the object.
+2）The work area should be well lit, but not cause too much glare on the object if it's shiny.
+
+2. When ready, Click the mouse on the corner of the object, drag it tightly over the object, then release the mouse button.""")
+
+        if step == 2:
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI", "\n\nStep 3: Verify")
+            h = QtCore.QCoreApplication.translate("ObjectManagerGUI", "-test text-")
+        self.stepLbl.setText(s)
+        self.howToLbl.setText(h)
+
+
+
+class OWPage3(QtWidgets.QWizardPage):
+    """
     Have the user select the object
     """
 
     newObject = QtCore.pyqtSignal()  # This emits when a valid object is selected, so that OWPage3 can update
 
     def __init__(self, environment, parent):
-        super(OWPage2, self).__init__(parent)
+        super(OWPage3, self).__init__(parent)
 
         # Detach the robots servos so that the user can move the robot out of the way
         robot = environment.getRobot()
@@ -1359,7 +1440,7 @@ class OWPage2(QtWidgets.QWizardPage):
 
         # The instructions are set in self.setStep(step) function, and are changed as needed
         self.stepLbl      = QtWidgets.QLabel("")
-        self.howToLbl     = QtWidgets.QLabel("")
+        self.howToLbl     = QtWidgets.QTextEdit("")
         self.hintLbl      = QtWidgets.QLabel("")  # This will tell the user if the object is good or bad
 
         # Create the camera widget and set it up
@@ -1368,7 +1449,6 @@ class OWPage2(QtWidgets.QWizardPage):
         self.cameraWidget.play()
         # self.cameraWidget.declinePicBtn.clicked.connect(self.tryAgain)
         self.cameraWidget.objSelected.connect(self.objectSelected)
-
 
         self.initUI()
         self.setStep(1)
@@ -1381,47 +1461,42 @@ class OWPage2(QtWidgets.QWizardPage):
         self.stepLbl.setFont(bold)
         self.hintLbl.setFont(bold)
         self.hintLbl.setWordWrap(True)
-
-        # Create a tutorial gif that will be next to the video
-        movieLbl   = QtWidgets.QLabel("")
-        movie = QtGui.QMovie(Paths.help_sel_obj)
-        movieLbl.setMovie(movie)
-        movie.start()
-
-        # Create a special row for the camera that will force it to remain in the center, regardless of size changes
-
-        camRow = QtWidgets.QHBoxLayout()
-        camRow.addWidget(self.cameraWidget)
-        camRow.addWidget(movieLbl)
-        camRow.addStretch(1)
+        self.howToLbl.setReadOnly(True)
+        self.howToLbl.setLineWrapMode(QtWidgets.QTextEdit.WidgetWidth)
+        self.howToLbl.setFrameStyle(QtWidgets.QFrame.NoFrame)
 
         # Place the GUI objects vertically
         col1 = QtWidgets.QVBoxLayout()
-        col1.addWidget(self.stepLbl)
+
         col1.addWidget(self.howToLbl)
         col1.addWidget(self.hintLbl)
-        col1.addLayout(camRow)
+        # col1.addLayout(camRow)
 
-        mainHLayout = QtWidgets.QHBoxLayout()
-        mainHLayout.addLayout(col1)
+        row = QtWidgets.QHBoxLayout()
+        row.addLayout(col1)
+        row.addWidget(self.cameraWidget)
+        mainVLayout = QtWidgets.QVBoxLayout()
 
+        mainVLayout.addWidget(self.stepLbl)
+        mainVLayout.addLayout(row)
 
-        self.setLayout(mainHLayout)
+        self.setLayout(mainVLayout)
 
     def setStep(self, step):
         if step == 1:
-            s = "\n\nStep 2: Select the Object"
-            h = "Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.\n\n"\
-                "Make sure the background is consistent and there is nothing on the screen except the object. The"\
-                "\nwork area should be well lit, but not cause too much glare on the object if it's shiny. The video"\
-                "\nshould be focused, and the object in the orientation that it will be recognized in. \n\n"\
-                "When ready, Click the mouse on the corner of the object, drag it tightly over the object, then"\
-                "\nrelease the mouse button."
-
-
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI","Step 2: Select the Object")
+            h = QtCore.QCoreApplication.translate("ObjectManagerGUI","")
+    #         h = QtCore.QCoreApplication.translate("ObjectManagerGUI","""Please place the object you want to recognize ON THE TABLES SURFACE, in the middle of the screen.\n\n
+    #             Make sure the background is consistent and there is nothing on the screen except the object. The
+    #             \nwork area should be well lit, but not cause too much glare on the object if it's shiny. The video
+    #             \nshould be focused, and the object in the orientation that it will be recognized in. \n\n
+    #             When ready, Click the mouse on the corner of the object, drag it tightly over the object, then
+    #         \nrelease the mouse button.""")
+    #
+    #
         if step == 2:
-            s = "\n\nStep 3: Verify"
-            h = "-test text-"
+            s = QtCore.QCoreApplication.translate("ObjectManagerGUI","Step 3: Verify")
+            h = QtCore.QCoreApplication.translate("ObjectManagerGUI","-test text-")
         self.stepLbl.setText(s)
         self.howToLbl.setText(h)
 
@@ -1442,8 +1517,8 @@ class OWPage2(QtWidgets.QWizardPage):
         # Reset all variables before setting a new object
         self.object = None
         self.completeChanged.emit()
-        self.hintLbl.setText("")
-        self.setStep(1)
+        # self.hintLbl.setText("")
+        # self.setStep(1)
         self.vision.endAllTrackers()
 
 
@@ -1457,7 +1532,7 @@ class OWPage2(QtWidgets.QWizardPage):
 
         # Analyze it, and make sure it's a valid target. If not, return the camera to selection mode.
         if len(target.descrs) == 0 or len(target.keypoints) == 0:
-            self.hintLbl.setText("Your selected object needs more detail to be tracked")
+            self.hintLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Your selected object needs more detail to be tracked"))
             self.cameraWidget.takeAnother()
             return
 
@@ -1474,23 +1549,25 @@ class OWPage2(QtWidgets.QWizardPage):
         # Do all the necessary things: Change the instructions, the step
         self.setStep(2)
         numPoints = str(len(self.object.descrs))
-        des = "Good job, you have selected an object. Try moving the object around to see how accurate the" + \
-            "\ntracking is. If it's not good enough, click 'Try Again'' on the bottom right of the camera to"       + \
-            "\nreselect the object.\n\n" + \
-            "Your selected object has " + numPoints + " points to describe it. " + \
-            "The more detail on the object, the more points"   + \
-            "\nwill be found, and the better the tracking will be. If you are having trouble tracking, try adding" + \
-            "\ndetail to the object by drawing on it or putting a sticker on it. \n"
+        des = QtCore.QCoreApplication.translate("ObjectManagerGUI","""Good job, you have selected an object. Try moving the object around to see how accurate the
+            \ntracking is. If it's not good enough, click 'Try Again'' on the bottom right of the camera to
+            \nreselect the object.\n\n
+            Your selected object has """) + numPoints + \
+            QtCore.QCoreApplication.translate("ObjectManagerGUI","""points to describe it.
+            The more detail on the object, the more points
+            \nwill be found, and the better the tracking will be. If you are having trouble tracking, try adding
+            \ndetail to the object by drawing on it or putting a sticker on it. \n
+            """)
         self.howToLbl.setText(des)
 
 
         # If the object was not very good, warn the user. Otherwise, state the # of points on the object
         if len(target.descrs) < MIN_POINTS_TO_LEARN_OBJECT:
-            self.hintLbl.setText("Your selected object has only " + numPoints + " points to describe it. It is not very"
-                                 " detailed, or is too small. Try adding more detail by drawing on it, or adding a "
-                                 "sticker to it. Tracking may not be very accurate.")
+            self.hintLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Your selected object has only ") + numPoints + QtCore.QCoreApplication.translate("ObjectManagerGUI"," points to describe it. It is not very")+
+                                 QtCore.QCoreApplication.translate("ObjectManagerGUI"," detailed, or is too small. Try adding more detail by drawing on it, or adding a ")+
+                                 QtCore.QCoreApplication.translate("ObjectManagerGUI","sticker to it. Tracking may not be very accurate."))
         else:
-            self.hintLbl.setText("Tracking " + str(len(self.object.descrs)) + " Points")
+            self.hintLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Tracking ") + str(len(self.object.descrs)) + " Points")
 
 
     def isComplete(self):
@@ -1500,13 +1577,13 @@ class OWPage2(QtWidgets.QWizardPage):
         self.cameraWidget.close()
         self.vision.endAllTrackers()
 
-class OWPage3(QtWidgets.QWizardPage):
+class OWPage4(QtWidgets.QWizardPage):
     """
     Get the height of the object, in centimeters
     """
 
     def __init__(self, parent):
-        super(OWPage3, self).__init__(parent)
+        super(OWPage4, self).__init__(parent)
 
         # Create GUI objects
         self.errorLbl  = QtWidgets.QLabel("")  # Tells the user why the height is invalid
@@ -1519,13 +1596,13 @@ class OWPage3(QtWidgets.QWizardPage):
     def initUI(self):
         self.heightTxt.setMaximumWidth(260)
 
-        step1Lbl   = QtWidgets.QLabel("\n\nStep 4: Measure Height")
-        promptLbl  = QtWidgets.QLabel("Please enter the height of the object in centimeters. "
-                                      "\nIf the object is very thin, like paper, enter 0."
-                                      "\nIf the object is not flat on the top, measure the height to the part of the "
-                                      "object that the robot will be grasping.")
+        step1Lbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","\n\nStep 4: Measure Height"))
+        promptLbl  = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Please enter the height of the object in centimeters. ")+
+                                      QtCore.QCoreApplication.translate("ObjectManagerGUI","\nIf the object is very thin, like paper, enter 0.")+
+                                      QtCore.QCoreApplication.translate("ObjectManagerGUI","\nIf the object is not flat on the top, measure the height to the part of the ")+
+                                      QtCore.QCoreApplication.translate("ObjectManagerGUI","object that the robot will be grasping."))
 
-        centLbl    = QtWidgets.QLabel(" centimeters")
+        centLbl    = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI"," centimeters"))
 
         # Set titles bold
         bold = QtGui.QFont()
@@ -1548,8 +1625,8 @@ class OWPage3(QtWidgets.QWizardPage):
         mainHLayout = QtWidgets.QHBoxLayout()
         mainHLayout.addLayout(col1)
 
-        self.setMinimumHeight(750)
-        self.setMinimumWidth(700)
+        self.setMinimumHeight(450)
+        self.setMinimumWidth(400)
         self.setLayout(mainHLayout)
 
     def isComplete(self):
@@ -1563,17 +1640,17 @@ class OWPage3(QtWidgets.QWizardPage):
         try:
             float(self.heightTxt.text())
         except ValueError:
-            self.errorLbl.setText('You must input a real number.')
+            self.errorLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI",'You must input a real number.'))
             return False
 
         if float(self.heightTxt.text()) < 0:
-            self.errorLbl.setText('Height must be a number greater than or equal to 0.')
+            self.errorLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI",'Height must be a number greater than or equal to 0.'))
             return False
 
         self.errorLbl.setText('')
         return True
 
-class OWPage4(QtWidgets.QWizardPage):
+class OWPage5(QtWidgets.QWizardPage):
     """
     If anything is changed here, check the CoordWizard in CalibrationsGUI.py to make sure that it still works, since
     this class is used there.
@@ -1590,7 +1667,7 @@ class OWPage4(QtWidgets.QWizardPage):
     """
 
     def __init__(self, environment, parent):
-        super(OWPage4, self).__init__(parent)
+        super(OWPage5, self).__init__(parent)
 
 
         # The final "rect" of the pickup area of the object is stored here: (x1,y1,x2,y2)
@@ -1610,13 +1687,13 @@ class OWPage4(QtWidgets.QWizardPage):
 
     def initUI(self):
         # Create the instructions
-        desc = "You're almost done!\n\n" +\
-               "Now that you have selected your object, please drag the mouse over THE ENTIRE AREA OF THE OBJECT \n" +\
-               "\nthat is smooth, flat, and able to be picked up by the robot's suction cup. \n\n" \
-               "\nThis information will be used in any commands that require the robot to pick up the object. If you" +\
-               "\ndo not intend to use those functions, then just select an area around the center of the object.\n\n"
+        desc = QtCore.QCoreApplication.translate("ObjectManagerGUI","You're almost done!\n\n" ) +\
+               QtCore.QCoreApplication.translate("ObjectManagerGUI","Now that you have selected your object, please drag the mouse over THE ENTIRE AREA OF THE OBJECT \n" ) +\
+               QtCore.QCoreApplication.translate("ObjectManagerGUI","\nthat is smooth, flat, and able to be picked up by the robot's suction cup. \n\n" ) + \
+               QtCore.QCoreApplication.translate("ObjectManagerGUI","\nThis information will be used in any commands that require the robot to pick up the object. If you")  +\
+               QtCore.QCoreApplication.translate("ObjectManagerGUI","\ndo not intend to use those functions, then just select an area around the center of the object.\n\n")
 
-        stepLbl = QtWidgets.QLabel("Step 5: Select the Pickup Area")
+        stepLbl = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Step 5: Select the Pickup Area"))
         howToLbl = QtWidgets.QLabel(desc)
 
 
@@ -1628,7 +1705,7 @@ class OWPage4(QtWidgets.QWizardPage):
 
 
         # Create a tutorial gif that will be next to the video
-        movieLbl   = QtWidgets.QLabel("Could not find example gif")
+        movieLbl   = QtWidgets.QLabel(QtCore.QCoreApplication.translate("ObjectManagerGUI","Could not find example gif"))
 
         # Set the animated gif on the movieLbl
         movie = QtGui.QMovie(Paths.help_sel_pickuprect)
@@ -1676,8 +1753,8 @@ class OWPage4(QtWidgets.QWizardPage):
         # Runs when the user has selected an area on self.cameraWidget
         rect = self.cameraWidget.getSelectedRect()
         self.pickupRect = rect
-        self.yourDoneLbl.setText("Congratulations, you've created a new object! "
-                                 "\nThis will now be saved in a seperate file, and can be used in any project.")
+        self.yourDoneLbl.setText(QtCore.QCoreApplication.translate("ObjectManagerGUI","Congratulations, you've created a new object! ") +
+                                 QtCore.QCoreApplication.translate("ObjectManagerGUI","\nThis will now be saved in a seperate file, and can be used in any project."))
         self.completeChanged.emit()
 
 
@@ -1712,7 +1789,7 @@ def sanitizeName(name, forbiddenNames):
 
     # START CHECKING FOR VALIDITIY
     if len(name) == 0:
-        return name, "You must input a name to continue"
+        return name, QtCore.QCoreApplication.translate("ObjectManagerGUI","You must input a name to continue")
 
 
 
@@ -1727,21 +1804,21 @@ def sanitizeName(name, forbiddenNames):
 
     # If there were errors, then display a message explaining why
     if len(invalidChars) > 0:
-        return name, 'You cannot have the following characters in the resource name: ' + ''.join(invalidChars)
+        return name, QtCore.QCoreApplication.translate("ObjectManagerGUI",'You cannot have the following characters in the resource name: ') + ''.join(invalidChars)
 
     # Make forbiddenNames all be lowercase, for easy comparation
     forbiddenNames = [name.lower() for name in forbiddenNames]
 
     # Check if the name is the same as any of the forbidden names
     if name.lower().strip() in forbiddenNames:
-        return name, 'There is already a resource named ' + name.strip() + '! \n' + \
-                     ' If you want to replace it, delete the original and try again.'
+        return name, QtCore.QCoreApplication.translate("ObjectManagerGUI",'There is already a resource named ') + name.strip() + '! \n' + \
+                     QtCore.QCoreApplication.translate("ObjectManagerGUI",' If you want to replace it, delete the original and try again.')
 
     if len(name) > 30:
-        return name, 'That name is too long.'
+        return name, QtCore.QCoreApplication.translate("ObjectManagerGUI",'That name is too long.')
 
     if name[-1] == " ":
-        return name, 'Names cannot end with a space.'
+        return name, QtCore.QCoreApplication.translate("ObjectManagerGUI",'Names cannot end with a space.')
     # If there were no errors, then turn the "next" button enabled, and make the error message dissapear
     return name, ''
 
