@@ -25,15 +25,18 @@ License:
     You should have received a copy of the GNU General Public License
     along with uArmCreatorStudio.  If not, see <http://www.gnu.org/licenses/>.
 """
+from time                import sleep  # Used only for waiting for robot in CoordCalibrations
+
+import numpy             as np
+from PyQt5               import QtCore, QtWidgets, QtGui
+
 import CommandsGUI
 import EventsGUI
 import Paths
-import numpy             as np
-from time                import sleep  # Used only for waiting for robot in CoordCalibrations
-from PyQt5               import QtCore, QtWidgets, QtGui
 from CameraGUI           import CameraSelector
 from Logic.Global        import printf
 from Logic.Resources     import TrackableObject
+from Logic.Robot import ROBOT_MARKER
 
 __author__ = "Alexander Thiel"
 
@@ -250,7 +253,7 @@ class CalibrateWindow(QtWidgets.QDialog):
         vStream      = self.env.getVStream()
         robot        = self.env.getRobot()
         objManager   = self.env.getObjectManager()
-        robotTracker = objManager.getObject("Robot Marker")
+        robotTracker = objManager.getObject(ROBOT_MARKER)
 
         # If Camera not connected
         if not vStream.connected():
@@ -658,7 +661,7 @@ class CWPage4(QtWidgets.QWizardPage):
         h, w, _  = frame.shape
 
         # Get the "target" object from the image and rectangle
-        trackable = TrackableObject("Robot Marker")
+        trackable = TrackableObject(ROBOT_MARKER)
         trackable.addNewView(image      = frame,
                              rect       = rect,
                              pickupRect = [0, 0, h, w],
@@ -680,7 +683,7 @@ class CWPage4(QtWidgets.QWizardPage):
             self.cameraWidget.takeAnother()
             return
 
-        self.objManager.deleteObject("Robot Marker")  # Delete any previous end effector file
+        self.objManager.deleteObject(ROBOT_MARKER)  # Delete any previous end effector file
         self.newRobotMrkr = trackable
         self.objManager.saveObject(self.newRobotMrkr)
         self.completeChanged.emit()
@@ -781,7 +784,7 @@ class CWPage5(QtWidgets.QWizardPage):
 
 
         #   Start tracking the robots marker
-        rbMarker = objManager.getObject("Robot Marker")
+        rbMarker = objManager.getObject(ROBOT_MARKER)
         vision.endAllTrackers()
         vision.addTarget(rbMarker)
 
@@ -801,24 +804,22 @@ class CWPage5(QtWidgets.QWizardPage):
 
         # Test the z on 3 xy points
         zTest = int(round(zLower, 0))  # Since range requires an integer, round zLower just for this case
-        for x in range(  -20, 20, 4): testCoords += [[x,  15,    11]]  # Center of XYZ grid
-        for y in range(    8, 24, 4): testCoords += [[ 0,  y,    11]]
-        for z in range(zTest, 19, 1): testCoords += [[ 0, 15,     z]]
+        for x in range(  -10, 10, 1): testCoords.append([x,  15,    11])  # Center of XYZ grid
+        for y in range(    8, 24, 4): testCoords.append([ 0,  y,    11])
+        for z in range(zTest, 19, 1): testCoords.append([ 0, 15,     z])
 
         # for x in range(  -20, 20, 1): testCoords += [[x,  15, zTest]]  # Center of XY, Bottom z
         # for y in range(    8, 25, 1): testCoords += [[ 0,  y, zTest]]
         # for z in range(zTest, 25): testCoords += [[ 0, 15,     z]]
 
-        for x in range(  -20, 20, 4): testCoords += [[x,  15,    17]]  # Center of XY, top z
-        for y in range(   12, 24, 4): testCoords += [[ 0,  y,    17]]
+        for x in range(  -10, 10, 1): testCoords.append([x,  15,    17])  # Center of XY, top z
+        for y in range(   12, 24, 4): testCoords.append([ 0,  y,    17])
 
-
-
-        direction  = int(1)
+        direction = int(1)
         for y in range(12, 25, 2):
-            for x in range(-20 * direction, 20 * direction, 2 * direction):
-                testCoords += [[x, y, zTest]]
-            direction *= -1
+          for x in range(-10 * direction, 10 * direction, 2 * direction):
+            testCoords.append([x, y, zTest])
+          direction *= -1
 
 
 
@@ -932,7 +933,7 @@ class CWPage5(QtWidgets.QWizardPage):
         # Get variables that will be used
         robot      = self.env.getRobot()
         vision     = self.env.getVision()
-        rbMarker   = self.env.getObjectManager().getObject("Robot Marker")
+        rbMarker   = self.env.getObjectManager().getObject(ROBOT_MARKER)
         singleShot = lambda: QtCore.QTimer.singleShot(10, lambda: self.getPoint(currentPoint, errors,
                                                                         newCalibrations, testCoords))
 

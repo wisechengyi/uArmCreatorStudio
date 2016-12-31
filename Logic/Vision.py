@@ -791,10 +791,10 @@ class PlaneTracker(Tracker):
                                     angles = [theta]
             return squares, angles
 
-        squares, angles = find_squares(frame)
-        if squares:
-            print("angle: {}".format(angles))
-            cv2.drawContours(frame, squares, -1, (0, 255, 0), 3)
+        # squares, angles = find_squares(frame)
+        # if squares:
+        #     print("angle: {}".format(angles))
+        #     cv2.drawContours(frame, squares, -1, (0, 255, 0), 3)
 
         return frame
 

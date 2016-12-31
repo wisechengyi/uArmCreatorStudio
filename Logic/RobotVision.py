@@ -592,7 +592,7 @@ def pickupObject(trackable, rbMarker, robot, vision, transform):
 
     # Move to the objects position
     pos = transform.cameraToRobot(targetCamPos)
-    robot.setPos(z=robot.zMax)
+    # robot.setPos(z=robot.zMax)
     robot.setPos(x=pos[0], y=pos[1])
 
 

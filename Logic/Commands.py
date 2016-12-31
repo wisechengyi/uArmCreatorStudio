@@ -26,11 +26,15 @@ License:
     along with uArmCreatorStudio.  If not, see <http://www.gnu.org/licenses/>.
 """
 import math
-import numpy as np
 import sys
+
+import numpy as np
+
 from Logic             import RobotVision as rv
 from Logic.Global      import printf, wait, getModuleClasses
 from Logic.LogicObject import LogicObject
+from Logic.Robot import ROBOT_MARKER
+
 __author__ = "Alexander Thiel"
 
 
@@ -443,7 +447,7 @@ class PickupObjectCommand(Command):
         self.robot      = self.getVerifyRobot(env)
         self.vision     = self.getVerifyVision(env)
         self.trackable  = self.getVerifyObject(env, self.parameters["objectID"])
-        self.rbMarker   = self.getVerifyObject(env, "Robot Marker")
+        self.rbMarker   = self.getVerifyObject(env, ROBOT_MARKER)
         self.exitFunc   = interpreter.isExiting
 
         if len(self.errors): return
@@ -800,7 +804,7 @@ class VisionMoveXYZCommand(MoveXYZCommand):
         self.interpreter = interpreter
         self.transform   = self.getVerifyTransform(env)
         self.vision      = self.getVerifyVision(env)
-        self.rbMarker    = self.getVerifyObject(env, "Robot Marker")
+        self.rbMarker    = self.getVerifyObject(env, ROBOT_MARKER)
 
 
         if len(self.errors): return

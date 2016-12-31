@@ -31,9 +31,12 @@ from time                        import sleep
 from threading                   import Thread, RLock
 from Logic.Global                import printf
 from Logic.CommunicationProtocol import Device
+
+
 __author__ = "Alexander Thiel"
 
 
+ROBOT_MARKER = "Robot Marker"
 
 def getConnectedRobots():
     # Returns any arduino serial ports in a list [port, port, port]
@@ -478,6 +481,5 @@ class Robot:
         # if exiting:
         #     printf("Robot| Setting Robot to Exiting mode. All commands should be ignored")
         self.__exiting = exiting
-
 
 

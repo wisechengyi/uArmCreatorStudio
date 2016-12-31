@@ -28,6 +28,8 @@ License:
 import os
 from Logic        import Resources
 from Logic.Global import printf, ensurePathExists, getModuleClasses
+from Logic.Robot import ROBOT_MARKER
+
 __author__ = "Alexander Thiel"
 
 
@@ -145,7 +147,7 @@ class ObjectManager:
 
             # If object is capable of being picked up by the robot with any pickup function
             if typeFilter == self.PICKUP:
-                if obj.name == "Robot Marker": continue
+                if obj.name == ROBOT_MARKER: continue
 
                 if isType(obj, (Resources.TrackableObject, Resources.TrackableGroupObject)):
                     nameList.append(obj.name)
@@ -169,7 +171,7 @@ class ObjectManager:
 
 
         forbidden = self.getObjectNameList()
-        forbidden += ["Trackable", "Robot Marker", "TrackableObject", "TrackableGroup", "Face", "Smile", "Eyes",
+        forbidden += ["Trackable", ROBOT_MARKER, "TrackableObject", "TrackableGroup", "Face", "Smile", "Eyes",
                       "MotionPath", "Function", "Task"]
         return forbidden
 
