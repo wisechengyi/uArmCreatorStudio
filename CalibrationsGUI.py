@@ -25,8 +25,6 @@ License:
     You should have received a copy of the GNU General Public License
     along with uArmCreatorStudio.  If not, see <http://www.gnu.org/licenses/>.
 """
-import copy
-import math
 import threading
 from time                import sleep  # Used only for waiting for robot in CoordCalibrations
 
@@ -40,7 +38,7 @@ from CameraGUI           import CameraSelector
 from Logic.CalibrationLogic import CalibrationLogic
 from Logic.Global        import printf
 from Logic.Resources     import TrackableObject
-from Logic.Robot import ROBOT_MARKER, OutOfBoundError
+from Logic.Robot import ROBOT_MARKER
 
 __author__ = "Alexander Thiel"
 
@@ -779,7 +777,8 @@ class CWPage5(QtWidgets.QWizardPage):
 
     def startCalibration(self):
 
-        if self.testRunning is True: return
+        if self.testRunning:
+            return
 
         # Pull from the environment and start the tracking
         robot      = self.env.getRobot()
@@ -801,26 +800,6 @@ class CWPage5(QtWidgets.QWizardPage):
         zLower = float(round(self.getGroundCoord()[2] + 2.0, 2))
         # robot.setPos(x=robot.home["x"], y=robot.home["y"], z=zLower)
         sleep(1)
-
-
-        # Generate a large set of points to test the robot, and put them in testCoords
-        testCoords    = []
-
-        # Test the z on 3 xy points
-        zTest = int(round(zLower, 0))  # Since range requires an integer, round zLower just for this case
-        for x in range(-10, 10, 1): testCoords.append([x, 20, 11])  # Center of XYZ grid
-        for y in range(    8, 24, 4): testCoords.append([ 0,  y,    11])
-        for z in range(zTest, 19, 1): testCoords.append([ 0, 15,     z])
-        for x in range(  -10, 10, 1): testCoords.append([x,  15,    17])  # Center of XY, top z
-        for y in range(   12, 24, 4): testCoords.append([ 0,  y,    17])
-
-        direction = int(1)
-        for y in range(12, 25, 2):
-          for x in range(-10 * direction, 10 * direction, 2 * direction):
-            testCoords.append([x, y, zTest])
-          direction *= -1
-
-        printf("GUI| Testing ", len(testCoords), " coordinates")
 
         # Begin testing every coordinate in the testCoords array, and recording the results into newCalibrations
         self.cancelTest  = False
