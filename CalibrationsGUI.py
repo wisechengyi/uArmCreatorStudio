@@ -25,6 +25,8 @@ License:
     You should have received a copy of the GNU General Public License
     along with uArmCreatorStudio.  If not, see <http://www.gnu.org/licenses/>.
 """
+import copy
+import math
 import threading
 from time                import sleep  # Used only for waiting for robot in CoordCalibrations
 
@@ -827,7 +829,7 @@ class CWPage5(QtWidgets.QWizardPage):
         self.testLbl.show()
         self.startBtn.hide()
 
-        t = threading.Thread(target=self.getPoint, args=(0, [], {"ptPairs": [], "failPts": []}, testCoords))
+        t = threading.Thread(target=self.getPoint, args=({"ptPairs": [], "failPts": []},))
         t.start()
 
     def endCalibration(self, errors, newCalibrations, testCoords):
@@ -863,12 +865,9 @@ class CWPage5(QtWidgets.QWizardPage):
                        \n\n\t  Also make sure that the area around the camera view is clear, blank, without too
                        \n\t  much detail around it- try having a clear workspace with white paper as a background."""))
 
-
         # Return the robot to home and turn off tracking
         vision.endAllTrackers()
         robot.setPos(**robot.home)
-
-
 
         # Print out the errors, and set the appropriate GUI elements
         hintText = ""
@@ -895,7 +894,8 @@ class CWPage5(QtWidgets.QWizardPage):
         # Update the "Finished" button
         self.completeChanged.emit()
 
-    def getPoint(self, currentPoint, errors, newCalibrations, testCoords):
+    def getPoint(self, newCalibrations):
+        errors = []
 
         def getMarkerImageCoord(physical_coord):
             # Move the robot to the coordinate
@@ -908,7 +908,6 @@ class CWPage5(QtWidgets.QWizardPage):
             # Make sure the robot is still connected before checking anything else
             if not robot.connected():
                 errors.append(self.tr("Robot was disconnected during calibration"))
-                self.endCalibration(errors, newCalibrations, testCoords)
                 return None
 
             # Make sure the object was found in a recent frame
@@ -928,50 +927,59 @@ class CWPage5(QtWidgets.QWizardPage):
         vision = self.env.getVision()
         rbMarker = self.env.getObjectManager().getObject(ROBOT_MARKER)
 
-        # Find the limit in each axis
-        start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
-        while True:
-            robot.setPos(coord=start)
-            if not getMarkerImageCoord(start):
-                xMax = start[0]
-                break
-            start[0] += .5
+        def findViewLimit(startCoord, axis, direction):
+            """
+            :param start: staring coordinate
+            :param axis: 0 - x, 1 - y, 2 - z
+            :param direction: +/-1
+            :return: the max/min value in that axis
+            """
+            limit = startCoord[axis]
+            while True:
+                try:
+                    robot.setPos(coord=startCoord)
+                except OutOfBoundError:
+                    return limit
+
+                if not getMarkerImageCoord(startCoord):
+                    limit = startCoord[axis]
+                    break
+                startCoord[axis] += .5 * direction
+
+            return limit
 
         # Find the limit in each axis
         start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
-        while True:
-            robot.setPos(coord=start)
-            if not getMarkerImageCoord(start):
-                xMin = start[0]
-                break
-            start[0] -= .5
+        xMax = findViewLimit(copy.copy(start), 0, 1)
+        xMin = findViewLimit(copy.copy(start), 0, -1)
+        yMax = findViewLimit(copy.copy(start), 1, 1)
+        yMin = findViewLimit(copy.copy(start), 1, -1)
 
+        # Generate a large set of points to test the robot, and put them in testCoords
+        testCoords = []
 
-        # Find the limit in each axis
-        start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
-        while True:
-            try:
-                robot.setPos(coord=start)
-            except OutOfBoundError:
-                yMax = start[1]
-                break
+        # Test the z on 3 xy points
+        zTest = int(round(start[2], 0))  # Since range requires an integer, round zLower just for this case
+        for x in range(math.ceil(xMin), math.floor(xMax), 1):
+            testCoords.append([x, (yMax + yMin) / 2, zTest])  # Center of XYZ grid
 
-            if not getMarkerImageCoord(start):
-                yMax = start[1]
-                break
-            start[1] += .5
+        for y in range(math.ceil(yMin), math.floor(yMax), 1):
+            testCoords.append([(xMax + xMin) / 2, y, zTest])
 
-        # Find the limit in each axis
-        start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
-        while True:
-            robot.setPos(coord=start)
-            if not getMarkerImageCoord(start):
-                yMin = start[1]
-                break
-            start[1] -= .5
+        for z in range(zTest, 19, 1):
+            testCoords.append([(xMax + xMin) / 2, (yMax + yMin) / 2, z])
 
+        for x in range(math.ceil(xMin), math.floor(xMax), 1):
+            testCoords.append([x, (yMax + yMin) / 2, 17])  # Center of XY, top z
 
+        for y in range(math.ceil(yMin), math.floor(yMax), 4):
+            testCoords.append([0, y, 17])
 
+        direction = 1
+        for y in range(math.ceil(yMin), math.floor(yMax), 2):
+            for x in range(math.ceil(xMin) * direction, math.floor(xMax) * direction, direction):
+                testCoords.append([x, y, zTest])
+            direction *= -1
 
 
         for i, coord in enumerate(testCoords):
