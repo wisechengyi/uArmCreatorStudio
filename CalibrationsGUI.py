@@ -805,11 +805,11 @@ class CWPage5(QtWidgets.QWizardPage):
 
         # Test the z on 3 xy points
         zTest = int(round(zLower, 0))  # Since range requires an integer, round zLower just for this case
-        for x in range(  -10, 10, 1): testCoords.append([x,  20,    11])  # Center of XYZ grid
-        # for y in range(    8, 24, 4): testCoords.append([ 0,  y,    11])
-        # for z in range(zTest, 19, 1): testCoords.append([ 0, 15,     z])
-        # for x in range(  -10, 10, 1): testCoords.append([x,  15,    17])  # Center of XY, top z
-        # for y in range(   12, 24, 4): testCoords.append([ 0,  y,    17])
+        for x in range(-10, 10, 1): testCoords.append([x, 20, 11])  # Center of XYZ grid
+        for y in range(    8, 24, 4): testCoords.append([ 0,  y,    11])
+        for z in range(zTest, 19, 1): testCoords.append([ 0, 15,     z])
+        for x in range(  -10, 10, 1): testCoords.append([x,  15,    17])  # Center of XY, top z
+        for y in range(   12, 24, 4): testCoords.append([ 0,  y,    17])
 
         direction = int(1)
         for y in range(12, 25, 2):
@@ -824,16 +824,11 @@ class CWPage5(QtWidgets.QWizardPage):
         self.testRunning = True
         self.hintLbl.setText("")
         self.testLbl.setText("")
-        self.progressBar.setMaximum(len(testCoords))
-        self.progressBar.setValue(0)
-        self.progressBar.show()
         self.testLbl.show()
         self.startBtn.hide()
 
         t = threading.Thread(target=self.getPoint, args=(0, [], {"ptPairs": [], "failPts": []}, testCoords))
         t.start()
-        # getFirstPoint = lambda: self.getPoint(0, [], {"ptPairs": [], "failPts": []}, testCoords)
-        # self.timer    = QtCore.QTimer.singleShot(10, getFirstPoint)
 
     def endCalibration(self, errors, newCalibrations, testCoords):
         robot      = self.env.getRobot()
@@ -907,44 +902,19 @@ class CWPage5(QtWidgets.QWizardPage):
             self.testRunning = False
             return
 
-
-        # Here we update the GUI element for telling the user how many valid points have been tested, and progress
-        successCount = len(newCalibrations["ptPairs"])
-        recFailCount = len(newCalibrations["failPts"])
-        # print("failcoutn: ", recFailCount)
-        for coord in testCoords:
-            text  = "Calibration Progress: \n"
-            # if currentPoint > len(testCoords) * .25:
-            #     if recFailCount / currentPoint > .85:  # If over 85% of tests failed so far
-            #         text += self.tr("    Progress Report: The robot marker has failed to be recognized ") + \
-            #                 str(recFailCount) + " times\n"
-            #     else:
-            #         text += self.tr("    Progress Report: The calibration is going well.\n")
+        # Get variables that will be used
+        robot = self.env.getRobot()
+        vision = self.env.getVision()
+        rbMarker = self.env.getObjectManager().getObject(ROBOT_MARKER)
 
 
-            # text += self.tr("    Testing Point:\t") + str(currentPoint) + "/" + str(len(testCoords)) + "\n"
-            # text += self.tr("    Valid Points: \t") + str(successCount) + "\n"
-            # text += "    Failed Points:\t" + str(currentPoint - successCount) + "\n"
-            text += str(coord)
+        for i, coord in enumerate(testCoords):
+            successPoints = newCalibrations["ptPairs"]
+            failurePoints = newCalibrations["failPts"]
+
+            text = "Calibration Progress:\n{}/{}, success: {}, failure: {}" \
+                .format(i, len(testCoords), len(successPoints), len(failurePoints))
             self.testLbl.setText(text)
-            # self.testLbl.show()
-
-
-            # Get variables that will be used
-            robot      = self.env.getRobot()
-            vision     = self.env.getVision()
-            rbMarker   = self.env.getObjectManager().getObject(ROBOT_MARKER)
-            # singleShot = lambda: QtCore.QTimer.singleShot(10, lambda: None)
-
-            # singleShot = lambda: QtCore.QTimer.singleShot(10)
-            # if currentPoint >= len(testCoords):
-            #     self.endCalibration(errors, newCalibrations, testCoords)
-            #     return
-            self.progressBar.setValue(5)
-            # currentPoint += 1
-
-
-            printf("GUI| Testing point ", coord)
 
             # Move the robot to the coordinate
             robot.setPos(x=coord[0], y=coord[1], z=coord[2])
@@ -953,22 +923,18 @@ class CWPage5(QtWidgets.QWizardPage):
             # Now that the robot is at the desired position, get the avg location
             frameAge, marker = vision.getObjectLatestRecognition(rbMarker)
 
-
             # Make sure the robot is still connected before checking anything else
             if not robot.connected():
                 errors.append(self.tr("Robot was disconnected during calibration"))
                 self.endCalibration(errors, newCalibrations, testCoords)
                 return
 
-
             # Make sure the object was found in a recent frame
             if marker is None or not frameAge < 2:
                 printf("GUI| Marker was not recognized.")
                 newCalibrations['failPts'].append(coord)
-                # self.timer = singleShot()
             else:
-                newCalibrations["ptPairs"].append([marker.center, coord])
-                # self.timer = singleShot()
+                successPoints.append([marker.center, coord])
         else:
             self.endCalibration(errors, newCalibrations, testCoords)
 
