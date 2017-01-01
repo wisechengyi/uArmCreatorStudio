@@ -37,7 +37,7 @@ import Paths
 from CameraGUI           import CameraSelector
 from Logic.Global        import printf
 from Logic.Resources     import TrackableObject
-from Logic.Robot import ROBOT_MARKER
+from Logic.Robot import ROBOT_MARKER, OutOfBoundError
 
 __author__ = "Alexander Thiel"
 
@@ -896,7 +896,28 @@ class CWPage5(QtWidgets.QWizardPage):
         self.completeChanged.emit()
 
     def getPoint(self, currentPoint, errors, newCalibrations, testCoords):
-        print(currentPoint)
+
+        def getMarkerImageCoord(physical_coord):
+            # Move the robot to the coordinate
+            robot.setPos(coord=physical_coord)
+            vision.waitForNewFrames(3)
+
+            # Now that the robot is at the desired position, get the avg location
+            frameAge, marker = vision.getObjectLatestRecognition(rbMarker)
+
+            # Make sure the robot is still connected before checking anything else
+            if not robot.connected():
+                errors.append(self.tr("Robot was disconnected during calibration"))
+                self.endCalibration(errors, newCalibrations, testCoords)
+                return None
+
+            # Make sure the object was found in a recent frame
+            if marker is None or not frameAge < 2:
+                printf("GUI| Marker was not recognized.")
+                return None
+
+            return marker.center
+
         self.testRunning = True
         if self.cancelTest:
             self.testRunning = False
@@ -907,6 +928,51 @@ class CWPage5(QtWidgets.QWizardPage):
         vision = self.env.getVision()
         rbMarker = self.env.getObjectManager().getObject(ROBOT_MARKER)
 
+        # Find the limit in each axis
+        start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
+        while True:
+            robot.setPos(coord=start)
+            if not getMarkerImageCoord(start):
+                xMax = start[0]
+                break
+            start[0] += .5
+
+        # Find the limit in each axis
+        start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
+        while True:
+            robot.setPos(coord=start)
+            if not getMarkerImageCoord(start):
+                xMin = start[0]
+                break
+            start[0] -= .5
+
+
+        # Find the limit in each axis
+        start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
+        while True:
+            try:
+                robot.setPos(coord=start)
+            except OutOfBoundError:
+                yMax = start[1]
+                break
+
+            if not getMarkerImageCoord(start):
+                yMax = start[1]
+                break
+            start[1] += .5
+
+        # Find the limit in each axis
+        start = [0, 20, float(round(self.getGroundCoord()[2] + 2.0, 2))]
+        while True:
+            robot.setPos(coord=start)
+            if not getMarkerImageCoord(start):
+                yMin = start[1]
+                break
+            start[1] -= .5
+
+
+
+
 
         for i, coord in enumerate(testCoords):
             successPoints = newCalibrations["ptPairs"]
@@ -916,25 +982,13 @@ class CWPage5(QtWidgets.QWizardPage):
                 .format(i, len(testCoords), len(successPoints), len(failurePoints))
             self.testLbl.setText(text)
 
-            # Move the robot to the coordinate
-            robot.setPos(x=coord[0], y=coord[1], z=coord[2])
-            vision.waitForNewFrames(3)
+            markerCenter = getMarkerImageCoord(coord)
 
-            # Now that the robot is at the desired position, get the avg location
-            frameAge, marker = vision.getObjectLatestRecognition(rbMarker)
-
-            # Make sure the robot is still connected before checking anything else
-            if not robot.connected():
-                errors.append(self.tr("Robot was disconnected during calibration"))
-                self.endCalibration(errors, newCalibrations, testCoords)
-                return
-
-            # Make sure the object was found in a recent frame
-            if marker is None or not frameAge < 2:
-                printf("GUI| Marker was not recognized.")
-                newCalibrations['failPts'].append(coord)
+            if markerCenter:
+                successPoints.append([markerCenter, coord])
             else:
-                successPoints.append([marker.center, coord])
+                newCalibrations['failPts'].append(coord)
+
         else:
             self.endCalibration(errors, newCalibrations, testCoords)
 

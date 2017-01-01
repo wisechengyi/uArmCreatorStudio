@@ -48,6 +48,9 @@ def getConnectedRobots():
             uarm_ports.append(i)
     return uarm_ports
 
+class OutOfBoundError(Exception):
+    pass
+
 
 class Robot:
     """
@@ -226,16 +229,16 @@ class Robot:
             # Make sure all X, Y, and Z values are within a reachable range (not a permanent solution)
             if self.coord[0] is not None and self.coord[1] is not None and self.coord[2] is not None:
                 if self.xMin > self.coord[0] or self.coord[0] > self.xMax:
-                    printf("Robot| X is out of bounds. Requested: ", self.coord[0])
-                    self.coord[0] = self.clamp(self.xMin, self.coord[0], self.xMax)
+                    raise OutOfBoundError("Robot| X is out of bounds. Requested: ", self.coord[0])
+                    # self.coord[0] = self.clamp(self.xMin, self.coord[0], self.xMax)
 
                 if self.yMin > self.coord[1] or self.coord[1] > self.yMax:
-                    printf("Robot| Y is out of bounds. Requested: ", self.coord[1])
-                    self.coord[1] = self.clamp(self.yMin, self.coord[1], self.yMax)
+                    raise OutOfBoundError("Robot| Y is out of bounds. Requested: ", self.coord[1])
+                    # self.coord[1] = self.clamp(self.yMin, self.coord[1], self.yMax)
 
                 if self.zMin > self.coord[2] or self.coord[2] > self.zMax:
-                    printf("Robot| Z is out of bounds. Requested: ", self.coord[2])
-                    self.coord[2] = self.clamp(self.zMin, self.coord[2], self.zMax)
+                    raise OutOfBoundError("Robot| Z is out of bounds. Requested: ", self.coord[2])
+                    # self.coord[2] = self.clamp(self.zMin, self.coord[2], self.zMax)
 
 
             # If this command has changed the position, then move the robot
@@ -253,7 +256,7 @@ class Robot:
                     self.servoAttachStatus = [True, True, True, True]
 
                 except ValueError:
-                    printf("Robot| ERROR: Robot out of bounds and the uarm_python library crashed!")
+                    raise OutOfBoundError("Robot| ERROR: Robot out of bounds and the uarm_python library crashed!")
 
 
                 # Wait for robot to finish move, but if in exiting mode, just continue
