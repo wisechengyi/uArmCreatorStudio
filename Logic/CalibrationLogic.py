@@ -38,8 +38,6 @@ class CalibrationLogic(object):
 
       return marker.center
 
-
-
     # Get variables that will be used
     robot = self.env.getRobot()
     vision = self.env.getVision()
@@ -67,6 +65,7 @@ class CalibrationLogic(object):
       return limit
 
     # Find the limit in each axis
+    textLabel.setText("Determining robot and camera view limit...")
     start = [0, 20, float(round(self.groundCoord[2] + 2.0, 2))]
     xMax = findViewLimit(copy.copy(start), 0, 1)
     xMin = findViewLimit(copy.copy(start), 0, -1)
@@ -119,6 +118,4 @@ class CalibrationLogic(object):
       else:
         newCalibrations['failPts'].append(coord)
 
-
     return errors, newCalibrations, testCoords
-
