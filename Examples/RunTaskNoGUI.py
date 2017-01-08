@@ -26,7 +26,7 @@ run this it will already know the robots COM port and the cameras ID, and all th
 """
 
 taskPath     = "Resources\\Save Files\\test.task"
-settingsPath = "Resources\\Settings.txt"
+settingsPath = "Resources/Settings.txt"
 cascadePath  = "Resources\\"
 objectsPath  = "Resources\\Objects"
 
@@ -36,34 +36,39 @@ print("Make sure the script works in GUI before trying it here")
 
 
 # Create the environment. This will connect the robot and camera using Settings.txt
-env = Environment(settingsPath=settingsPath, objectsPath=objectsPath, cascadePath=cascadePath)
+env = Environment(settingsPath=settingsPath, objectsPath=objectsPath, cascadePath=cascadePath, sync_mode=True)
 
+# # Create the interpreter
+# interpreter = Interpreter(env)
 
-# Wait for the robot and camera to connect in their seperate threads
-print("Waiting 8 seconds for robot and camera to connect")
-sleep(8)
-
-
-# Create the interpreter
-interpreter = Interpreter(env)
-
-
-# Load the .task file you want to run
-saveFile = json.load(open(taskPath))
-
-
-# Load the task into the interpreter, and print the errors
-errors = interpreter.initializeScript(saveFile)
-print("The following errors occured while initializing the script:\n", errors)
-if str(input("Do you want to continue and start the script? (Y/N)")).lower() == "n": sys.exit()
+#
+# # Load the .task file you want to run
+# saveFile = json.load(open(taskPath))
+#
+#
+# # Load the task into the interpreter, and print the errors
+# errors = interpreter.initializeScript(saveFile)
+# print("The following errors occured while initializing the script:\n", errors)
+# if str(input("Do you want to continue and start the script? (Y/N)")).lower() == "n": sys.exit()
 
 # Before starting script, move the robot to a home position
 robot = env.getRobot()
+# env.getVStream().connected()
 robot.setPos(**robot.home)
+
+# robot.setSpeed(1)
+
+# while True:
+#   print(robot.getAngles())
+#   # for theta_1 in [45, 135]:
+#     # robot.setServoAngles(theta_1, 90, 75, 90)
+#     # robot.getMoving()
+#   sleep(1)
+  # break
 
 
 # Start the task in another thread
-interpreter.startThread(threaded=False)
-
+# interpreter.startThread(threaded=False)
+# robot.disconnect()
 env.close()
-print("Errors during interpreter run: ", interpreter.getExitErrors())
+# print("Errors during interpreter run: ", interpreter.getExitErrors())

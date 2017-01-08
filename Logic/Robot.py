@@ -80,7 +80,7 @@ class Robot:
     servo3  ->  Wrist Servo
     """
 
-    def __init__(self):
+    def __init__(self, env):
         # Cache Variables that keep track of robot state
         self.speed             = 10                        # In cm / second (or XYZ [unit] per second)
         self.coord             = [None, None, None]        # Keep track of the robots position
@@ -107,7 +107,11 @@ class Robot:
         # Convenience function for clamping a number to a range
         self.clamp = lambda lower, num, higher: max(lower, min(num, higher))
 
+        # Keep a tab on the general environment
+        self.env = env
 
+    def __shoud_exit(self):
+        return self.__shoud_exit()
 
     def getMoving(self):
         """
@@ -115,7 +119,7 @@ class Robot:
         :return: True or False, if robot is moving
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, returning False")
             return False
 
@@ -128,7 +132,7 @@ class Robot:
         :return: True or False if the sensor is pressed
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, returning False for Tip Sensor")
             return False
 
@@ -141,7 +145,7 @@ class Robot:
         :return: [X, Y, Z] List. If robot is not connect, [0.0, 0.0, 0.0]
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, return 0 for all coordinates")
             return [0.0, 0.0, 0.0]
 
@@ -154,7 +158,7 @@ class Robot:
         :return: [servo0, servo1, servo2, servo3] angles
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, returning 0 for angle")
             return [0.0, 0.0, 0.0, 0.0]
 
@@ -166,7 +170,7 @@ class Robot:
         Get the forward kinematic calculations for the robots servos.
         :return: [X, Y, Z] list
         """
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, returning 0 for FK")
             return [0.0, 0.0, 0.0]
 
@@ -178,7 +182,7 @@ class Robot:
         Get the inverse kinematic calculations for a certain XYZ location.
         :return: [X, Y, Z] list
         """
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, returning 0 for IK")
             return [0.0, 0.0, 0.0]
 
@@ -200,7 +204,7 @@ class Robot:
         :param wait: True or False: If true, the function will wait for the robot to finish the move after sending it
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, canceling position change")
             return
 
@@ -275,7 +279,7 @@ class Robot:
         :param relative: If you want to move to a relative position to the servos current position
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, canceling wrist change")
             return
 
@@ -317,7 +321,7 @@ class Robot:
         :param servo3:
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, canceling servo change")
             return
 
@@ -362,7 +366,7 @@ class Robot:
         :param status: True or False
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, canceling gripper change")
             return
 
@@ -379,7 +383,7 @@ class Robot:
         :param duration:  In seconds
         """
 
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, canceling buzzer change")
             return
         with self.__lock:
@@ -390,7 +394,7 @@ class Robot:
         """
         Stop the robot's ongoing movement
         """
-        if not self.connected() or self.__exiting:
+        if self.__shoud_exit():
             printf("Robot| Robot not avaliable, canceling position change")
             return
 
@@ -448,7 +452,6 @@ class Robot:
         # Check if the uArm was able to connect successfully
         if self.__uArm.connected():
             printf("Robot| SUCCESS: uArm successfully connected")
-            # self.__uArm.setXYZ(self.home['x'], self.home['y'], self.home['z'], self.speed)
             self.__threadRunning = False
             self.setPos(**self.home)
             self.setActiveServos(all=False)
@@ -467,8 +470,11 @@ class Robot:
         if com is not None and not self.__threadRunning:
             self.__threadRunning = True
             printf("Robot| Setting uArm to ", com)
-            setup = Thread(target=lambda: self.__setupThread(com))
-            setup.start()
+            if self.env.is_sync_mode():
+                self.__setupThread(com)
+            else:
+                setup = Thread(target=lambda: self.__setupThread(com))
+                setup.start()
 
         else:
             printf("Robot| ERROR: Tried setting uArm when it was already set!")
