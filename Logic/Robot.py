@@ -111,7 +111,7 @@ class Robot:
         self.env = env
 
     def __shoud_exit(self):
-        return self.__shoud_exit()
+        return not self.connected() or self.__exiting
 
     def getMoving(self):
         """
